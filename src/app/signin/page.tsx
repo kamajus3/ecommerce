@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Image from 'next/image'
 import googleIcon from '@/assets/images/google.svg'
-import Header from '../components/Header'
+import Header from '@/app/components/Header'
 
 const schema = yup.object().shape({
   email: yup.string().email('Email inválido').required('Email obrigatório'),
@@ -33,10 +33,7 @@ export default function SignIn() {
 
   return (
     <section className="bg-white overflow-hidden">
-      <div>
-        <Header.Promo title="Promoção de verão para todos os trajes de banho e entrega expressa grátis - OFF 50%!" />
-        <Header.Base />
-      </div>
+      <Header />
 
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">

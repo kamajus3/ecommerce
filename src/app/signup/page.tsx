@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import googleIcon from '@/assets/images/google.svg'
-import Header from '../components/Header'
+import Header from '@/app/components/Header'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
@@ -40,10 +40,7 @@ export default function SignUp() {
 
   return (
     <section className="bg-white overflow-hidden">
-      <div>
-        <Header.Promo title="Promoção de verão para todos os trajes de banho e entrega expressa grátis - OFF 50%!" />
-        <Header.Base />
-      </div>
+      <Header />
 
       <article className="flex justify-center items-center py-32">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">

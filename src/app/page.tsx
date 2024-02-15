@@ -1,3 +1,9 @@
+import Header from '@/app/components/Header'
+
 export default function Home() {
-  return <section></section>
+  return (
+    <section className="bg-white">
+      <Header />
+    </section>
+  )
 }
