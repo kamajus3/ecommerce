@@ -21,7 +21,7 @@ export default function Base() {
         )}
       >
         <Link href="/">
-          <h1 className="text-black font-bold text-2xl">Racius Care</h1>
+          <h1 className="text-black font-bold text-2xl">Example</h1>
         </Link>
 
         <div className="flex gap-4">
