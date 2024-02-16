@@ -1,9 +1,7 @@
 'use client'
 import React, { ButtonHTMLAttributes } from 'react'
-// Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -11,7 +9,6 @@ import 'swiper/css/scrollbar'
 
 import '@/assets/swiper.css'
 
-// import required modules
 import {
   Pagination,
   Navigation,
@@ -27,7 +24,7 @@ import { MoveRight } from 'lucide-react'
 function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
   return (
     <button
-      className="flex items-center gap-2 py-3 text-base text-white transition-all active:brightness-75 hover:border-b"
+      className="flex items-center gap-2 py-3 text-base text-white transition-all border-b border-b-transparent active:brightness-75 hover:border-b"
       {...props}
     >
       {props.children}

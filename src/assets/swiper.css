@@ -1,12 +1,16 @@
-.swiper {
+.mySwiper.swiper {
   width: 100%;
   height: 60vh;
 }
 
+.product-card.swiper {
+  padding: 40px;
+}
+
 @media (min-width: 1024px) {
-  .swiper {
+  .mySwiper.swiper {
     width: 100%;
-    height: 80vh;
+    height: 70vh;
   }
 }
 
@@ -18,14 +22,12 @@
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
-
-  /* Center slide text vertically */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.swiper-slide::before {
+.mySwiper .swiper-slide::before {
   content: "";
   position: absolute;
   left: 0;
