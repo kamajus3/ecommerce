@@ -14,18 +14,18 @@ export default function Base() {
       <HeaderPromo title="Promoção de verão para todos os trajes de banho e entrega expressa grátis - OFF 50%!" />
       <article
         className={clsx(
-          'w-screen flex sm:flex justify-around items-center py-4',
+          'w-screen flex sm:flex justify-between items-center px-4 py-4',
           {
             hidden: isSearchOn,
           },
         )}
       >
         <Link href="/">
-          <h1 className="text-black font-bold text-2xl">Example</h1>
+          <h1 className="text-black font-bold text-2xl">Racius Care</h1>
         </Link>
 
         <div className="flex gap-4">
-          <div className="max-sm:hidden h-11 w-72 flex justify-between items-center bg-input">
+          <div className="max-sm:hidden h-11 w-72 flex justify-between items-center bg-neutral-100">
             <input
               type="text"
               placeholder="Oque é que você precisa?"
@@ -35,7 +35,7 @@ export default function Base() {
               <Search color="#fff" size={18} />
             </button>
           </div>
-          <div className="h-11 flex items-center gap-8 justify-between">
+          <div className="h-11 flex gap-4 items-center justify-between">
             <button className="hidden max-sm:block">
               <Search
                 onClick={() => setSearchOn(true)}
@@ -46,8 +46,8 @@ export default function Base() {
             <button>
               <ShoppingCart color="#000" size={27} />
             </button>
-            <button>
-              <User color="#000" size={27} />
+            <button className="bg-red-500 p-2 rounded-full">
+              <User color="#fff" size={27} />
             </button>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function Base() {
 
         <div
           className={
-            'flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-input border-b'
+            'flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-neutral-100 border-b'
           }
         >
           <input

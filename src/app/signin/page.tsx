@@ -44,7 +44,7 @@ export default function SignIn() {
               <input
                 type="email"
                 {...register('email')}
-                className={`w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
+                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
               />
               {errors.email && (
                 <p className="text-red-500 mt-1">{errors.email.message}</p>
@@ -55,7 +55,7 @@ export default function SignIn() {
               <input
                 type="password"
                 {...register('password')}
-                className={`w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
+                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
               />
               {errors.password && (
                 <p className="text-red-500 mt-1">{errors.password.message}</p>

@@ -53,7 +53,7 @@ export default function SignUp() {
               <input
                 type="text"
                 {...register('name')}
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                className="w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
               />
               {errors.name && (
                 <p className="text-red-500 mt-1">{errors.name.message}</p>
@@ -64,7 +64,7 @@ export default function SignUp() {
               <input
                 type="email"
                 {...register('email')}
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                className="w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
               />
               {errors.email && (
                 <p className="text-red-500 mt-1">{errors.email.message}</p>
@@ -75,7 +75,7 @@ export default function SignUp() {
               <input
                 type="password"
                 {...register('password')}
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                className="w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
               />
               {errors.password && (
                 <p className="text-red-500 mt-1">{errors.password.message}</p>
@@ -87,7 +87,7 @@ export default function SignUp() {
               <input
                 type="password"
                 {...register('confirmPassword')}
-                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                className="w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
               />
               {errors.confirmPassword && (
                 <p className="text-red-500 mt-1">

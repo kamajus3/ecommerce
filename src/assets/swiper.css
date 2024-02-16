@@ -44,8 +44,8 @@
 .swiper-button-prev,
 .swiper-button-next {
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.356);
-  border: 1px solid #000;
+  background-color: #ef4444;
+  border: 1px solid #fff;
   width: 20px !important;
   height: 20px !important;
   padding: 30px;
@@ -59,8 +59,11 @@ div.swiper-button-prev::after {
 
 .swiper-pagination-bullet {
   background-color: #ffffff;
+  width: 15px !important;
+  height: 15px !important;
 }
 
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: #003366;
+  background-color: #ef4444;
+  border: 2px solid #fff;
 }

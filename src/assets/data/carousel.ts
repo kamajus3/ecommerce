@@ -1,10 +1,10 @@
 export const CAROUSEL = [
   {
     id: Math.random(),
-    title: 'Veja o que podemos oferecer-lhe',
+    title: 'Descubra o poder da saúde e do bem-estar!',
     image: 'https://placehold.co/600x400.png',
     content:
-      'Explore a nossa gama de serviços abrangentes, incluindo cuidados com a saúde mental, apoio emocional, estimulação cognitiva e assistência com atividades diárias.',
+      'Explore nossa ampla seleção de produtos de qualidade para cuidados pessoais, saúde e higiene corporal.',
     url: '/#nossos-serviços',
     action: 'Explorar serviços',
   },
