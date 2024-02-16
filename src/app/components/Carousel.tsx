@@ -24,7 +24,7 @@ import { MoveRight } from 'lucide-react'
 function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
   return (
     <button
-      className="flex items-center gap-2 py-3 text-base text-white transition-all border-b border-b-transparent active:brightness-75 hover:border-b"
+      className="flex items-center gap-2 py-3 text-base text-white transition-all border-b border-b-transparent active:brightness-75 hover:border-b-white"
       {...props}
     >
       {props.children}

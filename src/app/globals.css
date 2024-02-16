@@ -26,6 +26,11 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+input::selection {
+  background-color: #ef4444;
+  color: #fff;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
