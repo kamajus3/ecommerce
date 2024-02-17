@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { MoveLeft, Search, ShoppingCart, User } from 'lucide-react'
+import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import HeaderPromo from './HeaderPromo'
 import { useState } from 'react'
 import clsx from 'clsx'
+import HeaderAvatar from './HeaderAvatar'
 
 export default function Base() {
   const [isSearchOn, setSearchOn] = useState(false)
@@ -43,12 +44,10 @@ export default function Base() {
                 size={27}
               />
             </button>
-            <button>
+            <button className="inline-flex justify-center w-full border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
               <ShoppingCart color="#000" size={27} />
             </button>
-            <button className="bg-red-500 p-2 rounded-full">
-              <User color="#fff" size={27} />
-            </button>
+            <HeaderAvatar />
           </div>
         </div>
       </article>
