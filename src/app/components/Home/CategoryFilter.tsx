@@ -1,12 +1,15 @@
 'use client'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css/scrollbar'
+
 import CATEGORIES from '@/assets/data/categories'
 import { Scrollbar } from 'swiper/modules'
 import dynamic from 'next/dynamic'
 import Category from '@/@types/categories'
 import dynamicIconImports from 'lucide-react/dynamicIconImports'
+
+import 'swiper/css/scrollbar'
+import '@/assets/swiper.css'
 
 interface CategoryFilterProps {
   title: string

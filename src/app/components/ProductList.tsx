@@ -2,9 +2,15 @@
 
 import products from '@/assets/data/products'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css/scrollbar'
 import { Scrollbar } from 'swiper/modules'
 import ProductCard from './ProductCard'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
+
+import '@/assets/swiper.css'
 
 interface ProductListProps {
   title: string

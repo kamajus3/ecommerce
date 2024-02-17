@@ -8,6 +8,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Higiene pessoal',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
   {
     id: 2,
@@ -18,6 +20,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Dezidorizantes',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
   {
     id: 3,
@@ -28,6 +32,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Limpezas',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
   {
     id: 4,
@@ -38,6 +44,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Limpezas',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
   {
     id: 5,
@@ -48,6 +56,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Limpezas',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
   {
     id: 6,
@@ -58,6 +68,8 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
     price: '$35',
     category: 'Limpezas',
+    description:
+      'PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.',
   },
 ]
 
