@@ -28,6 +28,10 @@ export default function HeaderAvatar() {
     }
   }, [])
 
+  const handleLinkClick = () => {
+    setIsOpen(false)
+  }
+
   return (
     <div className="relative bg-white" ref={dropdownRef}>
       <button
@@ -57,6 +61,7 @@ export default function HeaderAvatar() {
               <a
                 href="/perfil"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLinkClick}
               >
                 Definições da conta
               </a>
@@ -64,6 +69,7 @@ export default function HeaderAvatar() {
               <a
                 href="/signin"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLinkClick}
               >
                 Iniciar a sua sessão
               </a>
@@ -72,6 +78,7 @@ export default function HeaderAvatar() {
               <a
                 href="/delivery"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLinkClick}
               >
                 Meus pedidos
               </a>
@@ -80,6 +87,7 @@ export default function HeaderAvatar() {
               <a
                 href="/logout"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLinkClick}
               >
                 Terminar sessão
               </a>
@@ -87,6 +95,7 @@ export default function HeaderAvatar() {
               <a
                 href="/signup"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+                onClick={handleLinkClick}
               >
                 Criar uma conta
               </a>
