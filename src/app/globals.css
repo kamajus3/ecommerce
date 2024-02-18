@@ -26,16 +26,35 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-input::selection {
+::selection {
   background-color: #ef4444;
   color: #fff;
 }
-
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0; 
+input {
+  all: unset;
 }
+
+input[type="checkbox"], input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  margin: 0; 
+  appearance: auto;
+  border:none;
+  background-image:none;
+  background-color:transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: checkbox !important;
+  -moz-appearance: checkbox !important;
+  -ms-appearance: checkbox !important;
+  -o-appearance: checkbox !important;
+  appearance: checkbox !important;
+  border: none;
+  }
 
 @layer utilities {
   .text-balance {
