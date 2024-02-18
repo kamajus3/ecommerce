@@ -2,9 +2,13 @@ import Header from './components/Header'
 import Carousel from './components/Carousel'
 import ProductList from './components/ProductList'
 import CategoryFilter from './components/Home/CategoryFilter'
-import Promo from './components/Promo'
 import Advantages from './components/Home/Advantages'
 import Footer from './components/Footer'
+import dynamic from 'next/dynamic'
+
+const Promo = dynamic(() => import('./components/Promo/PromoBig'), {
+  ssr: false,
+})
 
 export default function Home() {
   return (
@@ -16,7 +20,9 @@ export default function Home() {
       <CategoryFilter title="Pesquise por Categoria" />
       <ProductList title="Recém adicionados" />
       <div className="h-32 border-b" />
-      <Promo.Big serverTime={new Date('2024-02-17T14:50:30Z')} />
+      <Promo
+        serverTime={new Date(new Date().setDate(new Date().getDate() + 2))}
+      />
       <ProductList title="Produtos mais vendidos" />
       <Advantages />
       <Footer />

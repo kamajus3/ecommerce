@@ -5,7 +5,14 @@ import promoHeroe from '@/assets/images/promo-heroe.png'
 import Image from 'next/image'
 
 function calculateTimeRemaining(finishDate: Date) {
-  const timeDiff = finishDate.getTime() - new Date().getTime()
+  const currentTime = new Date().getTime()
+  const finishTime = finishDate.getTime()
+
+  if (finishTime < currentTime) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+  }
+
+  const timeDiff = finishTime - currentTime
 
   const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
   const hours = Math.floor(
@@ -13,6 +20,7 @@ function calculateTimeRemaining(finishDate: Date) {
   )
   const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
   const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
+
   return { days, hours, minutes, seconds }
 }
 

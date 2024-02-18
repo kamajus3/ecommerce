@@ -35,7 +35,7 @@ function CartTableRow({
   const money = useMoneyFormat()
 
   const notifyDelete = () =>
-    toast.success('Producto apagado com sucesso', {
+    toast.success('Producto removido com sucesso', {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
