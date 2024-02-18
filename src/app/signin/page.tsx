@@ -6,6 +6,10 @@ import * as yup from 'yup'
 import Image from 'next/image'
 import googleIcon from '@/assets/images/google.svg'
 import Header from '@/app/components/Header'
+import { useAuth } from '@/hooks/useAuth'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { Bounce, toast } from 'react-toastify'
 
 const schema = yup.object().shape({
   email: yup.string().email('Email inválido').required('Email obrigatório'),
@@ -21,14 +25,37 @@ interface FormData {
 }
 
 export default function SignIn() {
+  const router = useRouter()
+  const { signInWithEmail } = useAuth()
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
 
+  const [isLoading, setLoading] = useState(false)
+
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    setLoading(true)
+    signInWithEmail(data.email, data.password)
+      .then(() => {
+        router.push('/')
+      })
+      .catch((e: Error) => {
+        toast.error(e.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+      })
+    setLoading(false)
   }
 
   return (
@@ -70,7 +97,14 @@ export default function SignIn() {
               type="submit"
               className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
             >
-              Entrar
+              {isLoading ? (
+                <div
+                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                />
+              ) : (
+                <p className="text-white">Entrar</p>
+              )}
             </button>
             <div>
               <button className="w-full flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">

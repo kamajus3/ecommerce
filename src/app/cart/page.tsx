@@ -8,8 +8,7 @@ import Image from 'next/image'
 import Footer from '../components/Footer'
 import Dialog from '../components/Dialog'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { ToastContainer, toast, Bounce } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 
 interface CartProduct extends Product {
@@ -233,19 +232,6 @@ export default function CartPage() {
           Fazer pagamento
         </button>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover={false}
-        theme="light"
-        transition={Bounce}
-      />
       <Footer />
     </section>
   )

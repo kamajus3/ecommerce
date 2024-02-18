@@ -6,9 +6,13 @@ import Header from '@/app/components/Header'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+import { useAuth } from '@/hooks/useAuth'
+import { Bounce, toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
 
 const schema = yup.object().shape({
-  name: yup.string().required('Nome obrigatório'),
+  firstName: yup.string().required('O nome obrigatório'),
   email: yup.string().email('Email inválido').required('Email obrigatório'),
   password: yup
     .string()
@@ -21,7 +25,7 @@ const schema = yup.object().shape({
 })
 
 interface FormData {
-  name: string
+  firstName: string
   email: string
   password: string
   confirmPassword: string
@@ -34,8 +38,42 @@ export default function SignUp() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
 
+  const router = useRouter()
+  const [isLoading, setLoading] = useState(false)
+  const { signUpWithEmail } = useAuth()
+
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    setLoading(true)
+    signUpWithEmail(data.firstName, data.email, data.password)
+      .then(() => {
+        toast.success('Conta criada com sucesso!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+
+        router.replace('/')
+      })
+      .catch((e: Error) => {
+        toast.error(e.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
+      })
+    setLoading(false)
   }
 
   return (
@@ -52,11 +90,11 @@ export default function SignUp() {
               <label className="font-medium">Nome</label>
               <input
                 type="text"
-                {...register('name')}
+                {...register('firstName')}
                 className="w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
               />
-              {errors.name && (
-                <p className="text-red-500 mt-1">{errors.name.message}</p>
+              {errors.firstName && (
+                <p className="text-red-500 mt-1">{errors.firstName.message}</p>
               )}
             </div>
             <div>
@@ -100,7 +138,14 @@ export default function SignUp() {
               type="submit"
               className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
             >
-              Continuar
+              {isLoading ? (
+                <div
+                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                />
+              ) : (
+                <p className="text-white">Continuar</p>
+              )}
             </button>
             <div>
               <button className="w-full flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">
