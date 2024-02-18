@@ -46,8 +46,8 @@ interface FormData {
   email: string
   address: string
   phone: string
-  oldPassword?: string | null
-  newPassword?: string | null
+  oldPassword?: string
+  newPassword?: string
   confirmPassword?: string
 }
 
@@ -100,15 +100,15 @@ export default function PerfilPage() {
           })
         })
 
-      if (data.newPassword && user && user.email && data.oldPassword) {
+      if (user) {
         const credential = EmailAuthProvider.credential(
-          user.email,
-          data.oldPassword,
+          user.email || '',
+          data.oldPassword || '',
         )
 
         reauthenticateWithCredential(user, credential)
           .then(() => {
-            updatePassword(user, data.newPassword)
+            updatePassword(user, data.newPassword || '')
               .then(() => {
                 toast.success('Palavra-passe atualizada com sucesso', {
                   position: 'top-right',
