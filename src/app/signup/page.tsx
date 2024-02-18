@@ -6,7 +6,6 @@ import Header from '@/app/components/Header'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
-import { useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { Bounce, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
@@ -35,15 +34,13 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({ resolver: yupResolver(schema) })
 
   const router = useRouter()
-  const [isLoading, setLoading] = useState(false)
   const { signUpWithEmail } = useAuth()
 
   const onSubmit = (data: FormData) => {
-    setLoading(true)
     signUpWithEmail(data.firstName, data.email, data.password)
       .then(() => {
         toast.success('Conta criada com sucesso!', {
@@ -73,7 +70,6 @@ export default function SignUp() {
           transition: Bounce,
         })
       })
-    setLoading(false)
   }
 
   return (
@@ -138,7 +134,7 @@ export default function SignUp() {
               type="submit"
               className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <div
                   className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                   role="status"

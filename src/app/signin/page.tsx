@@ -8,7 +8,6 @@ import googleIcon from '@/assets/images/google.svg'
 import Header from '@/app/components/Header'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { Bounce, toast } from 'react-toastify'
 
 const schema = yup.object().shape({
@@ -31,13 +30,10 @@ export default function SignIn() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({ resolver: yupResolver(schema) })
 
-  const [isLoading, setLoading] = useState(false)
-
   const onSubmit = (data: FormData) => {
-    setLoading(true)
     signInWithEmail(data.email, data.password)
       .then(() => {
         router.push('/')
@@ -55,7 +51,6 @@ export default function SignIn() {
           transition: Bounce,
         })
       })
-    setLoading(false)
   }
 
   return (
@@ -97,7 +92,7 @@ export default function SignIn() {
               type="submit"
               className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
             >
-              {isLoading ? (
+              {isSubmitting ? (
                 <div
                   className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                   role="status"

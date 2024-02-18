@@ -6,39 +6,34 @@ import HeaderBase from '../components/Header/HeaderBase'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
-import { updatePassword } from 'firebase/auth'
+import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { database } from '@/config/firebase'
 import { Bounce, toast } from 'react-toastify'
+import { EmailAuthProvider } from 'firebase/auth/cordova'
 
 const schema = yup.object().shape({
   firstName: yup.string().required('O nome é obrigatório').trim(),
   lastName: yup.string().required('O sobrenome é obrigatório').trim(),
-  address: yup.string().required('A morada é obrigatório').trim(),
+  address: yup.string().required('A morada é obrigatória').trim(),
   phone: yup.string().required('O número de telefone é obrigatório'),
   email: yup.string().email('Email inválido').required('Email obrigatório'),
-  oldPassword: yup.string().when('oldPassword', (val) => {
-    if (val?.length > 0) {
-      return yup
-        .string()
-        .min(8, 'Palavra-passe deve ter no mínimo 8 caracteres')
-        .max(32, 'A palavra-passe não pode ter mais de 8 caracteres')
-    } else {
-      return yup.string().notRequired()
-    }
+  oldPassword: yup.string().matches(/^.{8,}$/, {
+    excludeEmptyString: true,
+    message: 'Palavra-passe deve ter no mínimo 8 caracteres',
   }),
-  newPassword: yup.string().when('oldPassword', (val) => {
-    if (val?.length > 0) {
-      return yup
-        .string()
-        .min(8, 'Palavra-passe deve ter no mínimo 8 caracteres')
-        .max(32, 'A palavra-passe não pode ter mais de 8 caracteres')
-    } else {
-      return yup.string().notRequired()
-    }
-  }),
+  newPassword: yup
+    .string()
+    .matches(/^.{8,}$/, {
+      excludeEmptyString: true,
+      message: 'Palavra-passe deve ter no mínimo 8 caracteres',
+    })
+    .matches(/^.{1,32}$/, {
+      excludeEmptyString: true,
+      message: 'A palavra-passe não pode ter mais de 32 caracteres',
+    }),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('newPassword')], 'As palavras-passe devem ser iguais')
@@ -62,59 +57,29 @@ export default function PerfilPage() {
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { errors },
+    setError,
+    setValue,
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     resolver: yupResolver(schema),
   })
 
-  const [isLoading, setLoading] = useState(false)
-
   const onSubmit = (data: FormData) => {
-    setLoading(true)
-    set(ref(database, 'users/' + userDatabase?.id), {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-    })
-      .then(() => {
-        toast.success('A tua conta foi atualizada com sucesso', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+    if (isDirty) {
+      set(ref(database, 'users/' + user?.uid), {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
       })
-      .catch(() => {
-        toast.error('Houve algum erro.', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
-      })
-
-    if (data.newPassword && user) {
-      updatePassword(user, data.newPassword)
         .then(() => {
-          toast.success('Palavra-passe atualizada com sucesso', {
+          toast.success('A tua conta foi atualizada com sucesso', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
-            pauseOnHover: true,
+            pauseOnHover: false,
             draggable: true,
             progress: undefined,
             theme: 'light',
@@ -122,27 +87,107 @@ export default function PerfilPage() {
           })
         })
         .catch(() => {
-          toast.error('Erro ao atualizar palavra-passe', {
+          toast.error('Houve algum erro.', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
-            pauseOnHover: true,
+            pauseOnHover: false,
             draggable: true,
             progress: undefined,
             theme: 'light',
             transition: Bounce,
           })
         })
+
+      if (data.newPassword && user && user.email && data.oldPassword) {
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          data.oldPassword,
+        )
+
+        reauthenticateWithCredential(user, credential)
+          .then(() => {
+            updatePassword(user, data.newPassword)
+              .then(() => {
+                toast.success('Palavra-passe atualizada com sucesso', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                })
+              })
+              .catch(() => {
+                toast.error('Erro ao atualizar palavra-passe', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                })
+              })
+          })
+          .catch(() => {
+            setError(
+              'oldPassword',
+              { type: 'focus', message: 'A palavra-passe está incorrecta.' },
+              { shouldFocus: true },
+            )
+          })
+      }
+    } else {
+      toast.warn('Você não atualizou nenhum campo', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
-    setLoading(false)
   }
 
   useEffect(() => {
     if (userDatabase) {
-      reset(userDatabase)
+      setValue('firstName', userDatabase.firstName, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
+      setValue('lastName', userDatabase.lastName || '', {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
+      setValue('email', userDatabase.email, {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
+      setValue('phone', userDatabase.phone || '', {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
+      setValue('address', userDatabase.address || '', {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
     }
-  }, [userDatabase, reset])
+  }, [userDatabase, setValue])
 
   return (
     <section className="bg-white overflow-hidden">
@@ -385,7 +430,7 @@ export default function PerfilPage() {
             type="submit"
             className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            {isLoading ? (
+            {isSubmitting ? (
               <div
                 className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
                 role="status"
