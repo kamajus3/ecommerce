@@ -12,17 +12,19 @@ export default function ProductCard(product: Product) {
   return (
     <div>
       <div className="w-80 h-80 rounded-md group-hover:opacity-75  max-lg:h-64 max-lg:w-64">
-        <div className="w-full h-full relative select-none" draggable={false}>
-          <Image
-            src={product.photo}
-            alt={product.name}
-            objectFit="cover"
-            objectPosition="center"
-            draggable={false}
-            className="select-none"
-            fill
-          />
-        </div>
+        <a href={`/product/${product.id}`}>
+          <div className="w-full h-full relative select-none" draggable={false}>
+            <Image
+              src={product.photo}
+              alt={product.name}
+              objectFit="cover"
+              objectPosition="center"
+              draggable={false}
+              className="select-none"
+              fill
+            />
+          </div>
+        </a>
       </div>
       <div className="w-80 max-lg:w-64 mt-4 flex flex-col">
         <div className="w-full flex justify-between">

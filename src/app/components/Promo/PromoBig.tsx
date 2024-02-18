@@ -46,26 +46,26 @@ export default function PromoBig({ serverTime }: { serverTime: Date }) {
           Até 60% de desconto direito
         </h5>
 
-        <div className="flex gap-x-6 mt-5">
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12">
+        <div className="flex flex-wrap gap-6 mt-5">
+          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
             <p className="font-semibold text-lg">{timeRemaining.days}</p>
             <p className="text-base font-medium">dias</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12">
+          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
             <p className="font-semibold text-lg">{timeRemaining?.hours}</p>
             <p className="text-base font-medium">horas</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12">
+          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
             <p className="font-semibold text-lg">{timeRemaining.minutes}</p>
             <p className="text-base font-medium">minutos</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12">
+          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
             <p className="font-semibold text-lg">{timeRemaining.seconds}</p>
             <p className="text-base font-medium">segundos</p>
           </div>
         </div>
 
-        <button className="mt-6 text-white bg-black font-medium rounded py-4 px-8 active:scale-95 hover:brig">
+        <button className="mt-6 text-white bg-black font-medium rounded py-4 px-8 active:scale-95 hover:brightness-75">
           Ver produtos
         </button>
       </div>

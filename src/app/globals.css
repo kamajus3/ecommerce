@@ -30,9 +30,6 @@ body {
   background-color: #ef4444;
   color: #fff;
 }
-input {
-  all: unset;
-}
 
 input[type="checkbox"], input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: auto;

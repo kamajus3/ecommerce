@@ -151,6 +151,10 @@ export default function CartPage() {
     setTotalPrice(selectedProductsTotalPrice)
   }, [selectedProducts, finalCartProducts])
 
+  useEffect(() => {
+    setSelectedProduct(cartProducts.map((p) => p.id))
+  }, [cartProducts])
+
   return (
     <section className="bg-white overflow-hidden">
       <HeaderBase />
@@ -171,6 +175,7 @@ export default function CartPage() {
                     type="checkbox"
                     id="select-all-products"
                     name="select-all-products"
+                    checked={selectedProducts.length === cartProducts.length}
                     className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                     onChange={(e) => {
                       if (e.target.checked) {
