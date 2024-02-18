@@ -1,116 +1,76 @@
-import { useAuth } from '@/hooks/useAuth'
-import clsx from 'clsx'
-import { User } from 'lucide-react'
-import React, { useState, useRef, useEffect } from 'react'
-import Swiper from 'swiper'
-import 'swiper/swiper-bundle.min.css'
+'use client'
+import React, { ButtonHTMLAttributes } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
-export default function HeaderAvatar() {
-  const { user } = useAuth()
-  const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-  const swiperRef = useRef<Swiper | null>(null)
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import 'swiper/css/scrollbar'
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
+import '@/assets/swiper.css'
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
-    ) {
-      setIsOpen(false)
-    }
-  }
+import {
+  Pagination,
+  Navigation,
+  Scrollbar,
+  A11y,
+  Autoplay,
+} from 'swiper/modules'
+import useDimensions from '@/hooks/useDimesions'
+import { CAROUSEL } from '@/assets/data/carousel'
+import Link from 'next/link'
+import { MoveRight } from 'lucide-react'
 
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside)
-
-    swiperRef.current = new Swiper('.swiper-container', {
-      on: {
-        click: function () {
-          setIsOpen(false)
-        },
-      },
-    })
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-
-      // Destrua o Swiper ao desmontar o componente
-      if (swiperRef.current) {
-        swiperRef.current.destroy()
-      }
-    }
-  }, [])
+function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
+  return (
+    <button
+      className="flex items-center gap-2 py-3 text-base text-white transition-all border-b border-b-transparent active:brightness-75 hover:border-b-white"
+      {...props}
+    >
+      {props.children}
+      <MoveRight />
+    </button>
+  )
+}
+export default function Carousel() {
+  const [width] = useDimensions()
 
   return (
-    <div className="relative bg-white" ref={dropdownRef}>
-      <button
-        className={clsx(
-          'inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-green-400 text-sm font-medium text-gray-700 hover:brightness-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
-          {
-            'bg-red-500': !user,
-          },
-        )}
-        id="options-menu"
-        aria-haspopup="true"
-        aria-expanded="true"
-        onClick={toggleMenu}
+    <>
+      <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
+        spaceBetween={30}
+        pagination={{ dynamicBullets: true }}
+        navigation={!(width <= 600)}
+        slidesPerView={1}
+        loop={true}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        className="mySwiper"
       >
-        <User color="#fff" size={27} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute min-w-44 right-0 mt-2 bg-white border rounded-md shadow-lg z-10">
-          <div className="py-1">
-            {user && (
-              <p className="text-sm px-4 py-2 text-gray-800 border-b">
-                Logado em <strong>{user.email}</strong>
+        {CAROUSEL.map((data) => (
+          <SwiperSlide
+            key={data.title}
+            style={{ backgroundImage: `url(${data.image})` }}
+          >
+            <div className="static left-24 z-50 flex w-[480px] select-none flex-col items-center justify-end gap-4 lg:absolute lg:items-start">
+              <h3 className="text-center text-5xl font-semibold text-white lg:text-left">
+                {data.title}
+              </h3>
+              <p className="text-center text-base text-white lg:text-left">
+                {data.content}
               </p>
-            )}
-            {user ? (
-              <a
-                href="/perfil"
-                className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Definições da conta
-              </a>
-            ) : (
-              <a
-                href="/signin"
-                className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Iniciar a sua sessão
-              </a>
-            )}
-            {user && (
-              <a
-                href="/delivery"
-                className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Meus pedidos
-              </a>
-            )}
-            {user ? (
-              <a
-                href="/logout"
-                className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Terminar sessão
-              </a>
-            ) : (
-              <a
-                href="/signup"
-                className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-              >
-                Criar uma conta
-              </a>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
+              {data.action && (
+                <Link href={data.url}>
+                  <CarouselButton>{data.action}</CarouselButton>
+                </Link>
+              )}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </>
   )
 }

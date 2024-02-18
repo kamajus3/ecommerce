@@ -2,11 +2,13 @@ import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
+import Swiper from 'swiper'
 
 export default function HeaderAvatar() {
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const swiperRef = useRef<Swiper | null>(null)
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
@@ -23,14 +25,23 @@ export default function HeaderAvatar() {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
+
+    swiperRef.current = new Swiper('.swiper-container', {
+      on: {
+        click: function () {
+          setIsOpen(false)
+        },
+      },
+    })
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
+
+      if (swiperRef.current) {
+        swiperRef.current.destroy()
+      }
     }
   }, [])
-
-  const handleLinkClick = () => {
-    setIsOpen(false)
-  }
 
   return (
     <div className="relative bg-white" ref={dropdownRef}>
@@ -61,7 +72,6 @@ export default function HeaderAvatar() {
               <a
                 href="/perfil"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-                onClick={handleLinkClick}
               >
                 Definições da conta
               </a>
@@ -69,7 +79,6 @@ export default function HeaderAvatar() {
               <a
                 href="/signin"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-                onClick={handleLinkClick}
               >
                 Iniciar a sua sessão
               </a>
@@ -78,7 +87,6 @@ export default function HeaderAvatar() {
               <a
                 href="/delivery"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-                onClick={handleLinkClick}
               >
                 Meus pedidos
               </a>
@@ -87,7 +95,6 @@ export default function HeaderAvatar() {
               <a
                 href="/logout"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-                onClick={handleLinkClick}
               >
                 Terminar sessão
               </a>
@@ -95,7 +102,6 @@ export default function HeaderAvatar() {
               <a
                 href="/signup"
                 className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
-                onClick={handleLinkClick}
               >
                 Criar uma conta
               </a>
