@@ -25,7 +25,7 @@ interface FormData {
 
 export default function SignIn() {
   const router = useRouter()
-  const { signInWithEmail } = useAuth()
+  const { signInWithEmail, signInWithGoogle } = useAuth()
 
   const {
     register,
@@ -102,7 +102,29 @@ export default function SignIn() {
               )}
             </button>
             <div>
-              <button className="w-full flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">
+              <button
+                onClick={() => {
+                  signInWithGoogle()
+                    .then(() => {
+                      router.push('/')
+                    })
+                    .catch((e: Error) => {
+                      toast.error(e.message, {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: 'light',
+                        transition: Bounce,
+                      })
+                    })
+                }}
+                type="button"
+                className="w-full flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100"
+              >
                 <Image src={googleIcon} alt="Icone do Google" />
                 <p className="font-medium">Continuar com o Google</p>
               </button>
