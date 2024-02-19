@@ -6,7 +6,7 @@ import HeaderBase from '../components/Header/HeaderBase'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
 import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
@@ -33,6 +33,17 @@ const schema = yup.object().shape({
     .matches(/^.{1,32}$/, {
       excludeEmptyString: true,
       message: 'A palavra-passe não pode ter mais de 32 caracteres',
+    })
+    .when('oldPassword', {
+      is: (oldPassword: string | undefined | null) => {
+        return (
+          oldPassword !== '' &&
+          oldPassword !== undefined &&
+          oldPassword !== null
+        )
+      },
+      then: (schema) =>
+        schema.min(8, 'Palavra-passe deve ter no mínimo 8 caracteres'),
     }),
   confirmPassword: yup
     .string()
@@ -59,13 +70,19 @@ export default function PerfilPage() {
     handleSubmit,
     setError,
     setValue,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, dirtyFields },
   } = useForm({
     resolver: yupResolver(schema),
   })
 
   const onSubmit = (data: FormData) => {
-    if (isDirty) {
+    if (
+      dirtyFields.firstName ||
+      dirtyFields.lastName ||
+      dirtyFields.email ||
+      dirtyFields.phone ||
+      dirtyFields.address
+    ) {
       set(ref(database, 'users/' + user?.uid), {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -74,6 +91,7 @@ export default function PerfilPage() {
         address: data.address,
       })
         .then(() => {
+          updateFieldAsDefault(data)
           toast.success('A tua conta foi atualizada com sucesso', {
             position: 'top-right',
             autoClose: 5000,
@@ -99,51 +117,6 @@ export default function PerfilPage() {
             transition: Bounce,
           })
         })
-
-      if (user) {
-        const credential = EmailAuthProvider.credential(
-          user.email || '',
-          data.oldPassword || '',
-        )
-
-        reauthenticateWithCredential(user, credential)
-          .then(() => {
-            updatePassword(user, data.newPassword || '')
-              .then(() => {
-                toast.success('Palavra-passe atualizada com sucesso', {
-                  position: 'top-right',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'light',
-                  transition: Bounce,
-                })
-              })
-              .catch(() => {
-                toast.error('Erro ao atualizar palavra-passe', {
-                  position: 'top-right',
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'light',
-                  transition: Bounce,
-                })
-              })
-          })
-          .catch(() => {
-            setError(
-              'oldPassword',
-              { type: 'focus', message: 'A palavra-passe está incorrecta.' },
-              { shouldFocus: true },
-            )
-          })
-      }
     } else {
       toast.warn('Você não atualizou nenhum campo', {
         position: 'top-right',
@@ -157,37 +130,90 @@ export default function PerfilPage() {
         transition: Bounce,
       })
     }
+
+    if (user && data.oldPassword) {
+      const credential = EmailAuthProvider.credential(
+        user.email || '',
+        data.oldPassword || '',
+      )
+
+      reauthenticateWithCredential(user, credential)
+        .then(() => {
+          updatePassword(user, data.newPassword || '')
+            .then(() => {
+              toast.success('Palavra-passe atualizada com sucesso', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+                transition: Bounce,
+              })
+            })
+            .catch(() => {
+              toast.error('Erro ao atualizar palavra-passe', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: 'light',
+                transition: Bounce,
+              })
+            })
+        })
+        .catch(() => {
+          setError(
+            'oldPassword',
+            { type: 'focus', message: 'A palavra-passe está incorrecta.' },
+            { shouldFocus: true },
+          )
+        })
+    }
   }
 
+  const updateFieldAsDefault = useCallback(
+    (data?: FormData) => {
+      if (userDatabase) {
+        const userData = data || userDatabase
+        setValue('firstName', userData.firstName, {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+        setValue('lastName', userData.lastName || '', {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+        setValue('email', userData.email, {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+        setValue('phone', userData.phone || '', {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+        setValue('address', userData.address || '', {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+      }
+    },
+    [setValue, userDatabase],
+  )
+
   useEffect(() => {
-    if (userDatabase) {
-      setValue('firstName', userDatabase.firstName, {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: false,
-      })
-      setValue('lastName', userDatabase.lastName || '', {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: false,
-      })
-      setValue('email', userDatabase.email, {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: false,
-      })
-      setValue('phone', userDatabase.phone || '', {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: false,
-      })
-      setValue('address', userDatabase.address || '', {
-        shouldDirty: false,
-        shouldTouch: false,
-        shouldValidate: false,
-      })
-    }
-  }, [userDatabase, setValue])
+    updateFieldAsDefault()
+  }, [updateFieldAsDefault])
 
   return (
     <section className="bg-white overflow-hidden">
