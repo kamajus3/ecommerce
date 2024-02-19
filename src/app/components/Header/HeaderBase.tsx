@@ -94,20 +94,25 @@ export default function HeaderBase(props: HeaderBaseProps) {
           <MoveLeft color="#000" size={20} />
         </button>
 
-        <div
+        <form
           className={
             'flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-neutral-100 border-b'
           }
+          action="/search"
+          method="get"
         >
           <input
             type="text"
+            id="value"
+            name="value"
             placeholder="Oque é que você precisa?"
+            defaultValue={props.searchDefault || ''}
             className="pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
           ></input>
           <button className="bg-main h-full w-[15%] flex items-center justify-center border-main">
             <Search color="#fff" size={18} />
           </button>
-        </div>
+        </form>
       </article>
     </header>
   )
