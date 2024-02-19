@@ -1,9 +1,22 @@
 'use client'
 
-import React, { useState, useEffect, createContext, ReactNode } from 'react'
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from 'react'
 import { auth, database } from '@/config/firebase'
-import { User, signInWithEmailAndPassword } from 'firebase/auth'
-import { createUserWithEmailAndPassword } from 'firebase/auth/cordova'
+import {
+  User,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth'
+
 import { ref, set, child, get } from 'firebase/database'
 
 interface UserDatabase {
@@ -18,7 +31,10 @@ interface UserDatabase {
 interface AuthContextProps {
   user: User | null | undefined
   userDatabase: UserDatabase | null | undefined
+  signInWithGoogle: () => Promise<void>
   signInWithEmail: (email: string, password: string) => Promise<void>
+  setUserDatabase: Dispatch<SetStateAction<UserDatabase | null | undefined>>
+  setUser: Dispatch<SetStateAction<User | null | undefined>>
   signUpWithEmail: (
     firstName: string,
     email: string,
@@ -29,6 +45,9 @@ interface AuthContextProps {
 export const AuthContext = createContext<AuthContextProps>({
   user: null,
   userDatabase: null,
+  setUserDatabase: () => {},
+  setUser: () => {},
+  signInWithGoogle: () => Promise.resolve(),
   signInWithEmail: () => Promise.resolve(),
   signUpWithEmail: () => Promise.resolve(),
 })
@@ -44,11 +63,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (snapshot.exists()) {
           setUserDatabase(snapshot.val())
         } else {
-          console.log('No data available')
+          throw Error('No data available')
         }
       })
       .catch((error) => {
-        console.error(error)
+        console.log(error)
       })
   }
 
@@ -81,10 +100,27 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           id: user.uid,
         })
       })
-      .catch((e) => {
-        console.log(e)
+      .catch(() => {
         throw Error('Houve algum erro ao tentar criar a conta')
       })
+  }
+
+  async function signInWithGoogle() {
+    const provider = new GoogleAuthProvider()
+    const result = await signInWithPopup(auth, provider)
+    await getUserFromDatabase(result.user.uid).then(() => {
+      set(ref(database, 'users/' + result.user.uid), {
+        firstName: result.user.displayName,
+        email: result.user.email,
+      })
+    })
+
+    setUser(result.user)
+    setUserDatabase({
+      firstName: result.user.displayName || '',
+      email: result.user.email || '',
+      id: result.user.uid,
+    })
   }
 
   useEffect(() => {
@@ -101,7 +137,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, userDatabase, signInWithEmail, signUpWithEmail }}
+      value={{
+        user,
+        userDatabase,
+        signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
+        setUserDatabase,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
