@@ -1,8 +1,19 @@
+'use client'
+
+import { ChevronUp } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-main">
+    <footer className="bg-main relative">
+      <button
+        onClick={() => {
+          window.scrollTo(0, 0)
+        }}
+        className="absolute -top-7 right-8 flex justify-center items-center w-14 h-14 border shadow-sm p-2 rounded-full bg-[#00A4C7] text-sm font-medium text-gray-700 hover:brightness-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+      >
+        <ChevronUp color="#fff" size={26} />
+      </button>
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
