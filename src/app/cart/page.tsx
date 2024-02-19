@@ -164,7 +164,7 @@ export default function CartPage() {
         </p>
       </article>
 
-      <article className="container mx-auto mt-8 mb-8">
+      <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
         <div className="overflow-x-auto">
           <table className="table-auto w-full border border-[#dddddd]">
             <thead>
