@@ -21,12 +21,12 @@ export default function Footer() {
                     Quem somos nós?
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a href="/terms-and-conditions" className="hover:underline">
                     Termos e condições
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a href="/politics" className="hover:underline">
                     Política de privacidade
                   </a>
@@ -46,7 +46,7 @@ export default function Footer() {
                     Facebook
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a
                     href="https://discord.gg/4eeurUVvTy"
                     className="hover:underline"
@@ -54,7 +54,7 @@ export default function Footer() {
                     Instagram
                   </a>
                 </li>
-                <li>
+                <li className="mb-4">
                   <a
                     href="https://discord.gg/4eeurUVvTy"
                     className="hover:underline"
