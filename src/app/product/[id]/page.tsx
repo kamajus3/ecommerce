@@ -35,8 +35,8 @@ export default function ProductPage() {
   return (
     <section className="bg-white overflow-hidden">
       <Header />
-      <div className="container mx-auto py-8 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg flex items-center justify-center gap-x-16">
+      <div className="container mx-auto py-8 flex items-center justify-center flex-wrap">
+        <div className="bg-white p-8 rounded-lg flex items-center justify-center flex-wrap gap-x-16">
           <div className="w-80 h-80 relative select-none" draggable={false}>
             {product ? (
               <Image
