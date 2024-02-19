@@ -37,7 +37,7 @@ export default function ProductPage() {
       <Header />
       <div className="container mx-auto py-8 flex items-center justify-center flex-wrap">
         <div className="bg-white p-8 rounded-lg flex items-center justify-center flex-wrap gap-x-16">
-          <div className="w-80 h-80 relative select-none" draggable={false}>
+          <div className="w-full sm:w-80 h-80 relative select-none" draggable={false}>
             {product ? (
               <Image
                 src={product?.photo}
@@ -57,7 +57,7 @@ export default function ProductPage() {
               </div>
             )}
           </div>
-          <div className="mt-4 w-[30%] flex flex-col items-start justify-center">
+          <div className="mt-4 sm:w-[30%] w-full flex flex-col items-start justify-center">
             <h2 className="text-2xl font-semibold text-gray-800">
               {product?.name}
             </h2>
