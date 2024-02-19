@@ -2,13 +2,11 @@ import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
-import Swiper from 'swiper'
 
 export default function HeaderAvatar() {
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const swiperRef = useRef<Swiper | null>(null)
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
@@ -26,20 +24,8 @@ export default function HeaderAvatar() {
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
 
-    swiperRef.current = new Swiper('.swiper-container', {
-      on: {
-        click: function () {
-          setIsOpen(false)
-        },
-      },
-    })
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
-
-      if (swiperRef.current) {
-        swiperRef.current.destroy()
-      }
     }
   }, [])
 
