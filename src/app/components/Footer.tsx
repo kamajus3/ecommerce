@@ -13,20 +13,22 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
             <div>
               <h2 className="mb-6 text-sm font-semibold uppercase text-white">
-                Resources
+                ÚTEIS
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
                   <a href="https://flowbite.com/" className="hover:underline">
-                    Flowbite
+                    Quem somos nós?
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="https://tailwindcss.com/"
-                    className="hover:underline"
-                  >
-                    Tailwind CSS
+                  <a href="/terms-and-conditions" className="hover:underline">
+                    Termos e condições
+                  </a>
+                </li>
+                <li>
+                  <a href="/politics" className="hover:underline">
+                    Política de privacidade
                   </a>
                 </li>
               </ul>
@@ -52,21 +54,12 @@ export default function Footer() {
                     Instagram
                   </a>
                 </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-sm font-semibold uppercase text-white">
-                Legal
-              </h2>
-              <ul className="text-gray-200 font-medium">
-                <li className="mb-4">
-                  <a href="#" className="hover:underline">
-                    Politica de privacidade
-                  </a>
-                </li>
                 <li>
-                  <a href="#" className="hover:underline">
-                    Termos e condições
+                  <a
+                    href="https://discord.gg/4eeurUVvTy"
+                    className="hover:underline"
+                  >
+                    LinkedIn
                   </a>
                 </li>
               </ul>
