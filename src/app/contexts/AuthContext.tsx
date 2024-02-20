@@ -18,6 +18,7 @@ import {
 } from 'firebase/auth'
 
 import { ref, set, child, get } from 'firebase/database'
+import { Bounce, toast } from 'react-toastify'
 
 interface UserDatabase {
   id: string
@@ -63,11 +64,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (snapshot.exists()) {
           setUserDatabase(snapshot.val())
         } else {
-          throw Error('No data available')
+          throw Error('Essa conta não existe')
         }
       })
-      .catch((error) => {
-        console.log(error)
+      .catch((e: Error) => {
+        toast.error(e.message, {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
       })
   }
 
@@ -101,26 +112,31 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         })
       })
       .catch(() => {
-        throw Error('Houve algum erro ao tentar criar a conta')
+        throw Error('Houve algum erro ao tentar criar a conta!')
       })
   }
 
   async function signInWithGoogle() {
     const provider = new GoogleAuthProvider()
-    const result = await signInWithPopup(auth, provider)
-    await getUserFromDatabase(result.user.uid).then(() => {
-      set(ref(database, 'users/' + result.user.uid), {
-        firstName: result.user.displayName,
-        email: result.user.email,
+    try {
+      const result = await signInWithPopup(auth, provider)
+      await getUserFromDatabase(result.user.uid).catch(() => {
+        // If user not exists
+        set(ref(database, 'users/' + result.user.uid), {
+          firstName: result.user.displayName,
+          email: result.user.email,
+        })
       })
-    })
 
-    setUser(result.user)
-    setUserDatabase({
-      firstName: result.user.displayName || '',
-      email: result.user.email || '',
-      id: result.user.uid,
-    })
+      setUser(result.user)
+      setUserDatabase({
+        firstName: result.user.displayName || '',
+        email: result.user.email || '',
+        id: result.user.uid,
+      })
+    } catch {
+      throw Error('Houve algum erro ao tentar iniciar sessão!')
+    }
   }
 
   useEffect(() => {
