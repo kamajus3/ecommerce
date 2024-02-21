@@ -2,17 +2,16 @@
 
 import Link from 'next/link'
 import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
-import HeaderPromo from './HeaderPromo'
+import HeaderPromo from '@/app/components/Promo/HeaderPromo'
 import { useState } from 'react'
 import clsx from 'clsx'
-import HeaderAvatar from './HeaderAvatar'
 import useCartStore from '@/store/CartStore'
 
-interface HeaderBaseProps {
+interface ClientHeaderProps {
   searchDefault?: string | null
 }
 
-export default function HeaderBase(props: HeaderBaseProps) {
+export default function ClientHeader(props: ClientHeaderProps) {
   const cartProducts = useCartStore((state) => state.products)
   const [isSearchOn, setSearchOn] = useState(false)
 
@@ -77,7 +76,6 @@ export default function HeaderBase(props: HeaderBaseProps) {
                 </span>
               </div>
             </a>
-            <HeaderAvatar />
           </div>
         </div>
       </article>

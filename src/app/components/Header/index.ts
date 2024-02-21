@@ -1,3 +1,8 @@
-import Base from './HeaderBase'
+import AdminHeader from './AdminHeader'
+import ClientHeader from './ClientHeader'
 
-export default Base
+// eslint-disable-next-line import/no-anonymous-default-export
+export default {
+  Admin: AdminHeader,
+  Client: ClientHeader,
+}

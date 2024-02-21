@@ -13,7 +13,7 @@ const Promo = dynamic(() => import('./components/Promo/PromoBig'), {
 export default function Home() {
   return (
     <section className="bg-white overflow-hidden">
-      <Header />
+      <Header.Client />
       <Carousel />
       <ProductList title="Produtos em Destaque" />
       <div className="h-32 border-b" />

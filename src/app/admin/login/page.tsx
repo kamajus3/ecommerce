@@ -3,19 +3,13 @@
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import Image from 'next/image'
-import googleIcon from '@/assets/images/google.svg'
-import Header from '@/app/components/Header'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
 
 const schema = yup.object().shape({
   email: yup.string().email('Email inválido').required('Email obrigatório'),
-  password: yup
-    .string()
-    .required('Palavra-passe obrigatória')
-    .min(8, 'Palavra-passe deve ter no mínimo 8 caracteres'),
+  password: yup.string().required('O código é obrigatório'),
 })
 
 interface FormData {
@@ -25,7 +19,7 @@ interface FormData {
 
 export default function SignIn() {
   const router = useRouter()
-  const { signInWithEmail, signInWithGoogle } = useAuth()
+  const { signInWithEmail } = useAuth()
 
   const {
     register,
@@ -36,7 +30,7 @@ export default function SignIn() {
   const onSubmit = (data: FormData) => {
     signInWithEmail(data.email, data.password)
       .then(() => {
-        router.push('/')
+        router.push('/admin/dashboard')
       })
       .catch((e: Error) => {
         toast.error(e.message, {
@@ -55,11 +49,11 @@ export default function SignIn() {
 
   return (
     <section className="bg-white overflow-hidden">
-      <Header />
-
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
-          <h3 className="text-black text-2xl font-bold sm:text-3xl">Entrar</h3>
+          <h3 className="text-black text-center text-2xl font-bold sm:text-3xl">
+            Entrando no BackOffice
+          </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label className="font-medium">Email</label>
@@ -73,7 +67,7 @@ export default function SignIn() {
               )}
             </div>
             <div>
-              <label className="font-medium">Palavra-passe</label>
+              <label className="font-medium">Código</label>
               <input
                 type="password"
                 {...register('password')}
@@ -82,11 +76,6 @@ export default function SignIn() {
               {errors.password && (
                 <p className="text-red-500 mt-1">{errors.password.message}</p>
               )}
-            </div>
-            <div>
-              <a href="#" className="hover:text-main">
-                Esqueceu sua palavra-passe?
-              </a>
             </div>
             <button
               type="submit"
@@ -101,40 +90,7 @@ export default function SignIn() {
                 <p className="text-white">Entrar</p>
               )}
             </button>
-            <div>
-              <button
-                onClick={() => {
-                  signInWithGoogle()
-                    .then(() => {
-                      router.push('/')
-                    })
-                    .catch((e: Error) => {
-                      toast.error(e.message, {
-                        position: 'top-right',
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'light',
-                        transition: Bounce,
-                      })
-                    })
-                }}
-                type="button"
-                className="w-full flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100"
-              >
-                <Image src={googleIcon} alt="Icone do Google" />
-                <p className="font-medium">Continuar com o Google</p>
-              </button>
-            </div>
           </form>
-          <div className="text-center">
-            <a href="/signup" className="hover:text-main">
-              Você não tem uma conta? Criar uma
-            </a>
-          </div>
         </div>
       </article>
     </section>

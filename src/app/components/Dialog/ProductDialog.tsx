@@ -1,17 +1,16 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { AlertTriangle } from 'lucide-react'
+import { ProductCart } from '@/@types'
 
-interface DialogCustomProps {
+interface ProductDialogProps {
+  product?: ProductCart
   title: string
   actionTitle: string
-  action: () => void
-  description: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function DialogCustom(props: DialogCustomProps) {
+export default function ProductDialog(props: ProductDialogProps) {
   const cancelButtonRef = useRef(null)
 
   return (
@@ -48,13 +47,6 @@ export default function DialogCustom(props: DialogCustomProps) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start">
-                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      <AlertTriangle
-                        color="#000"
-                        className="h-6 w-6 text-red-600"
-                        aria-hidden="true"
-                      />
-                    </div>
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
                       <Dialog.Title
                         as="h3"
@@ -62,21 +54,71 @@ export default function DialogCustom(props: DialogCustomProps) {
                       >
                         {props.title}
                       </Dialog.Title>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          {props.description}
-                        </p>
-                      </div>
+                      {/* Form fields */}
+                      <form className="mt-2">
+                        <div className="mb-4">
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Nome
+                          </label>
+                          <input
+                            type="text"
+                            id="name"
+                            className="p-2 block w-full border-gray-300 rounded-md bg-neutral-100 mt-2 px-3 py-2 text-gray-500"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label
+                            htmlFor="quantity"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Quantidade
+                          </label>
+                          <input
+                            type="number"
+                            id="quantity"
+                            className="p-2 block w-full border-gray-300 rounded-md bg-neutral-100 mt-2 px-3 py-2 text-gray-500"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label
+                            htmlFor="price"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Preço
+                          </label>
+                          <input
+                            type="number"
+                            id="name"
+                            className="p-2 block w-full border-gray-300 rounded-md bg-neutral-100 mt-2 px-3 py-2 text-gray-500"
+                          />
+                        </div>
+                        <div className="mb-4">
+                          <label
+                            htmlFor="photo"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Fotografia
+                          </label>
+                          <input
+                            type="file"
+                            id="photo"
+                            accept="image/*"
+                            className="mt-1 p-2 block w-full border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       props.setOpen(false)
-                      props.action()
                     }}
                   >
                     {props.actionTitle}

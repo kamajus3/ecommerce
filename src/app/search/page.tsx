@@ -13,7 +13,7 @@ function SearchPageWithoutBoundary() {
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
-      <Header searchDefault={searchValue} />
+      <Header.Client searchDefault={searchValue} />
 
       <div>
         <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">

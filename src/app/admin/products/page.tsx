@@ -1,15 +1,13 @@
 'use client'
 
-import products from '@/assets/data/products'
-import Header from '../components/Header'
+import Header from '@/app/components/Header'
 import { Product } from '@/@types'
-import useCartStore from '@/store/CartStore'
 import Image from 'next/image'
-import Footer from '../components/Footer'
-import Dialog from '../components/Dialog'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import Dialog from '@/app/components/Dialog'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
+import adminProducts from '@/assets/data/products_admin'
 
 interface CartProduct extends Product {
   quantity: number
@@ -19,18 +17,13 @@ interface CartTableRow {
   product: CartProduct
   setOpenDeleteModal: Dispatch<SetStateAction<boolean>>
   openDeleteModal: boolean
-  selectedProducts: string[]
-  setSelectedProduct: Dispatch<SetStateAction<string[]>>
 }
 
 function CartTableRow({
   product,
   openDeleteModal,
   setOpenDeleteModal,
-  selectedProducts,
-  setSelectedProduct,
 }: CartTableRow) {
-  const removeFromCart = useCartStore((state) => state.removeProduct)
   const money = useMoneyFormat()
 
   const notifyDelete = () =>
@@ -48,25 +41,6 @@ function CartTableRow({
 
   return (
     <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <input
-            type="checkbox"
-            checked={!!selectedProducts.find((id) => id === product.id)}
-            name="bordered-checkbox"
-            onChange={(e) => {
-              if (e.target.checked) {
-                setSelectedProduct([...selectedProducts, product.id])
-              } else {
-                setSelectedProduct(
-                  selectedProducts.filter((id) => id !== product.id),
-                )
-              }
-            }}
-            className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
-          ></input>
-        </div>
-      </td>
       <td className="p-3">
         <div className="flex items-center justify-center">
           <Image
@@ -103,10 +77,29 @@ function CartTableRow({
         </div>
         <Dialog.Delete
           title="Remover producto"
-          description="Você tem certeza que queres remover esse producto do carinho?"
+          description="Você tem certeza que queres remover esse producto do estoque?"
           actionTitle="Remover"
           action={() => {
-            removeFromCart(product.id)
+            notifyDelete()
+          }}
+          isOpen={openDeleteModal}
+          setOpen={setOpenDeleteModal}
+        />
+      </td>
+      <td className="p-3">
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => setOpenDeleteModal(true)}
+            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          >
+            <span className="text-violet-600 font-medium">Editar</span>
+          </button>
+        </div>
+        <Dialog.Delete
+          title="Remover producto"
+          description="Você tem certeza que queres remover esse producto do estoque?"
+          actionTitle="Remover"
+          action={() => {
             notifyDelete()
           }}
           isOpen={openDeleteModal}
@@ -119,49 +112,26 @@ function CartTableRow({
 
 export default function CartPage() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const money = useMoneyFormat()
-  const cartProducts = useCartStore((state) => state.products)
-  const [totalPrice, setTotalPrice] = useState(0)
-  const [selectedProducts, setSelectedProduct] = useState(
-    cartProducts.map((p) => p.id),
-  )
-
-  const finalCartProducts = products.map((p) => {
-    const cartProduct = cartProducts.find(
-      (cartProduct) => cartProduct.id === p.id,
-    )
-    if (cartProduct) {
-      return { ...p, quantity: cartProduct.quantity }
-    }
-    return null
-  })
-
-  useEffect(() => {
-    const selectedProductsTotalPrice = finalCartProducts.reduce(
-      (total, product) => {
-        if (product && selectedProducts.includes(product.id)) {
-          return total + product.price * product.quantity
-        }
-        return total
-      },
-      0,
-    )
-
-    setTotalPrice(selectedProductsTotalPrice)
-  }, [selectedProducts, finalCartProducts])
-
-  useEffect(() => {
-    setSelectedProduct(cartProducts.map((p) => p.id))
-  }, [cartProducts])
-
+  const [editorModal, setOpenEditorModal] = useState(false)
   return (
     <section className="bg-white overflow-hidden">
-      <Header.Client />
+      <Header.Admin />
 
-      <article className="mb-2 mt-5">
+      <article className="mb-2 mt-12">
         <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
-          Carrinho de productos
+          Meus productos
         </p>
+
+        <div className="mb-10 px-8 gap-y-5">
+          <button
+            onClick={() => {
+              setOpenEditorModal(true)
+            }}
+            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+          >
+            Adicionar producto
+          </button>
+        </div>
       </article>
 
       <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
@@ -169,25 +139,6 @@ export default function CartPage() {
           <table className="table-auto w-full border border-[#dddddd]">
             <thead>
               <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
-                  <input
-                    type="checkbox"
-                    id="select-all-products"
-                    name="select-all-products"
-                    checked={selectedProducts.length === cartProducts.length}
-                    className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedProduct(cartProducts.map((p) => p.id))
-                      } else {
-                        setSelectedProduct([])
-                      }
-                    }}
-                  />
-                  <label htmlFor="select-all-products" className="select-none">
-                    Todos
-                  </label>
-                </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   Foto
                 </th>
@@ -201,12 +152,15 @@ export default function CartPage() {
                   Quantidade
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  ?
+                  -
+                </th>
+                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                  -
                 </th>
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {finalCartProducts.map(
+              {adminProducts.map(
                 (product) =>
                   product && (
                     <CartTableRow
@@ -214,8 +168,6 @@ export default function CartPage() {
                       product={product}
                       openDeleteModal={openDeleteModal}
                       setOpenDeleteModal={setOpenDeleteModal}
-                      setSelectedProduct={setSelectedProduct}
-                      selectedProducts={selectedProducts}
                     />
                   ),
               )}
@@ -223,16 +175,12 @@ export default function CartPage() {
           </table>
         </div>
       </article>
-      <div className="mt-10 mb-10 p-8 gap-y-5">
-        <div className="text-black font-medium text-lg mb-3 flex flex-col gap-3">
-          <span className="text-[#5e5f61] ">Total a pagar</span>
-          <span className="font-bold text-4xl">{money.format(totalPrice)}</span>
-        </div>
-        <button className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none">
-          Fazer pagamento
-        </button>
-      </div>
-      <Footer />
+      <Dialog.Editor
+        title="Novo producto"
+        actionTitle="Postar"
+        isOpen={editorModal}
+        setOpen={setOpenEditorModal}
+      />
     </section>
   )
 }
