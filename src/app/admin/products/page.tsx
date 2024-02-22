@@ -122,7 +122,7 @@ export default function CartPage() {
           Meus productos
         </p>
 
-        <div className="mb-10 px-8 gap-y-5">
+        <div className="mb-10 px-8 gap-y-5 max-sm:mx-auto">
           <button
             onClick={() => {
               setOpenEditorModal(true)
