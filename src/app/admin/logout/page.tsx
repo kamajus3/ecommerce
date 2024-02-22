@@ -19,5 +19,5 @@ export default function Logout() {
       .catch(() => {
         router.replace('/')
       })
-  }, [router, setUser, setUserDatabase])
+  }, [router, setUser])
 }
