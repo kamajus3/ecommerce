@@ -127,7 +127,7 @@ export default function CartPage() {
             onClick={() => {
               setOpenEditorModal(true)
             }}
-            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none max-sm:mx-auto"
           >
             Adicionar producto
           </button>
