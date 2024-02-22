@@ -53,24 +53,24 @@ export default function Avatar() {
           <div className="py-1">
             <p className="text-sm px-4 py-2 text-gray-800 border-b">
               Logado em <strong>{user?.email}</strong>
-            </p> 
+            </p>
             <a
               href="/admin/analytics"
               className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
             >
               Analytics
-            </a>            
+            </a>
             <a
               href="/admin/salles"
               className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
             >
-              Vendas 
-           </a>            
-           <a
+              Vendas
+            </a>
+            <a
               href="/admin/products"
               className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
             >
-              Produtos 
+              Produtos
             </a>
             <a
               href="/admin/logout"
