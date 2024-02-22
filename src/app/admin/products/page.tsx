@@ -180,6 +180,7 @@ export default function CartPage() {
         actionTitle="Postar"
         isOpen={editorModal}
         setOpen={setOpenEditorModal}
+        action={() => {}}
       />
     </section>
   )
