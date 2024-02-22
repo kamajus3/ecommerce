@@ -118,9 +118,7 @@ export default function CartPage() {
       <Header.Admin />
 
       <article className="mb-2 mt-12">
-        <p className="text-black font-semibold text-3xl p-9">
-          Meus productos
-        </p>
+        <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
 
         <div className="mb-10 px-8 gap-y-5">
           <button
