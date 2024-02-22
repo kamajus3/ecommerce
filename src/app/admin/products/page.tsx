@@ -118,16 +118,16 @@ export default function CartPage() {
       <Header.Admin />
 
       <article className="mb-2 mt-12">
-        <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
+        <p className="text-black font-semibold text-3xl p-9">
           Meus productos
         </p>
 
-        <div className="mb-10 px-8 gap-y-5 max-sm:mx-auto">
+        <div className="mb-10 px-8 gap-y-5">
           <button
             onClick={() => {
               setOpenEditorModal(true)
             }}
-            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none max-sm:mx-auto"
+            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
             Adicionar producto
           </button>
