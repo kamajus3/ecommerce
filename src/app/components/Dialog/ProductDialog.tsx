@@ -14,6 +14,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import CATEGORIES from '@/assets/data/categories'
 import { ProductItem } from '@/@types'
+import clsx from 'clsx'
+import { Bounce, toast } from 'react-toastify'
 
 interface FormData {
   name: string
@@ -28,7 +30,7 @@ interface DialogRootProps {
   actionTitle: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (data: FormData) => void
+  action: (data: FormData, oldProduct?: ProductItem) => void
   defaultProduct?: ProductItem
 }
 
@@ -76,7 +78,7 @@ export default function DialogRoot(props: DialogRootProps) {
     reset,
     getValues,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
@@ -92,17 +94,20 @@ export default function DialogRoot(props: DialogRootProps) {
   }, [props.defaultProduct, getValues])
 
   async function URLtoFile(url: string) {
-    const xhr = new XMLHttpRequest()
-    let blob = new Blob()
-    xhr.responseType = 'blob'
-    xhr.onload = () => {
-      blob = xhr.response
+    try {
+      const response = await fetch(url)
+      const responseType = response.headers.get('content-type')
+      const blob = await response.blob()
+      if (responseType) {
+        return new File([blob], 'product-photo', {
+          type: responseType,
+        })
+      }
+      throw Error('Erro ao converter URL para arquivo')
+    } catch (error) {
+      console.error('Erro ao converter URL para arquivo:', error)
+      throw error
     }
-
-    xhr.open('GET', url)
-    xhr.send()
-
-    return blob
   }
 
   useEffect(() => {
@@ -110,18 +115,40 @@ export default function DialogRoot(props: DialogRootProps) {
       if (props.defaultProduct) {
         const photo = await URLtoFile(props.defaultProduct.photo)
 
-        reset({
-          ...props.defaultProduct,
-          photo,
-        })
+        reset(
+          {
+            ...props.defaultProduct,
+            photo,
+          },
+          {
+            keepDefaultValues: true,
+            keepDirtyValues: false,
+            keepTouched: false,
+            keepDirty: false,
+          },
+        )
       }
     }
 
     unsubscribed()
-  }, [reset, props.defaultProduct, setPhotoPreview])
+  }, [reset, props.defaultProduct])
 
-  const onSubmit = (data: FormData) => {
-    console.log(data)
+  function onSubmit(data: FormData) {
+    if (isDirty) {
+      if (props.defaultProduct) props.action(data, props.defaultProduct)
+    } else {
+      toast.warn('Nenhum campo foi alterado', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    }
   }
 
   return (
@@ -161,10 +188,7 @@ export default function DialogRoot(props: DialogRootProps) {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="sm:flex sm:items-start mx-auto px-5">
-                    <article
-                      onSubmit={handleSubmit(onSubmit)}
-                      className="mt-2 m-auto w-full"
-                    >
+                    <article className="mt-2 m-auto w-full">
                       <div className="mb-4">
                         <Dialog.Title
                           as="h3"
@@ -258,7 +282,14 @@ export default function DialogRoot(props: DialogRootProps) {
                           }}
                           className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95 ${errors.photo && 'border-red-500 bg-red-100'}`}
                         >
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <div
+                            className={clsx(
+                              'flex flex-col items-center justify-center pt-5 pb-6',
+                              {
+                                hidden: photoPreview,
+                              },
+                            )}
+                          >
                             <svg
                               className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
                               aria-hidden="true"

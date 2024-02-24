@@ -35,7 +35,7 @@ export default function Avatar() {
     <div className="relative bg-white" ref={dropdownRef}>
       <button
         className={clsx(
-          'inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-green-400 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
+          'inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-main text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
           {
             'bg-red-500': !user,
           },

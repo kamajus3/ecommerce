@@ -7,14 +7,15 @@ import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { onValue, ref, set, update } from 'firebase/database'
-import { database, storage } from '@/config/firebase'
-import { randomBytes } from 'crypto'
+import { onValue, ref, remove, set, update } from 'firebase/database'
 import {
+  ref as storageRef,
   uploadBytes,
   getDownloadURL,
-  ref as storageRef,
+  deleteObject,
 } from 'firebase/storage'
+import { database, storage } from '@/config/firebase'
+import { randomBytes } from 'crypto'
 import PublishedSince from '@/app/components/PublishedSince'
 
 interface CartTableRow {
@@ -34,61 +35,117 @@ function CartTableRow({ product }: CartTableRow) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
-  const editProduct = (data: FormData) => {
-    // const reference = storageRef(storage, `/products/${product.id}`)
-
-    // uploadBytes(reference, data.photo[0]).then(async () => {
-    //   const photo = await getDownloadURL(reference)
-    // })
-
-    update(ref(database, `/products/${product.id}`), {
-      name: data.name,
-      quantity: data.quantity,
-      price: data.price,
-      category: data.category,
-      photo: product.photo,
-      updatedAt: new Date().toISOString(),
-    })
-      .then(() => {
-        toast.success(`Producto editado com sucesso`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
+  async function URLtoFile(url: string) {
+    try {
+      const response = await fetch(url)
+      const responseType = response.headers.get('content-type')
+      const blob = await response.blob()
+      if (responseType) {
+        return new File([blob], 'product-photo', {
+          type: responseType,
         })
-      })
-      .catch((error) => {
-        toast.error(`Erro a fazer a postagem ${error}`, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
-      })
+      }
+      throw Error('Erro ao converter URL para arquivo')
+    } catch (error) {
+      console.error('Erro ao converter URL para arquivo:', error)
+      throw error
+    }
   }
 
-  const notifyDelete = () =>
-    toast.success('Producto removido com sucesso', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: 'light',
-      transition: Bounce,
-    })
+  async function deleteProduct(id: string) {
+    const databaseReference = ref(database, `products/${id}`)
+    const storageReference = storageRef(storage, `products/${id}`)
+
+    try {
+      await remove(databaseReference)
+      await deleteObject(storageReference)
+      toast.success(`Produto eliminado com sucesso`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    } catch (error) {
+      toast.error(`Erro a apagar o produto`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    }
+  }
+
+  async function editProduct(data: FormData, oldProduct?: ProductItem) {
+    if (oldProduct && oldProduct.id) {
+      const reference = storageRef(storage, `/products/${oldProduct.id}`)
+      const oldPhoto = await URLtoFile(oldProduct.photo)
+
+      if (oldPhoto !== data.photo) {
+        uploadBytes(reference, data.photo).then(async () => {
+          oldProduct.photo =
+            oldProduct.photo + '?timestamp=' + new Date().getTime()
+        })
+      }
+
+      update(ref(database, `/products/${oldProduct.id}`), {
+        name: data.name,
+        quantity: data.quantity,
+        price: data.price,
+        category: data.category,
+        photo: oldProduct.photo,
+        updatedAt: new Date().toISOString(),
+      })
+        .then(() => {
+          toast.success(`Producto editado com sucesso`, {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          })
+        })
+        .catch((error) => {
+          toast.error(`Erro a fazer a postagem ${error}`, {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          })
+        })
+      setOpenEditModal(false)
+    } else {
+      toast.error(`Erro a editar o produto`, {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    }
+  }
 
   return (
     <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
@@ -140,9 +197,7 @@ function CartTableRow({ product }: CartTableRow) {
           title="Remover producto"
           description="Você tem certeza que queres remover esse producto do estoque?"
           actionTitle="Remover"
-          action={() => {
-            notifyDelete()
-          }}
+          action={() => deleteProduct(product.id)}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
@@ -196,7 +251,7 @@ export default function ProductPage() {
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               progress: undefined,
               theme: 'light',
@@ -209,7 +264,7 @@ export default function ProductPage() {
               autoClose: 5000,
               hideProgressBar: false,
               closeOnClick: true,
-              pauseOnHover: true,
+              pauseOnHover: false,
               draggable: true,
               progress: undefined,
               theme: 'light',
@@ -223,7 +278,7 @@ export default function ProductPage() {
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
           theme: 'light',
