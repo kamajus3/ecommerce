@@ -30,7 +30,7 @@ interface DialogRootProps {
   actionTitle: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (data: FormData, oldProduct?: ProductItem) => void
+  action: (data: FormData, oldProduct?: ProductItem) => void | Promise<void>
   defaultProduct?: ProductItem
 }
 
@@ -133,9 +133,14 @@ export default function DialogRoot(props: DialogRootProps) {
     unsubscribed()
   }, [reset, props.defaultProduct])
 
-  function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData) {
     if (isDirty) {
-      if (props.defaultProduct) props.action(data, props.defaultProduct)
+      if (props.defaultProduct) {
+        await props.action(data, props.defaultProduct)
+      } else {
+        props.action(data)
+      }
+      props.setOpen(false)
     } else {
       toast.warn('Nenhum campo foi alterado', {
         position: 'top-right',
