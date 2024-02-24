@@ -1,15 +1,15 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
 
-const schema = yup.object().shape({
-  email: yup.string().email('Email inválido').required('Email obrigatório'),
-  password: yup.string().required('O código é obrigatório'),
+const schema = z.object({
+  email: z.string().email('Email inválido'),
+  password: z.string().min(6, 'A senha precisa de no minimo 6 caracteres'),
 })
 
 interface FormData {
@@ -25,7 +25,7 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: yupResolver(schema) })
+  } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = (data: FormData) => {
     signInWithEmail(data.email, data.password)
@@ -56,7 +56,7 @@ export default function SignIn() {
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">Email</label>
+              <label className="font-medium">E-mail</label>
               <input
                 type="email"
                 {...register('email')}

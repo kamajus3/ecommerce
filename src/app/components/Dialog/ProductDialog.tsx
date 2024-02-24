@@ -10,52 +10,62 @@ import {
 } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import CATEGORIES from '@/assets/data/categories'
+import { ProductItem } from '@/@types'
 
 interface FormData {
   name: string
   quantity: number
   price: number
-  photo: FileList
+  category: string
+  photo: Blob
 }
 
 interface DialogRootProps {
   title: string
   actionTitle: string
-  action: (data: FormData) => void
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
+  action: (data: FormData) => void
+  defaultProduct?: ProductItem
 }
 
-const schema = yup.object().shape({
-  name: yup.string().required('O nome é obrigatório'),
-  quantity: yup
-    .number()
-    .typeError('A quantidade deve ser um número')
-    .required('A quantidade é obrigatório')
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+
+const schema = z.object({
+  name: z.string().min(6, 'O nome deve ter no minimo 6 caracteres').trim(),
+  quantity: z
+    .number({
+      required_error: 'Digite a quantidade do producto',
+      invalid_type_error: 'A quantidade do producto está invalida',
+    })
     .positive('A quantidade deve ser um número positivo'),
-  price: yup
-    .number()
-    .typeError('O preço deve ser um número')
-    .required('O preço é obrigatório')
+  price: z
+    .number({
+      required_error: 'Digite o preço do producto',
+      invalid_type_error: 'A preço do producto está invalido',
+    })
     .positive('O preço deve ser um número positivo'),
-  photo: yup
-    .mixed<FileList>()
-    .test(
-      'fileRequired',
-      'A fotografia é obrigatória',
-      (files) => files && files.length > 0,
+  category: z
+    .string({
+      invalid_type_error: 'Digite uma categória válida',
+      required_error: 'A categória é obrigatória',
+    })
+    .trim(),
+  photo: z
+    .instanceof(Blob, {
+      message: 'A fotografia é obrigatória',
+    })
+    .refine(
+      (file) => file!.size <= 5 * 1024 * 1024,
+      'A fotografia deve ter no máximo 5mB',
     )
-    .test(
-      'fileSize',
-      'Fotografias acima de 2mB não são permitidas',
-      (files) =>
-        !files ||
-        files.length === 0 ||
-        Array.from(files).every((file) => file.size <= 2_000_000),
-    )
-    .required('A fotografia é obrigatória'),
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
+    ),
 })
 
 export default function DialogRoot(props: DialogRootProps) {
@@ -63,30 +73,55 @@ export default function DialogRoot(props: DialogRootProps) {
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
+    getValues,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm({ resolver: yupResolver(schema) })
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  })
 
-  const watchPhoto = watch('photo')
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
   useEffect(() => {
-    if (watchPhoto && watchPhoto.length > 0) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setPhotoPreview(`${reader.result}`)
-        }
-      }
-      reader.readAsDataURL(watchPhoto[0])
+    if (props.defaultProduct?.photo) {
+      setPhotoPreview(props.defaultProduct?.photo)
     } else {
       setPhotoPreview(null)
     }
-  }, [watchPhoto])
+  }, [props.defaultProduct, getValues])
+
+  async function URLtoFile(url: string) {
+    const xhr = new XMLHttpRequest()
+    let blob = new Blob()
+    xhr.responseType = 'blob'
+    xhr.onload = () => {
+      blob = xhr.response
+    }
+
+    xhr.open('GET', url)
+    xhr.send()
+
+    return blob
+  }
+
+  useEffect(() => {
+    async function unsubscribed() {
+      if (props.defaultProduct) {
+        const photo = await URLtoFile(props.defaultProduct.photo)
+
+        reset({
+          ...props.defaultProduct,
+          photo,
+        })
+      }
+    }
+
+    unsubscribed()
+  }, [reset, props.defaultProduct, setPhotoPreview])
 
   const onSubmit = (data: FormData) => {
-    props.action(data)
-    props.setOpen(false)
+    console.log(data)
   }
 
   return (
@@ -167,8 +202,8 @@ export default function DialogRoot(props: DialogRootProps) {
                           min={1}
                           id="quantity"
                           defaultValue={1}
-                          {...register('quantity')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                          {...register('quantity', { valueAsNumber: true })}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.quantity && 'border-red-500'}`}
                         />
                         {errors.quantity && (
                           <p className="text-red-500 mt-1">
@@ -184,16 +219,35 @@ export default function DialogRoot(props: DialogRootProps) {
                           Preço
                         </label>
                         <input
-                          type="text"
                           id="price"
-                          {...register('price')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                          type="number"
+                          {...register('price', { valueAsNumber: true })}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.price && 'border-red-500'}`}
                         />
                         {errors.price && (
                           <p className="text-red-500 mt-1">
                             {errors.price.message}
                           </p>
                         )}
+                      </div>
+                      <div className="mb-4">
+                        <label
+                          htmlFor="price"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Categória
+                        </label>
+
+                        <select
+                          {...register('category')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.category && 'border-red-500'}`}
+                        >
+                          {CATEGORIES.map((category) => (
+                            <option key={category.label}>
+                              {category.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="flex items-center justify-center w-full">
                         <label
@@ -202,7 +256,7 @@ export default function DialogRoot(props: DialogRootProps) {
                             backgroundImage: `url(${photoPreview})`,
                             backgroundSize: 'cover',
                           }}
-                          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                          className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95 ${errors.photo && 'border-red-500 bg-red-100'}`}
                         >
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <svg
@@ -220,20 +274,28 @@ export default function DialogRoot(props: DialogRootProps) {
                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
-                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <p className="mb-2 text-sm text-gray-500 text-center">
                               <span className="font-semibold">
-                                Click to upload
-                              </span>{' '}
-                              or drag and drop
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              SVG, PNG, JPG or GIF (MAX. 800x400px)
+                                Clique para fazer upload
+                              </span>
+                              <br />
+                              ou arrasta e larga
                             </p>
                           </div>
                           <input
                             type="file"
                             id="dropzone-file"
-                            {...register('photo')}
+                            onChange={(e) => {
+                              if (
+                                e.target.files &&
+                                e.target.files?.length !== 0
+                              ) {
+                                setValue('photo', e.target.files[0])
+                                setPhotoPreview(
+                                  window.URL.createObjectURL(e.target.files[0]),
+                                )
+                              }
+                            }}
                             className="hidden"
                             accept="image/*"
                           />
