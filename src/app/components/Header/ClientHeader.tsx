@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import useCartStore from '@/store/CartStore'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 interface ClientHeaderProps {
   searchDefault?: string | null
@@ -47,7 +48,12 @@ export default function ClientHeader(props: ClientHeaderProps) {
         )}
       >
         <Link href="/">
-          <h1 className="text-black font-bold text-2xl">Racius Care</h1>
+          <Image
+            src="/logo.png"
+            alt="Logotipo da Racius Care"
+            width={90}
+            height={90}
+          />
         </Link>
 
         <div className="flex gap-4">

@@ -1,40 +1,36 @@
 'use client'
 
-import products from '@/assets/data/products'
 import Header from '../components/Header'
-import { Product } from '@/@types'
-import useCartStore from '@/store/CartStore'
-import Image from 'next/image'
 import Footer from '../components/Footer'
 import Dialog from '../components/Dialog'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
+import Image from 'next/image'
+import { getProduct } from '@/lib/firebase/database'
+import { ProductItem } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
+import useCartStore from '@/store/CartStore'
 
-interface CartProduct extends Product {
+interface CartProduct extends ProductItem {
   quantity: number
 }
 
-interface CartTableRow {
+interface CartTableRowProps {
   product: CartProduct
-  setOpenDeleteModal: Dispatch<SetStateAction<boolean>>
-  openDeleteModal: boolean
   selectedProducts: string[]
   setSelectedProduct: Dispatch<SetStateAction<string[]>>
 }
 
 function CartTableRow({
   product,
-  openDeleteModal,
-  setOpenDeleteModal,
   selectedProducts,
   setSelectedProduct,
-}: CartTableRow) {
+}: CartTableRowProps) {
   const removeFromCart = useCartStore((state) => state.removeProduct)
-  const money = useMoneyFormat()
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
   const notifyDelete = () =>
-    toast.success('Producto removido com sucesso', {
+    toast.success('Produto removido com sucesso', {
       position: 'top-center',
       autoClose: 5000,
       hideProgressBar: false,
@@ -84,7 +80,7 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {money.format(product.price)}
+          {product.price}
         </div>
       </td>
       <td className="p-3">
@@ -118,52 +114,53 @@ function CartTableRow({
 }
 
 export default function CartPage() {
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const money = useMoneyFormat()
-  const cartProducts = useCartStore((state) => state.products)
   const [totalPrice, setTotalPrice] = useState(0)
+  const [productData, setProductData] = useState<CartProduct[]>([])
+
+  const cartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState(
     cartProducts.map((p) => p.id),
   )
-
-  const finalCartProducts = products.map((p) => {
-    const cartProduct = cartProducts.find(
-      (cartProduct) => cartProduct.id === p.id,
-    )
-    if (cartProduct) {
-      return { ...p, quantity: cartProduct.quantity }
-    }
-    return null
-  })
-
-  useEffect(() => {
-    const selectedProductsTotalPrice = finalCartProducts.reduce(
-      (total, product) => {
-        if (product && selectedProducts.includes(product.id)) {
-          return total + product.price * product.quantity
-        }
-        return total
-      },
-      0,
-    )
-
-    setTotalPrice(selectedProductsTotalPrice)
-  }, [selectedProducts, finalCartProducts])
+  const money = useMoneyFormat()
 
   useEffect(() => {
     setSelectedProduct(cartProducts.map((p) => p.id))
+
+    const fetchProducts = async () => {
+      const fetchedProducts = await Promise.all(
+        cartProducts.map(async (p) => {
+          const product = await getProduct(p.id)
+          if (product) {
+            return { ...product, id: p.id, quantity: p.quantity }
+          }
+          return null
+        }),
+      )
+      setProductData(fetchedProducts.filter((p) => p !== null) as CartProduct[])
+    }
+
+    fetchProducts()
   }, [cartProducts])
+
+  useEffect(() => {
+    const selectedProductsTotalPrice = productData.reduce((total, product) => {
+      if (product && selectedProducts.includes(product.id)) {
+        return total + product.price * product.quantity
+      }
+      return total
+    }, 0)
+
+    setTotalPrice(selectedProductsTotalPrice)
+  }, [selectedProducts, cartProducts, productData])
 
   return (
     <section className="bg-white overflow-hidden">
       <Header.Client />
-
       <article className="mb-2 mt-5">
         <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
           Carrinho de productos
         </p>
       </article>
-
       <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
         <div className="overflow-x-auto">
           <table className="table-auto w-full border border-[#dddddd]">
@@ -175,7 +172,6 @@ export default function CartPage() {
                     id="select-all-products"
                     name="select-all-products"
                     checked={selectedProducts.length === cartProducts.length}
-                    className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                     onChange={(e) => {
                       if (e.target.checked) {
                         setSelectedProduct(cartProducts.map((p) => p.id))
@@ -183,6 +179,7 @@ export default function CartPage() {
                         setSelectedProduct([])
                       }
                     }}
+                    className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                   />
                   <label htmlFor="select-all-products" className="select-none">
                     Todos
@@ -206,19 +203,14 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {finalCartProducts.map(
-                (product) =>
-                  product && (
-                    <CartTableRow
-                      key={product.id}
-                      product={product}
-                      openDeleteModal={openDeleteModal}
-                      setOpenDeleteModal={setOpenDeleteModal}
-                      setSelectedProduct={setSelectedProduct}
-                      selectedProducts={selectedProducts}
-                    />
-                  ),
-              )}
+              {productData.map((product) => (
+                <CartTableRow
+                  key={product.id}
+                  product={product}
+                  setSelectedProduct={setSelectedProduct}
+                  selectedProducts={selectedProducts}
+                />
+              ))}
             </tbody>
           </table>
         </div>
@@ -229,7 +221,7 @@ export default function CartPage() {
           <span className="font-bold text-4xl">{money.format(totalPrice)}</span>
         </div>
         <button className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none">
-          Fazer pagamento
+          Fazer pedido
         </button>
       </div>
       <Footer />

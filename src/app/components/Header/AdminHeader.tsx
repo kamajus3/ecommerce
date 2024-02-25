@@ -1,11 +1,19 @@
 import Avatar from '@/app/components/Avatar'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function AdminHeader() {
   return (
     <header className="border-b">
       <article className="w-screen flex sm:flex justify-between items-center px-4 py-4">
-        <h1 className="text-black font-bold text-2xl">Racius Care</h1>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="Logotipo da Racius Care"
+            width={90}
+            height={90}
+          />
+        </Link>
 
         <div className="flex gap-4 items-center mr-4">
           <Link

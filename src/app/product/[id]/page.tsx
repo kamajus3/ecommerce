@@ -6,6 +6,35 @@ import { FileImage } from 'lucide-react'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import PostAction from './action'
 import { getProduct } from '@/lib/firebase/database'
+import { Metadata } from 'next'
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string }
+}): Promise<Metadata> {
+  return new Promise((resolve) => {
+    getProduct(params.id)
+      .then((data) => {
+        resolve({
+          title: data.name,
+          description: data.description.slice(0, 100) + '...',
+          openGraph: {
+            type: 'article',
+            title: data.name,
+            description: data.description,
+            siteName: 'Racius Care',
+            images: data.photo,
+          },
+        })
+      })
+      .catch(() => {
+        resolve({
+          title: `Artigo não encontrado.`,
+        })
+      })
+  })
+}
 
 export default async function ProductPage({
   params,

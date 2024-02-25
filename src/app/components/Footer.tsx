@@ -1,6 +1,7 @@
 'use client'
 
-import { ChevronUp, Facebook, Instagram, Linkedin } from 'lucide-react'
+import { ChevronUp } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -18,7 +19,12 @@ export default function Footer() {
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
             <Link href="/">
-              <h1 className="text-white font-bold text-2xl">Racius Care</h1>
+              <Image
+                src="/logo-white.png"
+                alt="Logotipo da Racius Care"
+                width={140}
+                height={140}
+              />
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
@@ -37,7 +43,7 @@ export default function Footer() {
                 </li>
                 <li className="mb-4">
                   <a href="tel:+244926437705" className="hover:underline">
-                    +244 926 437 705
+                    +244 935 420 498
                   </a>
                 </li>
               </ul>
@@ -57,11 +63,6 @@ export default function Footer() {
                     Termos e condições
                   </a>
                 </li>
-                <li className="mb-4">
-                  <a href="/politics" className="hover:underline">
-                    Política de privacidade
-                  </a>
-                </li>
               </ul>
             </div>
             <div>
@@ -71,7 +72,8 @@ export default function Footer() {
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
                   <a
-                    href="https://github.com/themesberg/flowbite"
+                    href="https://www.facebook.com/profile.php?id=61556945094289"
+                    target="_blank"
                     className="hover:underline"
                   >
                     Facebook
@@ -79,18 +81,10 @@ export default function Footer() {
                 </li>
                 <li className="mb-4">
                   <a
-                    href="https://discord.gg/4eeurUVvTy"
+                    href="https://wa.me/message/7GFNTDQN5W25O1"
                     className="hover:underline"
                   >
-                    Instagram
-                  </a>
-                </li>
-                <li className="mb-4">
-                  <a
-                    href="https://discord.gg/4eeurUVvTy"
-                    className="hover:underline"
-                  >
-                    LinkedIn
+                    Whatsapp
                   </a>
                 </li>
               </ul>
@@ -101,21 +95,83 @@ export default function Footer() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-white sm:text-center">
             © 2024{' '}
-            <a href="https://flowbite.com/" className="hover:underline">
+            <a href="/" className="hover:underline">
               Racius Care
             </a>
             . Todos os direitos reservados.
           </span>
           <div className="flex mt-4 sm:justify-center sm:mt-0">
-            <a href="#" className="text-white hover:text-gray-200">
-              <Facebook color="#fff" size={20} />
-              <span className="sr-only">Facebook page</span>
+            <a
+              href="https://www.facebook.com/profile.php?id=61556945094289"
+              target="_blank"
+              className="text-white hover:text-gray-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                width="25"
+                height="25"
+              >
+                <rect width="256" height="256" fill="none" />
+                <circle
+                  cx="128"
+                  cy="128"
+                  r="96"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+                <path
+                  d="M168,88H152a24,24,0,0,0-24,24V224"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+                <line
+                  x1="96"
+                  y1="144"
+                  x2="160"
+                  y2="144"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="16"
+                />
+              </svg>
             </a>
-            <a href="#" className="text-white hover:text-gray-200 ms-5">
-              <Instagram color="#fff" size={20} />
-            </a>
-            <a href="#" className="text-white hover:text-gray-200 ms-5">
-              <Linkedin color="#fff" size={20} />
+            <a
+              href="https://wa.me/message/7GFNTDQN5W25O1"
+              className="text-white hover:text-gray-200 ms-5"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 256 256"
+                width="25"
+                height="25"
+              >
+                <rect width="256" height="256" fill="none" />
+                <path
+                  d="M72,104a32,32,0,0,1,32-32l16,32-12.32,18.47a48.19,48.19,0,0,0,25.85,25.85L152,136l32,16a32,32,0,0,1-32,32A80,80,0,0,1,72,104Z"
+                  fill="none"
+                  stroke="#fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="16"
+                />
+                <path
+                  d="M79.93,211.11a96,96,0,1,0-35-35h0L32.42,213.46a8,8,0,0,0,10.12,10.12l37.39-12.47Z"
+                  fill="none"
+                  stroke="#fff"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="16"
+                />
+              </svg>
             </a>
           </div>
         </div>
