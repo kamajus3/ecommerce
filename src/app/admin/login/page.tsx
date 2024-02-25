@@ -27,7 +27,7 @@ export default function SignIn() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
-  const onSubmit = (data: FormData) => {
+  function onSubmit(data: FormData) {
     signInWithEmail(data.email, data.password)
       .then(() => {
         router.push('/admin/dashboard')

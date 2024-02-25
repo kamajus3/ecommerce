@@ -19,6 +19,7 @@ import { Bounce, toast } from 'react-toastify'
 
 interface FormData {
   name: string
+  description: string
   quantity: number
   price: number
   category: string
@@ -38,6 +39,10 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 
 const schema = z.object({
   name: z.string().min(6, 'O nome deve ter no minimo 6 caracteres').trim(),
+  description: z
+    .string()
+    .min(6, 'A descrição me deve ter no minimo 6 caracteres')
+    .trim(),
   quantity: z
     .number({
       required_error: 'Digite a quantidade do producto',
@@ -277,6 +282,24 @@ export default function DialogRoot(props: DialogRootProps) {
                             </option>
                           ))}
                         </select>
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="description"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Descrição
+                        </label>
+                        <textarea
+                          id="description"
+                          {...register('description')}
+                          className={`w-full rounded-lg h-40 resize-none bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                        />
+                        {errors.description && (
+                          <p className="text-red-500 mt-1">
+                            {errors.description.message}
+                          </p>
+                        )}
                       </div>
                       <div className="flex items-center justify-center w-full">
                         <label

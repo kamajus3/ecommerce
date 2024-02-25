@@ -4,6 +4,7 @@ export interface Product {
   photo: string
   price: number
   category: string
+  description: string
 }
 
 export interface ProductCart {
@@ -18,6 +19,7 @@ export type ProductItem = {
   price: number
   category: string
   photo: string
+  description: string
   createdAt: string
   updatedAt: string
 }

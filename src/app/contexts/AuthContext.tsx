@@ -8,7 +8,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react'
-import { auth } from '@/config/firebase'
+import { auth } from '@/lib/firebase/config'
 import { User, signInWithEmailAndPassword } from 'firebase/auth'
 
 interface AuthContextProps {

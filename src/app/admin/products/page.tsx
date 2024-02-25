@@ -14,7 +14,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage'
-import { database, storage } from '@/config/firebase'
+import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import PublishedSince from '@/app/components/PublishedSince'
 
@@ -23,6 +23,7 @@ interface FormData {
   quantity: number
   price: number
   category: string
+  description: string
   photo: Blob
 }
 
@@ -132,7 +133,9 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
 }
 
 export default function ProductPage() {
-  const [blogData, setBlogData] = useState<Record<string, ProductItem>>({})
+  const [productData, setProductData] = useState<Record<string, ProductItem>>(
+    {},
+  )
 
   const [newModal, setNewModal] = useState(false)
 
@@ -148,6 +151,7 @@ export default function ProductPage() {
           quantity: data.quantity,
           price: data.price,
           category: data.category,
+          description: data.description,
           photo,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -208,6 +212,7 @@ export default function ProductPage() {
         quantity: data.quantity,
         price: data.price,
         category: data.category,
+        description: data.description,
         photo: oldProduct.photo,
         updatedAt: new Date().toISOString(),
       })
@@ -286,11 +291,11 @@ export default function ProductPage() {
   }
 
   useEffect(() => {
-    const blogRef = ref(database, 'products/')
-    onValue(blogRef, (snapshot) => {
+    const reference = ref(database, 'products/')
+    onValue(reference, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        setBlogData(data)
+        setProductData(data)
       }
     })
   }, [])
@@ -346,7 +351,7 @@ export default function ProductPage() {
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {Object.entries(blogData).map(([id, product]) => (
+              {Object.entries(productData).map(([id, product]) => (
                 <CartTableRow
                   key={id}
                   product={{

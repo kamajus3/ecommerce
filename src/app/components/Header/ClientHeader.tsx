@@ -5,15 +5,35 @@ import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import HeaderPromo from '@/app/components/Promo/HeaderPromo'
 import { useState } from 'react'
 import clsx from 'clsx'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import useCartStore from '@/store/CartStore'
+import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
 interface ClientHeaderProps {
   searchDefault?: string | null
 }
 
+const schema = z.object({
+  searchValue: z.string().min(1),
+})
+
+interface FormData {
+  searchValue: string
+}
+
 export default function ClientHeader(props: ClientHeaderProps) {
+  const { register, handleSubmit } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  })
   const cartProducts = useCartStore((state) => state.products)
   const [isSearchOn, setSearchOn] = useState(false)
+  const router = useRouter()
+
+  function onSubmit(data: FormData) {
+    router.push(`/search/${data.searchValue}`)
+  }
 
   return (
     <header className="border-b">
@@ -32,15 +52,14 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
         <div className="flex gap-4">
           <form
-            action="/search"
-            method="get"
+            onSubmit={handleSubmit(onSubmit)}
             className="max-sm:hidden h-11 w-72 flex justify-between items-center bg-neutral-100"
           >
             <input
               type="text"
               placeholder="Oque é que você precisa?"
-              name="value"
               defaultValue={props.searchDefault || ''}
+              {...register('searchValue')}
               className="pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
             ></input>
             <button
