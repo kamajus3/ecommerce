@@ -148,6 +148,7 @@ export default function ProductPage() {
         const photo = await getDownloadURL(reference)
         set(ref(database, 'products/' + postId), {
           name: data.name,
+          nameLowerCase: data.name.toLocaleLowerCase(),
           quantity: data.quantity,
           price: data.price,
           category: data.category,
@@ -209,6 +210,7 @@ export default function ProductPage() {
 
       update(ref(database, `/products/${oldProduct.id}`), {
         name: data.name,
+        nameLowerCase: data.name.toLocaleLowerCase(),
         quantity: data.quantity,
         price: data.price,
         category: data.category,

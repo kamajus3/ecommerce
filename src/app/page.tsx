@@ -15,15 +15,30 @@ export default function Home() {
     <section className="bg-white overflow-hidden">
       <Header.Client />
       <Carousel />
-      <ProductList title="Produtos em Destaque" />
+      <ProductList
+        title="Produtos em Destaque"
+        query={{
+          orderBy: 'mostViews',
+        }}
+      />
       <div className="h-32 border-b" />
       <CategoryFilter title="Pesquise por Categoria" />
-      <ProductList title="Recém adicionados" />
+      <ProductList
+        title="Recém adicionados"
+        query={{
+          orderBy: 'updatedAt',
+        }}
+      />
       <div className="h-32 border-b" />
       <Promo
         serverTime={new Date(new Date().setDate(new Date().getDate() + 2))}
       />
-      <ProductList title="Produtos mais vendidos" />
+      <ProductList
+        title="Produtos mais vendidos"
+        query={{
+          orderBy: 'bestSellers',
+        }}
+      />
       <Advantages />
       <Footer />
     </section>

@@ -5,7 +5,7 @@ import ProductList from '@/app/components/ProductList'
 import { FileImage } from 'lucide-react'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import PostAction from './action'
-import getProduct from '@/lib/firebase/database'
+import { getProduct } from '@/lib/firebase/database'
 
 export default async function ProductPage({
   params,
@@ -44,6 +44,9 @@ export default async function ProductPage({
             )}
           </div>
           <div className="mt-4 sm:w-[30%] w-full flex flex-col items-start justify-center">
+            <span className="text-gray-600 font-medium">
+              {product.category}
+            </span>
             <h2 className="text-2xl font-semibold text-gray-800">
               {product.name}
             </h2>
@@ -55,7 +58,13 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
-      <ProductList title="Produtos relacionados" />
+      <ProductList
+        title="Produtos relacionados"
+        query={{
+          category: product.category,
+          limit: 15,
+        }}
+      />
       <Footer />
     </section>
   )

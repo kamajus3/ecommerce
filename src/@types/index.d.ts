@@ -23,3 +23,10 @@ export type ProductItem = {
   createdAt: string
   updatedAt: string
 }
+
+export interface ProductQuery {
+  search?: string
+  limit?: number
+  category?: string
+  orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
+}

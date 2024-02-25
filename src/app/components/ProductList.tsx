@@ -1,6 +1,5 @@
 'use client'
 
-import products from '@/assets/data/products'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Scrollbar } from 'swiper/modules'
 import ProductCard from './ProductCard'
@@ -11,12 +10,33 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 import '@/assets/swiper.css'
+import { ProductItem, ProductQuery } from '@/@types'
+import { getProducts } from '@/lib/firebase/database'
+import { useEffect, useState } from 'react'
 
 interface ProductListProps {
   title: string
+  query: ProductQuery
 }
 
 export default function ProductList(props: ProductListProps) {
+  const [productData, setProductData] = useState<Record<string, ProductItem>>(
+    {},
+  )
+
+  useEffect(() => {
+    async function unsubscribed() {
+      await getProducts({
+        ...props.query,
+        limit: 15,
+      }).then((products) => {
+        setProductData(products)
+      })
+    }
+
+    unsubscribed()
+  }, [props.query])
+
   return (
     <div className="p-6 mt-6">
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>
@@ -43,9 +63,9 @@ export default function ProductList(props: ProductListProps) {
           },
         }}
       >
-        {products.map((product) => (
-          <SwiperSlide key={product.id}>
-            <ProductCard {...product} />
+        {Object.entries(productData).map(([id, product]) => (
+          <SwiperSlide key={id}>
+            <ProductCard {...product} id={id} />
           </SwiperSlide>
         ))}
       </Swiper>

@@ -5,13 +5,8 @@ import ProductCard from '@/app/components/ProductCard'
 import Footer from '@/app/components/Footer'
 import { useParams, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
-import { onValue, ref, query, orderByChild } from 'firebase/database'
-import { database } from '@/lib/firebase/config'
 import { ProductItem } from '@/@types'
-
-interface FilteredData {
-  [key: string]: ProductItem
-}
+import { getProducts } from '@/lib/firebase/database'
 
 function SearchPageWithoutBoundary() {
   const searchParams = useSearchParams()
@@ -20,42 +15,30 @@ function SearchPageWithoutBoundary() {
   )
 
   const category = searchParams.get('category') || ''
-  const { value: searchValue } = useParams<{ value: string }>()
+  const { value: search } = useParams<{ value: string }>()
 
   useEffect(() => {
-    const reference = ref(database, 'products/')
-    const productQuery = query(reference, orderByChild('name'))
+    async function unsubscribed() {
+      await getProducts({
+        search,
+        category,
+      }).then((products) => {
+        setProductData(products)
+      })
+    }
 
-    onValue(productQuery, (snapshot) => {
-      const data = snapshot.val()
-      if (data) {
-        setProductData(data)
-      }
-    })
-  }, [])
+    unsubscribed()
+  }, [search, category])
 
-  const filteredData: FilteredData = Object.entries(productData).reduce(
-    (result: FilteredData, [key, value]) => {
-      if (
-        (category === '' || value.category === category) &&
-        value.name.toLowerCase().includes(searchValue.toLowerCase())
-      ) {
-        result[key] = value
-      }
-      return result
-    },
-    {},
-  )
-
-  const resultsCount = Object.keys(filteredData).length
+  const resultsCount = Object.keys(productData).length
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
-      <Header.Client searchDefault={searchValue || ''} />
+      <Header.Client searchDefault={search} />
 
       <div>
         <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
-          PESQUISAR &quot;{searchValue}&quot;
+          PESQUISAR &quot;{search}&quot;
         </p>
         <p className="text-black font-semibold text-3xl p-4 mb-2 max-sm:text-center">
           Foram encontrados {resultsCount} resultados.
@@ -63,7 +46,7 @@ function SearchPageWithoutBoundary() {
       </div>
 
       <div className="w-screen flex flex-wrap gap-6 p-4 max-sm:justify-center mb-8">
-        {Object.entries(filteredData).map(([id, product]) => (
+        {Object.entries(productData).map(([id, product]) => (
           <ProductCard key={id} {...product} id={id} />
         ))}
       </div>
