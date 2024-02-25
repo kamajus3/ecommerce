@@ -7,6 +7,8 @@ import { useParams, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { ProductItem } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
+import clsx from 'clsx'
+import { SearchX } from 'lucide-react'
 
 function SearchPageWithoutBoundary() {
   const searchParams = useSearchParams()
@@ -15,7 +17,8 @@ function SearchPageWithoutBoundary() {
   )
 
   const category = searchParams.get('category') || ''
-  const { value: search } = useParams<{ value: string }>()
+  const { value: searchValue } = useParams<{ value: string }>()
+  const search = decodeURIComponent(searchValue)
 
   useEffect(() => {
     async function unsubscribed() {
@@ -40,15 +43,43 @@ function SearchPageWithoutBoundary() {
         <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
           PESQUISAR &quot;{search}&quot;
         </p>
-        <p className="text-black font-semibold text-3xl p-4 mb-2 max-sm:text-center">
+        <p
+          className={clsx(
+            'text-black font-semibold text-3xl p-4 mb-2 max-sm:text-center',
+            {
+              hidden: resultsCount === 0,
+            },
+          )}
+        >
           Foram encontrados {resultsCount} resultados.
         </p>
       </div>
 
-      <div className="w-screen flex flex-wrap gap-6 p-4 max-sm:justify-center mb-8">
+      <div
+        className={clsx(
+          'w-screen min-h-[50vh] flex flex-wrap gap-6 p-4 max-sm:justify-center mb-8',
+          {
+            hidden: resultsCount === 0,
+          },
+        )}
+      >
         {Object.entries(productData).map(([id, product]) => (
           <ProductCard key={id} {...product} id={id} />
         ))}
+      </div>
+
+      <div
+        className={clsx(
+          'w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8',
+          {
+            hidden: resultsCount !== 0,
+          },
+        )}
+      >
+        <SearchX size={60} color="#000" />
+        <p className="text-black font-semibold text-xl">
+          Nenhum resultado encontrado
+        </p>
       </div>
 
       <Footer />

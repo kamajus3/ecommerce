@@ -25,7 +25,11 @@ interface FormData {
 }
 
 export default function ClientHeader(props: ClientHeaderProps) {
-  const { register, handleSubmit } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
   const cartProducts = useCartStore((state) => state.products)
@@ -33,7 +37,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
   const router = useRouter()
 
   function onSubmit(data: FormData) {
-    router.push(`/search/${data.searchValue}`)
+    router.replace(`/search/${data.searchValue}`)
   }
 
   return (
@@ -66,7 +70,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
               placeholder="Oque é que você precisa?"
               defaultValue={props.searchDefault || ''}
               {...register('searchValue')}
-              className="pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
+              className={`pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main ${errors.searchValue && 'border-red-500'}`}
             ></input>
             <button
               className="bg-main h-full w-[15%] flex items-center justify-center border-main"
@@ -118,21 +122,20 @@ export default function ClientHeader(props: ClientHeaderProps) {
         </button>
 
         <form
-          className={
-            'flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-neutral-100 border-b'
-          }
-          action="/search"
-          method="get"
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-neutral-100 border-b"
         >
           <input
             type="text"
-            id="value"
-            name="value"
             placeholder="Oque é que você precisa?"
             defaultValue={props.searchDefault || ''}
-            className="pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
+            {...register('searchValue')}
+            className={`pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main ${errors.searchValue && 'border-red-500'}`}
           ></input>
-          <button className="bg-main h-full w-[15%] flex items-center justify-center border-main">
+          <button
+            type="submit"
+            className="bg-main h-full w-[15%] flex items-center justify-center border-main"
+          >
             <Search color="#fff" size={18} />
           </button>
         </form>
