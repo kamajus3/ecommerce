@@ -198,7 +198,7 @@ export default function CartPage() {
                   Quantidade
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  ?
+                  -
                 </th>
               </tr>
             </thead>

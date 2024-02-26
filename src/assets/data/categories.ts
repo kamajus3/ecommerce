@@ -10,7 +10,7 @@ const CATEGORIES: Category[] = [
     icon: 'baby',
   },
   {
-    label: 'Cuidados de Saúde',
+    label: 'Saúde',
     icon: 'heart-pulse',
   },
   {

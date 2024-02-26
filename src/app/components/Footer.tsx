@@ -42,7 +42,7 @@ export default function Footer() {
                   </a>
                 </li>
                 <li className="mb-4">
-                  <a href="tel:+244926437705" className="hover:underline">
+                  <a href="tel:+244935420498" className="hover:underline">
                     +244 935 420 498
                   </a>
                 </li>

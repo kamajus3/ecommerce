@@ -7,6 +7,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import PostAction from './action'
 import { getProduct } from '@/lib/firebase/database'
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
 export async function generateMetadata({
   params,
@@ -14,8 +15,8 @@ export async function generateMetadata({
   params: { id: string }
 }): Promise<Metadata> {
   return new Promise((resolve) => {
-    getProduct(params.id)
-      .then((data) => {
+    getProduct(params.id).then((data) => {
+      if (data) {
         resolve({
           title: data.name,
           description: data.description.slice(0, 100) + '...',
@@ -27,12 +28,12 @@ export async function generateMetadata({
             images: data.photo,
           },
         })
-      })
-      .catch(() => {
+      } else {
         resolve({
-          title: `Artigo não encontrado.`,
+          title: `Producto não encontrado.`,
         })
-      })
+      }
+    })
   })
 }
 
@@ -42,6 +43,7 @@ export default async function ProductPage({
   params: { id: string }
 }) {
   const product = await getProduct(params.id)
+  if (!product) notFound()
   const money = useMoneyFormat()
 
   return (

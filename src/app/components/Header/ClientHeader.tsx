@@ -113,7 +113,14 @@ export default function ClientHeader(props: ClientHeaderProps) {
               className="inline-flex relative justify-center w-full border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
             >
               <ShoppingCart color="#000" size={27} />
-              <div className="absolute bottom-7 left-7 bg-black rounded-full flex justify-center items-center w-6 h-6">
+              <div
+                className={clsx(
+                  'absolute bottom-7 left-7 bg-black rounded-full flex justify-center items-center w-6 h-6',
+                  {
+                    hidden: cartProducts.length === 0,
+                  },
+                )}
+              >
                 <span
                   className={clsx(
                     'text-white text-[12px] text-center font-semibold',

@@ -12,15 +12,15 @@ import {
 import { database } from './config'
 import { ProductItem, ProductQuery } from './../../@types'
 
-export function getProduct(id: string): Promise<ProductItem> {
+export function getProduct(id: string): Promise<ProductItem | undefined> {
   const documentRef = ref(database, `products/${id}`)
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     onValue(documentRef, (snapshot) => {
       const data = snapshot.val()
       if (data !== null) {
         resolve(data as ProductItem)
       } else {
-        reject(new Error('Ocorreu algum erro'))
+        resolve(undefined)
       }
     })
   })
