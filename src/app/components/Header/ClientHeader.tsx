@@ -45,13 +45,13 @@ export default function ClientHeader(props: ClientHeaderProps) {
       <HeaderPromo title="Promoção de verão para todos os trajes de banho e entrega expressa grátis - OFF 50%!" />
       <article
         className={clsx(
-          'w-screen flex sm:flex justify-between items-center px-4 py-4',
+          'w-screen flex justify-between items-center px-4 py-4',
           {
-            hidden: isSearchOn,
+            'mx-auto': isSearchOn,
           },
         )}
       >
-        <Link href="/">
+        <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
             alt="Logotipo da Racius Care"
@@ -60,10 +60,27 @@ export default function ClientHeader(props: ClientHeaderProps) {
           />
         </Link>
 
+        <button
+          className={clsx(
+            'h-full w-[10%] flex items-center justify-center sm:hidden',
+            {
+              hidden: !isSearchOn,
+            },
+          )}
+          onClick={() => setSearchOn(false)}
+        >
+          <MoveLeft color="#000" size={20} />
+        </button>
+
         <div className="flex gap-4">
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="max-sm:hidden h-11 w-72 flex justify-between items-center bg-neutral-100"
+            className={clsx(
+              'max-sm:flex max-sm:w-[80vw] h-11 w-72 flex justify-between items-center bg-neutral-100',
+              {
+                'max-sm:hidden': !isSearchOn,
+              },
+            )}
           >
             <input
               type="text"
@@ -79,7 +96,11 @@ export default function ClientHeader(props: ClientHeaderProps) {
               <Search color="#fff" size={18} />
             </button>
           </form>
-          <div className="h-11 flex gap-4 items-center justify-between">
+          <div
+            className={clsx('h-11 flex gap-4 items-center justify-between', {
+              hidden: isSearchOn,
+            })}
+          >
             <button className="hidden max-sm:block">
               <Search
                 onClick={() => setSearchOn(true)}
@@ -107,38 +128,6 @@ export default function ClientHeader(props: ClientHeaderProps) {
             </Link>
           </div>
         </div>
-      </article>
-
-      <article
-        className={clsx('items-center justify-around flex sm:hidden', {
-          hidden: !isSearchOn,
-        })}
-      >
-        <button
-          className="h-full w-[10%] flex items-center justify-center"
-          onClick={() => setSearchOn(false)}
-        >
-          <MoveLeft color="#000" size={20} />
-        </button>
-
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex justify-between items-center m-auto h-11 my-4 w-[80%] bg-neutral-100 border-b"
-        >
-          <input
-            type="text"
-            placeholder="Oque é que você precisa?"
-            defaultValue={props.searchDefault || ''}
-            {...register('searchValue')}
-            className={`pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main ${errors.searchValue && 'border-red-500'}`}
-          ></input>
-          <button
-            type="submit"
-            className="bg-main h-full w-[15%] flex items-center justify-center border-main"
-          >
-            <Search color="#fff" size={18} />
-          </button>
-        </form>
       </article>
     </header>
   )
