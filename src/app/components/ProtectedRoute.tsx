@@ -14,12 +14,22 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const pathname = usePathname()
 
   useEffect(() => {
+    if (user && pathname === '/admin/login') {
+      router.replace('/admin/dashboard')
+    }
+
     if (!user) {
       router.replace('/admin/login')
     }
-  }, [user, router])
+  }, [user, router, pathname])
 
   return (
-    <>{user || pathname === '/admin/login' ? children : <p>Carregando...</p>}</>
+    <>
+      {user || pathname === '/admin/login' || pathname === '/admin/logout' ? (
+        children
+      ) : (
+        <p>Carregando...</p>
+      )}
+    </>
   )
 }
