@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation'
-
-export async function Admin() {
-  redirect(`/admin/dashboard`)
+export default async function Admin() {
+  return <p>Carregando...</p>
 }

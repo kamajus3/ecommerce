@@ -23,13 +23,13 @@ export default function AdminHeader() {
 
         <div className="flex gap-4 items-center mr-4">
           <Link
-            href="/admin/analytics"
+            href="/admin/dashboard"
             className={clsx('font-medium text-black max-sm:hidden', {
               'text-main border-b border-b-main':
-                pathname === '/admin/analytics',
+                pathname === '/admin/dashboard',
             })}
           >
-            Analytics
+            Dashboard
           </Link>
           <Link
             href="/admin/sells"

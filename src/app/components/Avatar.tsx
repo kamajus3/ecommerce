@@ -51,23 +51,30 @@ export default function Avatar() {
       </button>
 
       {isOpen && (
-        <div className="absolute min-w-44 right-0 mt-2 bg-white border rounded-md shadow-lg z-10">
+        <div className="absolute min-w-32 right-0 mt-2 bg-white border rounded-md shadow-lg z-10">
           <div className="pt-1">
             <p className="text-sm px-4 py-2 text-gray-800 border-b">
               Logado em <strong>{user?.email}</strong>
             </p>
             <a
-              href="/admin/analytics"
-              className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
+              href="/admin/dashboard"
+              className={clsx(
+                'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
+                {
+                  'bg-main text-white hover:bg-main':
+                    pathname === '/admin/dashboard',
+                },
+              )}
             >
-              Analytics
+              Dashboard
             </a>
             <a
               href="/admin/salles"
               className={clsx(
                 'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
                 {
-                  'bg-main text-white': pathname === '/admin/salles',
+                  'bg-main text-white hover:bg-main':
+                    pathname === '/admin/salles',
                 },
               )}
             >
@@ -78,7 +85,8 @@ export default function Avatar() {
               className={clsx(
                 'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
                 {
-                  'bg-main text-white': pathname === '/admin/products',
+                  'bg-main text-white hover:bg-main':
+                    pathname === '/admin/products',
                 },
               )}
             >
