@@ -34,17 +34,17 @@ export default function Footer() {
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
-                  <a
-                    href="mailto:suporte@raciuscare.com"
+                  <Link
+                    href="mailto:geral@raciuscare.com"
                     className="hover:underline"
                   >
-                    suporte@raciuscare.com
-                  </a>
+                    geral@raciuscare.com
+                  </Link>
                 </li>
                 <li className="mb-4">
-                  <a href="tel:+244935420498" className="hover:underline">
+                  <Link href="tel:+244926437705" className="hover:underline">
                     +244 935 420 498
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -54,14 +54,14 @@ export default function Footer() {
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
-                  <a href="https://flowbite.com/" className="hover:underline">
+                  <Link href="/about-us" className="hover:underline">
                     Quem somos nós?
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-4">
-                  <a href="/terms-and-conditions" className="hover:underline">
+                  <Link href="/terms" className="hover:underline">
                     Termos e condições
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -71,21 +71,21 @@ export default function Footer() {
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
-                  <a
+                  <Link
                     href="https://www.facebook.com/profile.php?id=61556945094289"
                     target="_blank"
                     className="hover:underline"
                   >
                     Facebook
-                  </a>
+                  </Link>
                 </li>
                 <li className="mb-4">
-                  <a
+                  <Link
                     href="https://wa.me/message/7GFNTDQN5W25O1"
                     className="hover:underline"
                   >
                     Whatsapp
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -95,13 +95,13 @@ export default function Footer() {
         <div className="sm:flex sm:items-center sm:justify-between">
           <span className="text-sm text-white sm:text-center">
             © 2024{' '}
-            <a href="/" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Racius Care
-            </a>
+            </Link>
             . Todos os direitos reservados.
           </span>
           <div className="flex mt-4 sm:justify-center sm:mt-0">
-            <a
+            <Link
               href="https://www.facebook.com/profile.php?id=61556945094289"
               target="_blank"
               className="text-white hover:text-gray-200"
@@ -119,17 +119,17 @@ export default function Footer() {
                   r="96"
                   fill="none"
                   stroke="#fff"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="16"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="16"
                 />
                 <path
                   d="M168,88H152a24,24,0,0,0-24,24V224"
                   fill="none"
                   stroke="#fff"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="16"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="16"
                 />
                 <line
                   x1="96"
@@ -138,13 +138,13 @@ export default function Footer() {
                   y2="144"
                   fill="none"
                   stroke="#fff"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="16"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="16"
                 />
               </svg>
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://wa.me/message/7GFNTDQN5W25O1"
               className="text-white hover:text-gray-200 ms-5"
             >
@@ -172,7 +172,7 @@ export default function Footer() {
                   strokeWidth="16"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
