@@ -20,4 +20,6 @@ export default function Logout() {
         router.replace('/')
       })
   }, [router, setUser])
+
+  return <p>Terminando sessão...</p>
 }

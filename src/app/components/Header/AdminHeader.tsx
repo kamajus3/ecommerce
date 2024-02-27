@@ -1,3 +1,5 @@
+'use client'
+
 import Avatar from '@/app/components/Avatar'
 import clsx from 'clsx'
 import Image from 'next/image'
