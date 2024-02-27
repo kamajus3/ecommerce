@@ -12,18 +12,18 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import CATEGORIES from '@/assets/data/categories'
 import { ProductItem } from '@/@types'
 import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
+import ProductInput from '../ProductInput'
 
 interface FormData {
-  name: string
+  title: string
+  reduction: number
+  startDate: string
+  finishDate: string
   description: string
-  quantity: number
-  price: number
-  category: string
   photo: Blob
 }
 
@@ -37,30 +37,31 @@ interface DialogRootProps {
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+const DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 
 const schema = z.object({
-  name: z.string().min(6, 'O nome deve ter no minimo 6 caracteres').trim(),
+  title: z.string().min(6, 'O título deve ter no minimo 6 caracteres').trim(),
+  reduction: z
+    .number({
+      required_error: 'Digite a taxa de redução',
+      invalid_type_error: 'A taxa de redução está invalida',
+    })
+    .positive('A taxa de redução deve ser um número positivo'),
+  startDate: z
+    .string({
+      required_error: 'A data de início é obrigatória',
+      invalid_type_error: 'A data de início está invalida',
+    })
+    .regex(DATETIME_REGEX, 'A data de início está invalida'),
+  finishDate: z
+    .string({
+      required_error: 'A data de termino é obrigatória',
+      invalid_type_error: 'A data de termino está invalida',
+    })
+    .regex(DATETIME_REGEX, 'A data de termino está invalida'),
   description: z
     .string()
     .min(6, 'A descrição me deve ter no minimo 6 caracteres')
-    .trim(),
-  quantity: z
-    .number({
-      required_error: 'Digite a quantidade do producto',
-      invalid_type_error: 'A quantidade do producto está invalida',
-    })
-    .positive('A quantidade deve ser um número positivo'),
-  price: z
-    .number({
-      required_error: 'Digite o preço do producto',
-      invalid_type_error: 'A preço do producto está invalido',
-    })
-    .positive('O preço deve ser um número positivo'),
-  category: z
-    .string({
-      invalid_type_error: 'Digite uma categória válida',
-      required_error: 'A categória é obrigatória',
-    })
     .trim(),
   photo: z
     .instanceof(Blob, {
@@ -74,6 +75,7 @@ const schema = z.object({
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
       'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
     ),
+  products: z.array(z.string()).min(40, 'O máximo de producto'),
 })
 
 export default function DialogRoot(props: DialogRootProps) {
@@ -191,81 +193,79 @@ export default function DialogRoot(props: DialogRootProps) {
                       </Dialog.Title>
                       <div className="mb-4">
                         <label
-                          htmlFor="name"
+                          htmlFor="title"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Nome
+                          Título
                         </label>
                         <input
                           type="text"
-                          id="name"
-                          {...register('name')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                          id="title"
+                          {...register('title')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.title && 'border-red-500'}`}
                         />
-                        {errors.name && (
+                        {errors.title && (
                           <p className="text-red-500 mt-1">
-                            {errors.name.message}
+                            {errors.title.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="quantity"
+                          htmlFor="title"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Quantidade
+                          Taxa de redução
                         </label>
                         <input
                           type="number"
-                          min={1}
-                          id="quantity"
-                          defaultValue={1}
-                          {...register('quantity', { valueAsNumber: true })}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.quantity && 'border-red-500'}`}
+                          id="reduction"
+                          {...register('reduction')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.reduction && 'border-red-500'}`}
                         />
-                        {errors.quantity && (
+                        {errors.reduction && (
                           <p className="text-red-500 mt-1">
-                            {errors.quantity.message}
+                            {errors.reduction.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="price"
+                          htmlFor="start-date"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Preço
+                          Início da campanha
                         </label>
                         <input
-                          id="price"
-                          type="number"
-                          {...register('price', { valueAsNumber: true })}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.price && 'border-red-500'}`}
+                          type="datetime-local"
+                          id="startDate"
+                          {...register('startDate')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.startDate && 'border-red-500'}`}
                         />
-                        {errors.price && (
+                        {errors.startDate && (
                           <p className="text-red-500 mt-1">
-                            {errors.price.message}
+                            {errors.startDate.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="price"
+                          htmlFor="start-date"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Categória
+                          Fim da campanha
                         </label>
-
-                        <select
-                          {...register('category')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.category && 'border-red-500'}`}
-                        >
-                          {CATEGORIES.map((category) => (
-                            <option key={category.label}>
-                              {category.label}
-                            </option>
-                          ))}
-                        </select>
+                        <input
+                          type="datetime-local"
+                          id="finishDate"
+                          {...register('finishDate')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.finishDate && 'border-red-500'}`}
+                        />
+                        {errors.finishDate && (
+                          <p className="text-red-500 mt-1">
+                            {errors.finishDate.message}
+                          </p>
+                        )}
                       </div>
                       <div className="mb-4">
                         <label
@@ -284,6 +284,15 @@ export default function DialogRoot(props: DialogRootProps) {
                             {errors.description.message}
                           </p>
                         )}
+                      </div>
+                      <div className="mb-4">
+                        <label
+                          htmlFor="products"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Productos da campanha
+                        </label>
+                        <ProductInput />
                       </div>
                       <div className="flex items-center justify-center w-full">
                         <label

@@ -3,9 +3,11 @@
 import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import React, { useState, useRef, useEffect } from 'react'
 
 export default function Avatar() {
+  const pathname = usePathname()
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -50,7 +52,7 @@ export default function Avatar() {
 
       {isOpen && (
         <div className="absolute min-w-44 right-0 mt-2 bg-white border rounded-md shadow-lg z-10">
-          <div className="py-1">
+          <div className="pt-1">
             <p className="text-sm px-4 py-2 text-gray-800 border-b">
               Logado em <strong>{user?.email}</strong>
             </p>
@@ -62,15 +64,37 @@ export default function Avatar() {
             </a>
             <a
               href="/admin/salles"
-              className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
+              className={clsx(
+                'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
+                {
+                  'bg-main text-white': pathname === '/admin/salles',
+                },
+              )}
             >
               Vendas
             </a>
             <a
               href="/admin/products"
-              className="hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block"
+              className={clsx(
+                'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
+                {
+                  'bg-main text-white': pathname === '/admin/products',
+                },
+              )}
             >
               Produtos
+            </a>
+            <a
+              href="/admin/promotions"
+              className={clsx(
+                'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
+                {
+                  'bg-main text-white hover:bg-main':
+                    pathname === '/admin/promotions',
+                },
+              )}
+            >
+              Minhas campanhas
             </a>
             <a
               href="/admin/logout"

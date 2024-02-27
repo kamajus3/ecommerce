@@ -27,15 +27,15 @@ export function getProduct(id: string): Promise<ProductItem | undefined> {
 }
 
 export function getProducts(
-  props: ProductQuery,
+  props?: ProductQuery,
 ): Promise<Record<string, ProductItem>> {
   const reference = ref(database, `products/`)
   const constraints: QueryConstraint[] = []
   let productQuery = query(reference)
 
-  if (props.limit) constraints.push(limitToLast(props.limit))
+  if (props?.limit) constraints.push(limitToLast(props.limit))
 
-  if (props.search) {
+  if (props?.search) {
     constraints.push(
       orderByChild('nameLowerCase'),
       startAt(props.search.toLowerCase()),
@@ -43,17 +43,21 @@ export function getProducts(
     )
   }
 
-  if (props.category) {
+  if (props?.category) {
     constraints.push(orderByChild('category'), equalTo(props.category))
   }
 
-  if (props.orderBy) {
-    if (props.orderBy === 'updatedAt') {
+  if (props?.orderBy) {
+    if (props?.orderBy === 'updatedAt') {
       constraints.push(orderByChild('updatedAt'))
     }
   }
 
-  productQuery = query(reference, ...constraints)
+  if (!props) {
+    productQuery = reference
+  } else {
+    productQuery = query(reference, ...constraints)
+  }
 
   return new Promise((resolve) => {
     onValue(productQuery, (snapshot) => {

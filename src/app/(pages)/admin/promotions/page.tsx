@@ -6,7 +6,6 @@ import Image from 'next/image'
 import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { onValue, ref, remove, set, update } from 'firebase/database'
 import {
   ref as storageRef,
@@ -16,42 +15,23 @@ import {
 } from 'firebase/storage'
 import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
-import PublishedSince from '@/app/components/PublishedSince'
+import { URLtoFile, publishedSince } from '@/functions'
 
 interface FormData {
-  name: string
-  quantity: number
-  price: number
-  category: string
+  title: string
+  startDate: string
+  finishDate: string
   description: string
   photo: Blob
 }
 
-interface CartTableRow {
+interface TableRow {
   product: ProductItem
-  deleteProduct(): void
-  editProduct(data: FormData, oldProduct?: ProductItem): Promise<void>
+  deletePromotion(): void
+  editPromotion(data: FormData, oldProduct?: ProductItem): Promise<void>
 }
 
-async function URLtoFile(url: string) {
-  try {
-    const response = await fetch(url)
-    const responseType = response.headers.get('content-type')
-    const blob = await response.blob()
-    if (responseType) {
-      return new File([blob], 'product-photo', {
-        type: responseType,
-      })
-    }
-    throw Error('Erro ao converter URL para arquivo')
-  } catch (error) {
-    console.error('Erro ao converter URL para arquivo:', error)
-    throw error
-  }
-}
-
-function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
-  const money = useMoneyFormat()
+function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
@@ -73,23 +53,8 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
         <div className="text-center text-black font-medium">{product.name}</div>
       </td>
       <td className="p-3">
-        <div className="text-center text-black font-medium">
-          {product.category}
-        </div>
-      </td>
-      <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {money.format(product.price)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {product.quantity}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          <PublishedSince date={product.updatedAt} />
+          {publishedSince(product.updatedAt)}
         </div>
       </td>
       <td className="p-3">
@@ -102,10 +67,10 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
           </button>
         </div>
         <Dialog.Delete
-          title="Remover producto"
-          description="Você tem certeza que queres remover esse producto do estoque?"
+          title="Apagar a campanha"
+          description="Você tem certeza que queres apagar essa promoção?"
           actionTitle="Remover"
-          action={deleteProduct}
+          action={deletePromotion}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
@@ -119,12 +84,12 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
             <span className="text-violet-600 font-medium">Editar</span>
           </button>
         </div>
-        <Dialog.Editor
-          title="Editar producto"
+        <Dialog.Promotion
+          title="Editar campanha"
           actionTitle="Editar"
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
-          action={editProduct}
+          action={editPromotion}
           defaultProduct={{ ...product }}
         />
       </td>
@@ -132,33 +97,31 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
   )
 }
 
-export default function ProductPage() {
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
+export default function PromotionPage() {
+  const [promotionData, setPromotionData] = useState<
+    Record<string, ProductItem>
+  >({})
 
   const [newModal, setNewModal] = useState(false)
 
   function postProduct(data: FormData) {
     const postId = randomBytes(20).toString('hex')
-    const reference = storageRef(storage, `/products/${postId}`)
+    const reference = storageRef(storage, `/promotions/${postId}`)
 
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        set(ref(database, 'products/' + postId), {
-          name: data.name,
-          nameLowerCase: data.name.toLocaleLowerCase(),
-          quantity: data.quantity,
-          price: data.price,
-          category: data.category,
+        set(ref(database, 'promotions/' + postId), {
+          title: data.title,
           description: data.description,
+          startDate: data.startDate,
+          finishDate: data.finishDate,
           photo,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         })
           .then(() => {
-            toast.success(`Producto postada com sucesso`, {
+            toast.success(`Campanha postada com sucesso`, {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -171,7 +134,7 @@ export default function ProductPage() {
             })
           })
           .catch((error: string) => {
-            toast.error(`Erro a fazer a postagem ${error}`, {
+            toast.error(`Erro a fazer a campanha ${error}`, {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -185,7 +148,7 @@ export default function ProductPage() {
           })
       })
       .catch((error) => {
-        toast.error(`Erro a fazer a postagem ${error}`, {
+        toast.error(`Erro a fazer a campanha ${error}`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -199,27 +162,25 @@ export default function ProductPage() {
       })
   }
 
-  async function editProduct(data: FormData, oldProduct?: ProductItem) {
+  async function editPromotion(data: FormData, oldProduct?: ProductItem) {
     if (oldProduct && oldProduct.id) {
-      const reference = storageRef(storage, `/products/${oldProduct.id}`)
+      const reference = storageRef(storage, `/promotions/${oldProduct.id}`)
       const oldPhoto = await URLtoFile(oldProduct.photo)
 
       if (oldPhoto !== data.photo) {
         await uploadBytes(reference, data.photo)
       }
 
-      update(ref(database, `/products/${oldProduct.id}`), {
-        name: data.name,
-        nameLowerCase: data.name.toLocaleLowerCase(),
-        quantity: data.quantity,
-        price: data.price,
-        category: data.category,
+      update(ref(database, `/promotions/${oldProduct.id}`), {
+        title: data.title,
         description: data.description,
+        startDate: data.startDate,
+        finishDate: data.finishDate,
         photo: oldProduct.photo,
         updatedAt: new Date().toISOString(),
       })
         .then(() => {
-          toast.success(`Producto editado com sucesso`, {
+          toast.success(`Campanha editada com sucesso`, {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -232,7 +193,7 @@ export default function ProductPage() {
           })
         })
         .catch((error) => {
-          toast.error(`Erro a fazer a postagem ${error}`, {
+          toast.error(`Erro a criar a campanha ${error}`, {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -245,7 +206,7 @@ export default function ProductPage() {
           })
         })
     } else {
-      toast.error(`Erro a editar o produto`, {
+      toast.error(`Erro a editar a campanha`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -259,14 +220,14 @@ export default function ProductPage() {
     }
   }
 
-  async function deleteProduct(id: string) {
-    const databaseReference = ref(database, `products/${id}`)
-    const storageReference = storageRef(storage, `products/${id}`)
+  async function deletePromotion(id: string) {
+    const databaseReference = ref(database, `promotions/${id}`)
+    const storageReference = storageRef(storage, `promotions/${id}`)
 
     try {
       await remove(databaseReference)
       await deleteObject(storageReference)
-      toast.success(`Produto eliminado com sucesso`, {
+      toast.success(`Campanha eliminado com sucesso`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -278,7 +239,7 @@ export default function ProductPage() {
         transition: Bounce,
       })
     } catch (error) {
-      toast.error(`Erro a apagar o produto`, {
+      toast.error(`Erro a apagar a campanha`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -293,11 +254,11 @@ export default function ProductPage() {
   }
 
   useEffect(() => {
-    const reference = ref(database, 'products/')
+    const reference = ref(database, 'promotions/')
     onValue(reference, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        setProductData(data)
+        setPromotionData(data)
       }
     })
   }, [])
@@ -307,7 +268,9 @@ export default function ProductPage() {
       <Header.Admin />
 
       <article className="mb-2 mt-12">
-        <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
+        <p className="text-black font-semibold text-3xl p-9">
+          Minhas campanhas
+        </p>
 
         <div className="mb-10 px-8 gap-y-5">
           <button
@@ -316,7 +279,7 @@ export default function ProductPage() {
             }}
             className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
-            Adicionar producto
+            Criar uma campanha
           </button>
         </div>
       </article>
@@ -327,22 +290,19 @@ export default function ProductPage() {
             <thead>
               <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Foto
+                  Capa
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Nome
+                  Titulo
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Categória
+                  Início
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Preço
+                  Termino
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Quantidade
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Atualizado em
+                  Nº
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   -
@@ -353,25 +313,25 @@ export default function ProductPage() {
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
-              {Object.entries(productData).map(([id, product]) => (
-                <CartTableRow
+              {Object.entries(promotionData).map(([id, promotion]) => (
+                <TableRow
                   key={id}
                   product={{
-                    ...product,
+                    ...promotion,
                     id,
                   }}
-                  deleteProduct={() => {
-                    deleteProduct(id)
+                  deletePromotion={() => {
+                    deletePromotion(id)
                   }}
-                  editProduct={editProduct}
+                  editPromotion={editPromotion}
                 />
               ))}
             </tbody>
           </table>
         </div>
       </article>
-      <Dialog.Editor
-        title="Novo producto"
+      <Dialog.Promotion
+        title="Nova campanha"
         actionTitle="Postar"
         isOpen={newModal}
         setOpen={setNewModal}

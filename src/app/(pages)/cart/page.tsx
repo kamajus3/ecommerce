@@ -1,8 +1,8 @@
 'use client'
 
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-import Dialog from '../components/Dialog'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+import Dialog from '../../components/Dialog'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import Image from 'next/image'
