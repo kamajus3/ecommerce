@@ -35,7 +35,7 @@ body {
   color: #fff;
 }
 
-input[type="checkbox"], input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button {
+input[type="checkbox"], input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: auto;
   -moz-appearance: auto;
   margin: 0; 
@@ -46,6 +46,7 @@ input[type="checkbox"], input[type=number]::-webkit-outer-spin-button, input[typ
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
+  all: unset;
 }
 
 input[type="checkbox"] {

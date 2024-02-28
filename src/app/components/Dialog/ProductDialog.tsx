@@ -49,7 +49,8 @@ const schema = z.object({
       required_error: 'Digite a quantidade do producto',
       invalid_type_error: 'A quantidade do producto está invalida',
     })
-    .positive('A quantidade deve ser um número positivo'),
+    .positive('A quantidade deve ser um número positivo')
+    .max(10000, 'A quantidade máxima é 10.000'),
   price: z
     .number({
       required_error: 'Digite o preço do producto',
@@ -217,7 +218,6 @@ export default function DialogRoot(props: DialogRootProps) {
                         </label>
                         <input
                           type="number"
-                          min={1}
                           id="quantity"
                           defaultValue={1}
                           {...register('quantity', { valueAsNumber: true })}

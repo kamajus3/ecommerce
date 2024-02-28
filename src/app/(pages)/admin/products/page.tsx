@@ -27,13 +27,13 @@ interface FormData {
   photo: Blob
 }
 
-interface CartTableRow {
+interface TableRowProps {
   product: ProductItem
   deleteProduct(): void
   editProduct(data: FormData, oldProduct?: ProductItem): Promise<void>
 }
 
-function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
+function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
   const money = useMoneyFormat()
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -72,6 +72,11 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
+          {publishedSince(product.createdAt)}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
           {publishedSince(product.updatedAt)}
         </div>
       </td>
@@ -85,9 +90,9 @@ function CartTableRow({ product, deleteProduct, editProduct }: CartTableRow) {
           </button>
         </div>
         <Dialog.Delete
-          title="Remover producto"
-          description="Você tem certeza que queres remover esse producto do estoque?"
-          actionTitle="Remover"
+          title="Apagar producto"
+          description="Você tem certeza que queres apagar esse producto difinitivamente?"
+          actionTitle="Apagar"
           action={deleteProduct}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
@@ -309,35 +314,38 @@ export default function ProductPage() {
           <table className="table-auto w-full border border-[#dddddd]">
             <thead>
               <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Foto
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Nome
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Categória
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Preço
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Quantidade
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Atualização
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Data de criação
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Data de atualização
+                </th>
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -
                 </th>
               </tr>
             </thead>
             <tbody className="text-gray-600 text-sm font-light">
               {Object.entries(productData).map(([id, product]) => (
-                <CartTableRow
+                <TableRow
                   key={id}
                   product={{
                     ...product,

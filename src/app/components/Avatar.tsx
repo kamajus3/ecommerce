@@ -3,6 +3,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useState, useRef, useEffect } from 'react'
 
@@ -56,7 +57,7 @@ export default function Avatar() {
             <p className="text-sm px-4 py-2 text-gray-800 border-b">
               Logado em <strong>{user?.email}</strong>
             </p>
-            <a
+            <Link
               href="/admin/dashboard"
               className={clsx(
                 'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
@@ -67,20 +68,8 @@ export default function Avatar() {
               )}
             >
               Dashboard
-            </a>
-            <a
-              href="/admin/salles"
-              className={clsx(
-                'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
-                {
-                  'bg-main text-white hover:bg-main':
-                    pathname === '/admin/salles',
-                },
-              )}
-            >
-              Vendas
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/products"
               className={clsx(
                 'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
@@ -91,8 +80,8 @@ export default function Avatar() {
               )}
             >
               Produtos
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/promotions"
               className={clsx(
                 'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
@@ -103,13 +92,13 @@ export default function Avatar() {
               )}
             >
               Minhas campanhas
-            </a>
-            <a
+            </Link>
+            <Link
               href="/admin/logout"
               className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
             >
               Terminar sessão
-            </a>
+            </Link>
           </div>
         </div>
       )}

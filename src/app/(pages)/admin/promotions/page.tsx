@@ -1,7 +1,7 @@
 'use client'
 
 import Header from '@/app/components/Header'
-import { ProductItem } from '@/@types'
+import { ProductInputProps, PromotionItemNew } from '@/@types'
 import Image from 'next/image'
 import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
@@ -19,19 +19,21 @@ import { URLtoFile, publishedSince } from '@/functions'
 
 interface FormData {
   title: string
+  reduction: number
   startDate: string
   finishDate: string
   description: string
+  products: ProductInputProps[]
   photo: Blob
 }
 
-interface TableRow {
-  product: ProductItem
+interface TableRowProps {
+  data: PromotionItemNew
   deletePromotion(): void
-  editPromotion(data: FormData, oldProduct?: ProductItem): Promise<void>
+  editPromotion(data: FormData, oldData?: PromotionItemNew): Promise<void>
 }
 
-function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
+function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
@@ -42,19 +44,29 @@ function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
           <Image
             width={70}
             height={70}
-            src={product.photo}
-            alt={product.name}
+            src={data.photo}
+            alt={data.title}
             draggable={false}
             className="select-none"
           />
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-black font-medium">{product.name}</div>
+        <div className="text-center text-black font-medium">{data.title}</div>
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {publishedSince(product.updatedAt)}
+          {publishedSince(data.startDate)}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
+          {publishedSince(data.finishDate)}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-black font-medium">
+          {data.products.length}
         </div>
       </td>
       <td className="p-3">
@@ -68,8 +80,8 @@ function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
         </div>
         <Dialog.Delete
           title="Apagar a campanha"
-          description="Você tem certeza que queres apagar essa promoção?"
-          actionTitle="Remover"
+          description="Você tem certeza que queres apagar essa campanha?"
+          actionTitle="Apagar"
           action={deletePromotion}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
@@ -90,7 +102,7 @@ function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
           action={editPromotion}
-          defaultProduct={{ ...product }}
+          defaultData={{ ...data }}
         />
       </td>
     </tr>
@@ -99,12 +111,12 @@ function TableRow({ product, deletePromotion, editPromotion }: TableRow) {
 
 export default function PromotionPage() {
   const [promotionData, setPromotionData] = useState<
-    Record<string, ProductItem>
+    Record<string, PromotionItemNew>
   >({})
 
   const [newModal, setNewModal] = useState(false)
 
-  function postProduct(data: FormData) {
+  function postPromotion(data: FormData) {
     const postId = randomBytes(20).toString('hex')
     const reference = storageRef(storage, `/promotions/${postId}`)
 
@@ -116,6 +128,8 @@ export default function PromotionPage() {
           description: data.description,
           startDate: data.startDate,
           finishDate: data.finishDate,
+          reduction: data.reduction,
+          products: data.products.map((p) => p.id),
           photo,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -162,24 +176,38 @@ export default function PromotionPage() {
       })
   }
 
-  async function editPromotion(data: FormData, oldProduct?: ProductItem) {
-    if (oldProduct && oldProduct.id) {
-      const reference = storageRef(storage, `/promotions/${oldProduct.id}`)
-      const oldPhoto = await URLtoFile(oldProduct.photo)
+  async function editPromotion(data: FormData, oldData?: PromotionItemNew) {
+    if (oldData && oldData.id) {
+      const reference = storageRef(storage, `/promotions/${oldData.id}`)
+      const oldPhoto = await URLtoFile(oldData.photo)
 
       if (oldPhoto !== data.photo) {
         await uploadBytes(reference, data.photo)
       }
 
-      update(ref(database, `/promotions/${oldProduct.id}`), {
+      update(ref(database, `/promotions/${oldData.id}`), {
         title: data.title,
+        reduction: data.reduction,
         description: data.description,
         startDate: data.startDate,
         finishDate: data.finishDate,
-        photo: oldProduct.photo,
+        products: data.products.map((p) => p.id),
+        photo: oldData.photo,
         updatedAt: new Date().toISOString(),
       })
         .then(() => {
+          if (data.products !== oldData.products) {
+            data.products.map(async (p) => {
+              set(ref(database, 'products/' + p.id), {
+                promotion: {
+                  id: oldData.id,
+                  name: data.title,
+                  reduction: data.reduction,
+                },
+              })
+            })
+          }
+
           toast.success(`Campanha editada com sucesso`, {
             position: 'top-right',
             autoClose: 5000,
@@ -227,7 +255,7 @@ export default function PromotionPage() {
     try {
       await remove(databaseReference)
       await deleteObject(storageReference)
-      toast.success(`Campanha eliminado com sucesso`, {
+      toast.success(`Campanha eliminada com sucesso`, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -289,25 +317,27 @@ export default function PromotionPage() {
           <table className="table-auto w-full border border-[#dddddd]">
             <thead>
               <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Capa
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Titulo
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Título
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Início
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  <span className="max-sm:hidden">Início da campanha</span>
+                  <span className="hidden max-sm:inline">Início</span>
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Termino
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  <span className="max-sm:hidden">Fim da campanha</span>
+                  <span className="hidden max-sm:inline">Fim</span>
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Nº
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Nº de productos
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -
                 </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -
                 </th>
               </tr>
@@ -316,7 +346,7 @@ export default function PromotionPage() {
               {Object.entries(promotionData).map(([id, promotion]) => (
                 <TableRow
                   key={id}
-                  product={{
+                  data={{
                     ...promotion,
                     id,
                   }}
@@ -335,7 +365,7 @@ export default function PromotionPage() {
         actionTitle="Postar"
         isOpen={newModal}
         setOpen={setNewModal}
-        action={postProduct}
+        action={postPromotion}
       />
     </section>
   )

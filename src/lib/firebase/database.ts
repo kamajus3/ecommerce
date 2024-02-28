@@ -53,6 +53,10 @@ export function getProducts(
     }
   }
 
+  if (props?.promotion) {
+    constraints.push(orderByChild('promotion/id'), equalTo(props.promotion))
+  }
+
   if (!props) {
     productQuery = reference
   } else {

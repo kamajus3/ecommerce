@@ -32,14 +32,6 @@ export default function AdminHeader() {
             Dashboard
           </Link>
           <Link
-            href="/admin/sells"
-            className={clsx('font-medium text-black max-sm:hidden', {
-              'text-main border-b border-b-main': pathname === '/admin/sells',
-            })}
-          >
-            Vendas
-          </Link>
-          <Link
             href="/admin/products"
             className={clsx('font-medium text-black max-sm:hidden', {
               'text-main border-b border-b-main':

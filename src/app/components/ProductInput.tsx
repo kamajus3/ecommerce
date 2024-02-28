@@ -5,10 +5,14 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { getProducts } from '@/lib/firebase/database'
-import { ProductItem } from '@/@types'
-import { Search } from 'lucide-react'
+import { ProductItem, ProductInputProps as ProductInputObject } from '@/@types'
+import { Check, Search } from 'lucide-react'
 
 interface ProductInputProps {
+  products: ProductInputObject[]
+  appendProduct: (product: ProductInputObject) => void
+  removeProduct: (id: string) => void
+  error?: boolean
   inputProps?: HTMLAttributes<HTMLInputElement>
 }
 
@@ -21,7 +25,7 @@ interface FormData {
 }
 
 export default function ProductInput(props: ProductInputProps) {
-  const { register, watch } = useForm<FormData>({
+  const { register, watch, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
@@ -75,7 +79,9 @@ export default function ProductInput(props: ProductInputProps) {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <div className="w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 border flex items-center gap-2">
+      <div
+        className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 border flex items-center gap-2 ${props.error && 'border-red-500'}`}
+      >
         <Search size={15} color="#6B7280" />
 
         <input
@@ -92,9 +98,30 @@ export default function ProductInput(props: ProductInputProps) {
           {Object.entries(productData).map(([id, product]) => (
             <div
               key={id}
-              className="p-3 bg-white text-sm text-gray-800 hover:bg-gray-200 cursor-pointer select-none"
+              onClick={() => {
+                reset({
+                  searchValue: '',
+                })
+                setIsOpen(false)
+
+                const isInProducts = props.products.find((p) => p.id === id)
+
+                if (!isInProducts) {
+                  props.appendProduct({
+                    id,
+                    name: product.name,
+                  })
+                } else {
+                  props.removeProduct(id)
+                }
+              }}
+              className="flex items-center justify-between relative p-3 bg-white text-sm text-gray-800 hover:bg-gray-200 cursor-pointer select-none"
             >
               {product.name}
+
+              {props.products.find((p) => p.id === id) && (
+                <Check className="left-4" color="#000" size={15} />
+              )}
             </div>
           ))}
         </div>

@@ -94,7 +94,7 @@ function CartTableRow({
             onClick={() => setOpenDeleteModal(true)}
             className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
           >
-            <span className="text-red-500 font-medium">Apagar</span>
+            <span className="text-red-500 font-medium">Remover</span>
           </button>
         </div>
         <Dialog.Delete
