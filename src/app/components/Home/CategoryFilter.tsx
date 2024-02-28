@@ -8,6 +8,7 @@ import { Category } from '@/@types'
 
 import 'swiper/css/scrollbar'
 import '@/assets/swiper.css'
+import Link from 'next/link'
 
 interface CategoryFilterProps {
   title: string
@@ -15,7 +16,7 @@ interface CategoryFilterProps {
 
 function CategoryCard(props: Category) {
   return (
-    <div>
+    <Link href={`/search/category?value=${props.label}`}>
       <div
         style={{
           backgroundImage: `url(${props.img})`,
@@ -25,7 +26,7 @@ function CategoryCard(props: Category) {
       ></div>
 
       <p className="text-black font-medium mt-5 text-center">{props.label}</p>
-    </div>
+    </Link>
   )
 }
 

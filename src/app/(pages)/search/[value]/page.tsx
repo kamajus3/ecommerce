@@ -9,6 +9,7 @@ import { ProductItem } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import clsx from 'clsx'
 import { SearchX } from 'lucide-react'
+import Loading from '@/app/components/Loading'
 
 function SearchPageWithoutBoundary() {
   const searchParams = useSearchParams()
@@ -16,14 +17,14 @@ function SearchPageWithoutBoundary() {
     {},
   )
 
-  const category = searchParams.get('category') || ''
+  const category = searchParams.get('value') || ''
   const { value: searchValue } = useParams<{ value: string }>()
   const search = decodeURIComponent(searchValue)
 
   useEffect(() => {
     async function unsubscribed() {
       await getProducts({
-        search,
+        search: category ? undefined : search,
         category,
       }).then((products) => {
         setProductData(products)
@@ -37,12 +38,18 @@ function SearchPageWithoutBoundary() {
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
-      <Header.Client searchDefault={search} />
+      <Header.Client searchDefault={category && search ? undefined : search} />
 
       <div>
-        <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
-          PESQUISAR &quot;{search}&quot;
-        </p>
+        {category && search ? (
+          <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
+            PRODUCTOS DA CATEGÓRIA &quot;{category}&quot;
+          </p>
+        ) : (
+          <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
+            PESQUISAR &quot;{search}&quot;
+          </p>
+        )}
         <p
           className={clsx(
             'text-black font-semibold text-3xl p-4 mb-2 max-sm:text-center',
@@ -89,7 +96,7 @@ function SearchPageWithoutBoundary() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Carregando...</div>}>
+    <Suspense fallback={<Loading />}>
       <SearchPageWithoutBoundary />
     </Suspense>
   )

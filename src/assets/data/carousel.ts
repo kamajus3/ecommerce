@@ -6,7 +6,6 @@ export const CAROUSEL = [
     content:
       'Explore nossa ampla seleção de produtos de qualidade para cuidados pessoais, saúde e higiene corporal.',
     url: '/#nossos-serviços',
-    action: 'Explorar serviços',
   },
   {
     id: Math.random(),

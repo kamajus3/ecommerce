@@ -19,16 +19,14 @@ import {
 import useDimensions from '@/hooks/useDimesions'
 import { CAROUSEL } from '@/assets/data/carousel'
 import Link from 'next/link'
-import { MoveRight } from 'lucide-react'
 
 function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
   return (
     <button
-      className="flex items-center gap-2 py-3 text-base text-white transition-all border-b border-b-transparent active:brightness-75 hover:border-b-white"
+      className="flex items-center gap-2 py-3 px-6 text-base bg-main text-white transition-all border-none active:brightness-75 hover:brightness-90"
       {...props}
     >
       {props.children}
-      <MoveRight />
     </button>
   )
 }
@@ -56,17 +54,15 @@ export default function Carousel() {
             style={{ backgroundImage: `url(${data.image})` }}
           >
             <div className="static left-24 z-50 flex w-[480px] select-none flex-col items-center justify-end gap-4 lg:absolute lg:items-start">
-              <h3 className="text-center text-5xl font-semibold text-white lg:text-left">
+              <h3 className="text-center text-3xl font-semibold text-white lg:text-left">
                 {data.title}
               </h3>
               <p className="text-center text-base text-white lg:text-left">
                 {data.content}
               </p>
-              {data.action && (
-                <Link href={data.url}>
-                  <CarouselButton>{data.action}</CarouselButton>
-                </Link>
-              )}
+              <Link href={data.url}>
+                <CarouselButton>Ver productos</CarouselButton>
+              </Link>
             </div>
           </SwiperSlide>
         ))}

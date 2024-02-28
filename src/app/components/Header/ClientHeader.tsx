@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
-import HeaderPromo from '@/app/components/Promo/HeaderPromo'
 import { useState } from 'react'
 import clsx from 'clsx'
 import * as z from 'zod'
@@ -42,15 +41,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
   return (
     <header className="border-b">
-      <HeaderPromo title="Promoção de verão para todos os trajes de banho e entrega expressa grátis - OFF 50%!" />
-      <article
-        className={clsx(
-          'w-screen flex justify-between items-center px-4 py-4',
-          {
-            'mx-auto': isSearchOn,
-          },
-        )}
-      >
+      <article className="w-[98%] flex justify-between items-center py-2 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
@@ -115,7 +106,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
               <ShoppingCart color="#000" size={27} />
               <div
                 className={clsx(
-                  'absolute bottom-7 left-7 bg-black rounded-full flex justify-center items-center w-6 h-6',
+                  'absolute bottom-7 left-7 bg-main rounded-full flex justify-center items-center w-6 h-6',
                   {
                     hidden: cartProducts.length === 0,
                   },

@@ -250,7 +250,7 @@ export default function DialogRoot(props: DialogRootProps) {
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="price"
+                          htmlFor="category"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Categória
