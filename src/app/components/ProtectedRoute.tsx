@@ -3,6 +3,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import { ReactNode, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
+import Loading from './Loading'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -27,7 +28,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
       {(user && initialized) || pathname === '/admin/login' ? (
         children
       ) : (
-        <p>Carregando...</p>
+        <Loading />
       )}
     </>
   )
