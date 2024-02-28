@@ -37,19 +37,22 @@ export default function CategoryFilter(props: CategoryFilterProps) {
         modules={[Scrollbar]}
         spaceBetween={20}
         slidesPerView={5}
+        scrollbar={{
+          enabled: true,
+        }}
         className="product-card"
         breakpoints={{
           320: {
-            slidesPerView: 2,
+            slidesPerView: 1,
           },
           640: {
-            slidesPerView: 3,
+            slidesPerView: 2,
           },
           768: {
-            slidesPerView: 4,
+            slidesPerView: 3,
           },
           1024: {
-            slidesPerView: 5,
+            slidesPerView: 4,
           },
         }}
       >

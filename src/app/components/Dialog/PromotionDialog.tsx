@@ -12,11 +12,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import {
-  PromotionItemNew,
-  ProductInputProps,
-  PromotionItemEdit,
-} from '@/@types'
+import { ProductInputProps, PromotionItemEdit } from '@/@types'
 import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
@@ -41,7 +37,7 @@ interface DialogRootProps {
   setOpen: Dispatch<SetStateAction<boolean>>
   action: (
     data: FormData,
-    oldProduct?: PromotionItemNew,
+    oldProduct?: PromotionItemEdit,
   ) => void | Promise<void>
   defaultData?: PromotionItemEdit
 }

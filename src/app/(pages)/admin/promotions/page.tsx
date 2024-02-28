@@ -1,11 +1,7 @@
 'use client'
 
 import Header from '@/app/components/Header'
-import {
-  ProductInputProps,
-  PromotionItemEdit,
-  PromotionItemNew,
-} from '@/@types'
+import { ProductInputProps, PromotionItemEdit } from '@/@types'
 import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
@@ -34,7 +30,7 @@ interface FormData {
 interface TableRowProps {
   data: PromotionItemEdit
   deletePromotion(): void
-  editPromotion(data: FormData, oldData?: PromotionItemNew): Promise<void>
+  editPromotion(data: FormData, oldData?: PromotionItemEdit): Promise<void>
 }
 
 function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
@@ -181,7 +177,7 @@ export default function PromotionPage() {
       })
   }
 
-  async function editPromotion(data: FormData, oldData?: PromotionItemNew) {
+  async function editPromotion(data: FormData, oldData?: PromotionItemEdit) {
     if (oldData && oldData.id) {
       const reference = storageRef(storage, `/promotions/${oldData.id}`)
       const oldPhoto = await URLtoFile(oldData.photo)
@@ -190,7 +186,7 @@ export default function PromotionPage() {
         await uploadBytes(reference, data.photo)
       }
 
-      const oldDataProductsId = oldData.products.map((p) => p.id)
+      const oldDataProductsId = oldData.products
       const newDataProductsId = data.products.map((p) => p.id)
 
       update(ref(database, `/promotions/${oldData.id}`), {
@@ -203,7 +199,7 @@ export default function PromotionPage() {
         photo: oldData.photo,
       })
         .then(() => {
-          if (data.products !== oldData.products) {
+          if (newDataProductsId !== oldDataProductsId) {
             const deletedProducts = oldDataProductsId.filter(
               (id) => !newDataProductsId.includes(id),
             )
