@@ -22,6 +22,11 @@ export type ProductItem = {
   description: string
   createdAt: string
   updatedAt: string
+  promotion?: {
+    id: string
+    title: string
+    reduction: number
+  }
 }
 
 export interface ProductInputProps {
@@ -52,5 +57,11 @@ export interface ProductQuery {
   limit?: number
   category?: string
   promotion?: string
+  exceptOthersProduct?: boolean
   orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
+}
+
+export interface Category {
+  label: string
+  img: string
 }

@@ -23,6 +23,10 @@ export function publishedSince(date: string) {
     const publishedSince = formatDistanceToNowStrict(new Date(date), {
       locale: ptBR,
     })
+
+    if (new Date(date) > new Date()) {
+      return `Daqui à ${publishedSince}`
+    }
     return `${publishedSince} atrás`
   } catch (e) {
     return ''

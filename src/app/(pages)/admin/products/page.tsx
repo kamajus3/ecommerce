@@ -7,7 +7,15 @@ import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { onValue, ref, remove, set, update } from 'firebase/database'
+import {
+  child,
+  get,
+  onValue,
+  ref,
+  remove,
+  set,
+  update,
+} from 'firebase/database'
 import {
   ref as storageRef,
   uploadBytes,
@@ -247,13 +255,40 @@ export default function ProductPage() {
     }
   }
 
-  async function deleteProduct(id: string) {
+  async function deleteProduct(
+    id: string,
+    promotion?: {
+      id: string
+      title: string
+      reduction: number
+    },
+  ) {
     const databaseReference = ref(database, `products/${id}`)
     const storageReference = storageRef(storage, `products/${id}`)
 
     try {
       await remove(databaseReference)
       await deleteObject(storageReference)
+
+      if (promotion) {
+        get(child(ref(database), `promotions/${promotion.id}`)).then(
+          (snapshot) => {
+            if (snapshot.exists()) {
+              console.error(snapshot.val())
+
+              set(ref(database, 'promotions/' + promotion.id), {
+                ...snapshot.val(),
+                products: snapshot
+                  .val()
+                  .products.filter((p: string) => p !== id),
+              })
+            } else {
+              console.log('No data available')
+            }
+          },
+        )
+      }
+
       toast.success(`Produto eliminado com sucesso`, {
         position: 'top-right',
         autoClose: 5000,
@@ -352,7 +387,7 @@ export default function ProductPage() {
                     id,
                   }}
                   deleteProduct={() => {
-                    deleteProduct(id)
+                    deleteProduct(id, product?.promotion)
                   }}
                   editProduct={editProduct}
                 />

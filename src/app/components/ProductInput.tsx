@@ -1,5 +1,3 @@
-'use client'
-
 import { HTMLAttributes, useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,6 +8,7 @@ import { Check, Search } from 'lucide-react'
 
 interface ProductInputProps {
   products: ProductInputObject[]
+  promotionId?: string
   appendProduct: (product: ProductInputObject) => void
   removeProduct: (id: string) => void
   error?: boolean
@@ -56,8 +55,8 @@ export default function ProductInput(props: ProductInputProps) {
   const searchValue = watch('searchValue')
 
   useEffect(() => {
-    function unsubscribed() {
-      if (searchValue && searchValue?.length > 0) {
+    function fetchData() {
+      if (searchValue && searchValue.length > 0) {
         getProducts({
           search: searchValue,
           limit: 5,
@@ -74,13 +73,15 @@ export default function ProductInput(props: ProductInputProps) {
       }
     }
 
-    unsubscribed()
-  }, [searchValue])
+    fetchData()
+  }, [searchValue, props?.promotionId])
 
   return (
     <div className="relative" ref={dropdownRef}>
       <div
-        className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 border flex items-center gap-2 ${props.error && 'border-red-500'}`}
+        className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 border flex items-center gap-2 ${
+          props.error && 'border-red-500'
+        }`}
       >
         <Search size={15} color="#6B7280" />
 
@@ -95,35 +96,39 @@ export default function ProductInput(props: ProductInputProps) {
 
       {isOpen && (
         <div className="absolute top-14 w-full bg-white border rounded-md shadow-lg z-10">
-          {Object.entries(productData).map(([id, product]) => (
-            <div
-              key={id}
-              onClick={() => {
-                reset({
-                  searchValue: '',
-                })
-                setIsOpen(false)
+          {Object.entries(productData).map(
+            ([id, product]) =>
+              (product.promotion?.id === props.promotionId ||
+                product.promotion?.id === undefined) && (
+                <div
+                  key={id}
+                  onClick={() => {
+                    reset({
+                      searchValue: '',
+                    })
+                    setIsOpen(false)
 
-                const isInProducts = props.products.find((p) => p.id === id)
+                    const isInProducts = props.products.find((p) => p.id === id)
 
-                if (!isInProducts) {
-                  props.appendProduct({
-                    id,
-                    name: product.name,
-                  })
-                } else {
-                  props.removeProduct(id)
-                }
-              }}
-              className="flex items-center justify-between relative p-3 bg-white text-sm text-gray-800 hover:bg-gray-200 cursor-pointer select-none"
-            >
-              {product.name}
+                    if (!isInProducts) {
+                      props.appendProduct({
+                        id,
+                        name: product.name,
+                      })
+                    } else {
+                      props.removeProduct(id)
+                    }
+                  }}
+                  className="flex items-center justify-between relative p-3 bg-white text-sm text-gray-800 hover:bg-gray-200 cursor-pointer select-none"
+                >
+                  {product.name}
 
-              {props.products.find((p) => p.id === id) && (
-                <Check className="left-4" color="#000" size={15} />
-              )}
-            </div>
-          ))}
+                  {props.products.find((p) => p.id === id) && (
+                    <Check className="left-4" color="#000" size={15} />
+                  )}
+                </div>
+              ),
+          )}
         </div>
       )}
     </div>

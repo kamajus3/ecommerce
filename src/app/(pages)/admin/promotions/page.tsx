@@ -1,8 +1,11 @@
 'use client'
 
 import Header from '@/app/components/Header'
-import { ProductInputProps, PromotionItemNew } from '@/@types'
-import Image from 'next/image'
+import {
+  ProductInputProps,
+  PromotionItemEdit,
+  PromotionItemNew,
+} from '@/@types'
 import Dialog from '@/app/components/Dialog'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
@@ -16,6 +19,7 @@ import {
 import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
+import { getProduct } from '@/lib/firebase/database'
 
 interface FormData {
   title: string
@@ -28,7 +32,7 @@ interface FormData {
 }
 
 interface TableRowProps {
-  data: PromotionItemNew
+  data: PromotionItemEdit
   deletePromotion(): void
   editPromotion(data: FormData, oldData?: PromotionItemNew): Promise<void>
 }
@@ -39,18 +43,6 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
 
   return (
     <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <Image
-            width={70}
-            height={70}
-            src={data.photo}
-            alt={data.title}
-            draggable={false}
-            className="select-none"
-          />
-        </div>
-      </td>
       <td className="p-3">
         <div className="text-center text-black font-medium">{data.title}</div>
       </td>
@@ -111,7 +103,7 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
 
 export default function PromotionPage() {
   const [promotionData, setPromotionData] = useState<
-    Record<string, PromotionItemNew>
+    Record<string, PromotionItemEdit>
   >({})
 
   const [newModal, setNewModal] = useState(false)
@@ -131,10 +123,23 @@ export default function PromotionPage() {
           reduction: data.reduction,
           products: data.products.map((p) => p.id),
           photo,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
         })
           .then(() => {
+            data.products.map(async (p) => {
+              const product = await getProduct(p.id)
+
+              set(ref(database, 'products/' + p.id), {
+                ...product,
+                promotion: {
+                  id: postId,
+                  title: data.title,
+                  reduction: data.reduction,
+                },
+              }).catch((e) => {
+                console.error(e)
+              })
+            })
+
             toast.success(`Campanha postada com sucesso`, {
               position: 'top-right',
               autoClose: 5000,
@@ -185,26 +190,42 @@ export default function PromotionPage() {
         await uploadBytes(reference, data.photo)
       }
 
+      const oldDataProductsId = oldData.products.map((p) => p.id)
+      const newDataProductsId = data.products.map((p) => p.id)
+
       update(ref(database, `/promotions/${oldData.id}`), {
         title: data.title,
         reduction: data.reduction,
         description: data.description,
         startDate: data.startDate,
         finishDate: data.finishDate,
-        products: data.products.map((p) => p.id),
+        products: newDataProductsId,
         photo: oldData.photo,
-        updatedAt: new Date().toISOString(),
       })
         .then(() => {
           if (data.products !== oldData.products) {
+            const deletedProducts = oldDataProductsId.filter(
+              (id) => !newDataProductsId.includes(id),
+            )
+
             data.products.map(async (p) => {
-              set(ref(database, 'products/' + p.id), {
-                promotion: {
-                  id: oldData.id,
-                  name: data.title,
-                  reduction: data.reduction,
-                },
-              })
+              const product = await getProduct(p.id)
+
+              if (deletedProducts.includes(p.id)) {
+                await set(ref(database, 'products/' + p.id), {
+                  ...product,
+                  promotion: null,
+                })
+              } else {
+                await set(ref(database, 'products/' + p.id), {
+                  ...product,
+                  promotion: {
+                    id: oldData.id,
+                    title: data.title,
+                    reduction: data.reduction,
+                  },
+                })
+              }
             })
           }
 
@@ -248,13 +269,23 @@ export default function PromotionPage() {
     }
   }
 
-  async function deletePromotion(id: string) {
+  async function deletePromotion(id: string, products: string[]) {
     const databaseReference = ref(database, `promotions/${id}`)
     const storageReference = storageRef(storage, `promotions/${id}`)
 
     try {
       await remove(databaseReference)
       await deleteObject(storageReference)
+
+      products.map(async (id) => {
+        const product = await getProduct(id)
+
+        await set(ref(database, 'products/' + id), {
+          ...product,
+          promotion: null,
+        })
+      })
+
       toast.success(`Campanha eliminada com sucesso`, {
         position: 'top-right',
         autoClose: 5000,
@@ -318,9 +349,6 @@ export default function PromotionPage() {
             <thead>
               <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Capa
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Título
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
@@ -332,7 +360,8 @@ export default function PromotionPage() {
                   <span className="hidden max-sm:inline">Fim</span>
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Nº de productos
+                  <span className="max-sm:hidden">Nº de productos</span>
+                  <span className="hidden max-sm:inline">Productos</span>
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -
@@ -351,7 +380,7 @@ export default function PromotionPage() {
                     id,
                   }}
                   deletePromotion={() => {
-                    deletePromotion(id)
+                    deletePromotion(id, promotion.products)
                   }}
                   editPromotion={editPromotion}
                 />

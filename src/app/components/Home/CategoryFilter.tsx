@@ -4,9 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 
 import CATEGORIES from '@/assets/data/categories'
 import { Scrollbar } from 'swiper/modules'
-import dynamic from 'next/dynamic'
-import Category from '@/@types/categories'
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
+import { Category } from '@/@types'
 
 import 'swiper/css/scrollbar'
 import '@/assets/swiper.css'
@@ -16,13 +14,15 @@ interface CategoryFilterProps {
 }
 
 function CategoryCard(props: Category) {
-  const LucideIcon = dynamic(dynamicIconImports[props.icon])
-
   return (
     <div>
-      <button className="h-48 w-48 bg-[#d3d3d3] rounded-full border flex gap-y-2 flex-col justify-center items-center">
-        <LucideIcon color="#000" size={60} />
-      </button>
+      <div
+        style={{
+          backgroundImage: `url(${props.img})`,
+          backgroundSize: 'cover',
+        }}
+        className="h-48 w-48 bg-[#d3d3d3] rounded-full border flex gap-y-2 flex-col justify-center items-center"
+      ></div>
 
       <p className="text-black font-medium mt-5 text-center">{props.label}</p>
     </div>

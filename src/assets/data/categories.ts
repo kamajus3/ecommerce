@@ -1,29 +1,25 @@
-import Category from '@/@types/categories'
+import { Category } from '@/@types'
 
 const CATEGORIES: Category[] = [
   {
     label: 'Higiene Pessoal',
-    icon: 'user',
+    img: '/categories/personal-hygiene.jpg',
   },
   {
     label: 'Bebê',
-    icon: 'baby',
+    img: '/categories/baby.jpg',
   },
   {
     label: 'Saúde',
-    icon: 'heart-pulse',
+    img: '/categories/health.jpg',
   },
   {
     label: 'Inseticidas',
-    icon: 'bug',
-  },
-  {
-    label: 'Ambiente',
-    icon: 'globe',
+    img: '/categories/insecticide.jpg',
   },
   {
     label: 'Alimentação',
-    icon: 'utensils-crossed',
+    img: '/categories/food.jpg',
   },
 ]
 

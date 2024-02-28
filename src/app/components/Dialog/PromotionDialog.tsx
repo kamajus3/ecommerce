@@ -12,7 +12,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { PromotionItemNew, ProductInputProps } from '@/@types'
+import {
+  PromotionItemNew,
+  ProductInputProps,
+  PromotionItemEdit,
+} from '@/@types'
 import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
@@ -39,7 +43,7 @@ interface DialogRootProps {
     data: FormData,
     oldProduct?: PromotionItemNew,
   ) => void | Promise<void>
-  defaultData?: PromotionItemNew
+  defaultData?: PromotionItemEdit
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
@@ -117,31 +121,6 @@ export default function DialogRoot(props: DialogRootProps) {
   const promotionProducts = watch('products')
 
   useEffect(() => {
-    async function unsubscribed() {
-      if (props.defaultData && props.isOpen) {
-        const products = await getProducts({
-          promotion: props.defaultData.id,
-        })
-
-        const finalProducts: ProductInputProps[] = []
-
-        Object.entries(products).map(([id, product]) => {
-          finalProducts.push({
-            id,
-            name: product.name,
-          })
-
-          return null
-        })
-
-        setValue('products', finalProducts)
-      }
-    }
-
-    unsubscribed()
-  }, [props.defaultData, setValue, props.isOpen])
-
-  useEffect(() => {
     if (props.defaultData?.photo) {
       setPhotoPreview(props.defaultData?.photo)
     } else {
@@ -152,11 +131,28 @@ export default function DialogRoot(props: DialogRootProps) {
   useEffect(() => {
     async function unsubscribed() {
       if (props.defaultData) {
+        const products = await getProducts({
+          promotion: props.defaultData.id,
+        })
+
+        const finalProducts: ProductInputProps[] = []
+
+        Object.entries(products).map(([id, product]) => {
+          const promotion = {
+            id,
+            name: product.name,
+          }
+
+          finalProducts.push(...finalProducts, promotion)
+          return promotion
+        })
+
         const photo = await URLtoFile(props.defaultData.photo)
 
         reset(
           {
             ...props.defaultData,
+            products: finalProducts,
             photo,
           },
           {
@@ -170,7 +166,7 @@ export default function DialogRoot(props: DialogRootProps) {
     }
 
     unsubscribed()
-  }, [reset, props.defaultData])
+  }, [reset, props.defaultData, getValues])
 
   async function onSubmit(data: FormData) {
     if (isDirty) {
@@ -195,11 +191,17 @@ export default function DialogRoot(props: DialogRootProps) {
     }
   }
 
-  function appendProduct(promotion: ProductInputProps) {
+  function appendProduct(product: ProductInputProps) {
     const allProducts = getValues('products')
-    allProducts.push(promotion)
+    pushProduct(allProducts, product)
+  }
 
-    setValue('products', allProducts)
+  function pushProduct(
+    products: ProductInputProps[],
+    product: ProductInputProps,
+  ) {
+    products.push(product)
+    setValue('products', products)
   }
 
   function removeProduct(id: string) {
@@ -363,6 +365,7 @@ export default function DialogRoot(props: DialogRootProps) {
                           products={promotionProducts}
                           appendProduct={appendProduct}
                           removeProduct={removeProduct}
+                          promotionId={props?.defaultData?.id}
                           error={!!errors.products}
                         />
                         {promotionProducts && promotionProducts.length > 0 && (
@@ -422,9 +425,9 @@ export default function DialogRoot(props: DialogRootProps) {
                             >
                               <path
                                 stroke="currentColor"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                               />
                             </svg>
