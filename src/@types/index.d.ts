@@ -12,6 +12,14 @@ export interface ProductCart {
   quantity: number
 }
 
+export interface ProductPromotionObject {
+  id: string
+  title: string
+  reduction: number
+  startDate: string
+  finishDate: string
+}
+
 export type ProductItem = {
   id: string
   name: string
@@ -22,11 +30,7 @@ export type ProductItem = {
   description: string
   createdAt: string
   updatedAt: string
-  promotion?: {
-    id: string
-    title: string
-    reduction: number
-  }
+  promotion?: ProductPromotionObject
 }
 
 export interface ProductInputProps {

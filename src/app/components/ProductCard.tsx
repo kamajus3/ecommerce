@@ -5,6 +5,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { campaignValidator } from '@/functions'
 
 export default function ProductCard(product: ProductItem) {
   const money = useMoneyFormat()
@@ -25,8 +26,8 @@ export default function ProductCard(product: ProductItem) {
             </button>
           )}
 
-          {product.promotion?.reduction &&
-            product.promotion?.reduction !== 0 && (
+          {product.promotion &&
+            campaignValidator(product.promotion) === 'promotion' && (
               <span
                 onClick={() => {
                   router.push(
@@ -39,8 +40,8 @@ export default function ProductCard(product: ProductItem) {
               </span>
             )}
 
-          {product.promotion?.reduction &&
-            product.promotion?.reduction === 0 && (
+          {product.promotion &&
+            campaignValidator(product.promotion) === 'campaign' && (
               <span
                 onClick={() => {
                   router.push(
@@ -69,7 +70,8 @@ export default function ProductCard(product: ProductItem) {
       <div className="w-80 max-lg:w-64 mt-4 flex flex-wrap flex-col">
         <div className="w-full flex items-center gap-x-2">
           <p className="text-lg font-semibold text-gray-900">
-            {product.promotion?.reduction && product.promotion?.reduction !== 0
+            {product.promotion &&
+            campaignValidator(product.promotion) === 'promotion'
               ? money.format(
                   product.price -
                     product.price * (product.promotion.reduction / 100),
@@ -77,8 +79,8 @@ export default function ProductCard(product: ProductItem) {
               : money.format(product.price)}
           </p>
 
-          {product.promotion?.reduction &&
-            product.promotion?.reduction !== 0 && (
+          {product.promotion &&
+            campaignValidator(product.promotion) === 'promotion' && (
               <p className="font-medium line-through text-gray-500 text-sm">
                 {money.format(product.price)}
               </p>

@@ -130,6 +130,8 @@ export default function PromotionPage() {
                   id: postId,
                   title: data.title,
                   reduction: data.reduction,
+                  startDate: data.startDate,
+                  finishDate: data.finishDate,
                 },
               }).catch((e) => {
                 console.error(e)
@@ -219,6 +221,8 @@ export default function PromotionPage() {
                     id: oldData.id,
                     title: data.title,
                     reduction: data.reduction,
+                    startDate: data.startDate,
+                    finishDate: data.finishDate,
                   },
                 })
               }

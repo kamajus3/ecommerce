@@ -1,3 +1,4 @@
+import { ProductPromotionObject } from '@/@types'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -30,5 +31,22 @@ export function publishedSince(date: string) {
     return `${publishedSince} atrás`
   } catch (e) {
     return ''
+  }
+}
+
+export function campaignValidator(
+  promotion?: ProductPromotionObject,
+): undefined | 'campaign' | 'promotion' {
+  if (promotion) {
+    const startDate = new Date(promotion?.startDate)
+    const endDate = new Date(promotion?.finishDate)
+    const currentDate = new Date()
+
+    if (currentDate >= startDate && currentDate <= endDate) {
+      if (promotion.reduction === 0) {
+        return 'campaign'
+      }
+      return 'promotion'
+    }
   }
 }
