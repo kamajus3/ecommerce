@@ -47,7 +47,7 @@ const schema = z.object({
   description: z
     .string()
     .min(6, 'A descrição me deve ter no minimo 6 carácteres')
-    .max(170, 'A descrição deve ter no máxmio 170 carácteres')
+    .max(180, 'A descrição deve ter no máximo 180 carácteres')
     .trim(),
   quantity: z
     .number({
@@ -55,7 +55,7 @@ const schema = z.object({
       invalid_type_error: 'A quantidade do producto está invalida',
     })
     .positive('A quantidade deve ser um número positivo')
-    .max(10000, 'A quantidade máxima é 10.000'),
+    .max(10000, 'A quantidade máxima permitida é 10.000'),
   price: z
     .number({
       required_error: 'Digite o preço do producto',
