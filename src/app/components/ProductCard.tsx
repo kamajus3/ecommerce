@@ -68,7 +68,7 @@ export default function ProductCard(product: ProductItem) {
       </div>
       <div className="w-80 max-lg:w-64 mt-4 flex flex-wrap flex-col">
         <div className="w-full flex items-center gap-x-2">
-          <p className="text-lg font-medium text-gray-900">
+          <p className="text-lg font-semibold text-gray-900">
             {product.promotion?.reduction && product.promotion?.reduction !== 0
               ? money.format(
                   product.price -
