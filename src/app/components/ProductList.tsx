@@ -13,6 +13,7 @@ import '@/assets/swiper.css'
 import { ProductItem, ProductQuery } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import { useEffect, useState } from 'react'
+import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
 
 interface ProductListProps {
   title: string
@@ -69,6 +70,13 @@ export default function ProductList(props: ProductListProps) {
             )}
           </>
         ))}
+
+        {Object.entries(productData).length !== 0 &&
+          [1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => (
+            <SwiperSlide key={id}>
+              <ProductCardSkeleton />
+            </SwiperSlide>
+          ))}
       </Swiper>
     </div>
   )
