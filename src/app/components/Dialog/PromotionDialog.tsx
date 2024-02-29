@@ -73,7 +73,7 @@ const schema = z.object({
   description: z
     .string()
     .min(6, 'A descrição me deve ter no minimo 6 carácteres')
-    .max(70, 'A descrição deve ter no máxmio 70 carácteres')
+    .max(70, 'A descrição deve ter no máximo 70 carácteres')
     .trim(),
   photo: z
     .instanceof(Blob, {

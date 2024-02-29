@@ -11,6 +11,7 @@ import { ProductItem } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 import Link from 'next/link'
+import { campaignValidator } from '@/functions'
 
 interface CartProduct extends ProductItem {
   quantity: number
@@ -97,7 +98,8 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {product.promotion?.reduction && product.promotion?.reduction > 0
+          {product.promotion &&
+          campaignValidator(product.promotion) === 'promotion'
             ? `${product.promotion?.reduction} %`
             : '-'}
         </div>

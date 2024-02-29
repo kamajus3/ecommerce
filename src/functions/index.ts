@@ -1,5 +1,5 @@
 import { ProductPromotionObject } from '@/@types'
-import { formatDistanceToNowStrict } from 'date-fns'
+import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 export async function URLtoFile(url: string) {
@@ -21,11 +21,11 @@ export async function URLtoFile(url: string) {
 
 export function publishedSince(date: string) {
   try {
-    const publishedSince = formatDistanceToNowStrict(new Date(date), {
+    const publishedSince = formatDistanceToNowStrict(parseISO(date), {
       locale: ptBR,
     })
 
-    if (new Date(date) > new Date()) {
+    if (parseISO(date) > new Date()) {
       return `Daqui à ${publishedSince}`
     }
     return `${publishedSince} atrás`
@@ -38,8 +38,8 @@ export function campaignValidator(
   promotion?: ProductPromotionObject,
 ): undefined | 'campaign' | 'promotion' {
   if (promotion) {
-    const startDate = new Date(promotion?.startDate)
-    const endDate = new Date(promotion?.finishDate)
+    const startDate = parseISO(promotion.startDate)
+    const endDate = parseISO(promotion.finishDate)
     const currentDate = new Date()
 
     if (currentDate >= startDate && currentDate <= endDate) {
