@@ -199,9 +199,6 @@ export default function CartPage() {
                     }}
                     className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                   />
-                  <label htmlFor="select-all-products" className="select-none">
-                    Todos
-                  </label>
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   Foto
@@ -216,7 +213,7 @@ export default function CartPage() {
                   Quantidade
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Em promoção
+                  Em promoção?
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   -
