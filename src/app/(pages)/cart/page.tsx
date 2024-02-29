@@ -10,6 +10,7 @@ import { getProduct } from '@/lib/firebase/database'
 import { ProductItem } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
+import Link from 'next/link'
 
 interface CartProduct extends ProductItem {
   quantity: number
@@ -65,7 +66,10 @@ function CartTableRow({
         </div>
       </td>
       <td className="p-3">
-        <div className="flex items-center justify-center">
+        <Link
+          href={`/product/${product.id}`}
+          className="flex items-center justify-center"
+        >
           <Image
             width={70}
             height={70}
@@ -74,10 +78,12 @@ function CartTableRow({
             draggable={false}
             className="select-none"
           />
-        </div>
+        </Link>
       </td>
       <td className="p-3">
-        <div className="text-center text-black font-medium">{product.name}</div>
+        <div className="text-center text-black font-medium">
+          <Link href={`/product/${product.id}`}>{product.name}</Link>
+        </div>
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
@@ -124,6 +130,7 @@ function CartTableRow({
 export default function CartPage() {
   const [totalPrice, setTotalPrice] = useState(0)
   const [productData, setProductData] = useState<CartProduct[]>([])
+  const [isModalOpened, setModalOpen] = useState(false)
 
   const cartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState(
@@ -213,7 +220,7 @@ export default function CartPage() {
                   Quantidade
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Em promoção?
+                  Promoção
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   -
@@ -238,10 +245,18 @@ export default function CartPage() {
           <span className="text-[#5e5f61] ">Total a pagar</span>
           <span className="font-bold text-4xl">{money.format(totalPrice)}</span>
         </div>
-        <button className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none">
-          Fazer pedido
+        <button
+          onClick={() => setModalOpen(true)}
+          className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+        >
+          Confirmar seu pedido
         </button>
       </div>
+      <Dialog.ConfirmOrder
+        action={() => {}}
+        isOpen={isModalOpened}
+        setOpen={setModalOpen}
+      />
       <Footer />
     </section>
   )

@@ -1,3 +1,4 @@
+import ConfirmOrderDialog from './ConfirmOrderDialog'
 import DialogDelete from './DialogDelete'
 import ProductDialog from './ProductDialog'
 import PromotionDialog from './PromotionDialog'
@@ -7,4 +8,5 @@ export default {
   Delete: DialogDelete,
   Product: ProductDialog,
   Promotion: PromotionDialog,
+  ConfirmOrder: ConfirmOrderDialog,
 }
