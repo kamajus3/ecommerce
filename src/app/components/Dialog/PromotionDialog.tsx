@@ -46,7 +46,11 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 const DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 
 const schema = z.object({
-  title: z.string().min(6, 'O título deve ter no minimo 6 caracteres').trim(),
+  title: z
+    .string()
+    .min(6, 'O título deve ter no minimo 6 caracteres')
+    .max(12, 'O título deve ter no máximo 12 carácteres')
+    .trim(),
   reduction: z
     .number({
       required_error: 'Digite a taxa de redução',
@@ -68,7 +72,8 @@ const schema = z.object({
     .regex(DATETIME_REGEX, 'A data de termino está invalida'),
   description: z
     .string()
-    .min(6, 'A descrição me deve ter no minimo 6 caracteres')
+    .min(6, 'A descrição me deve ter no minimo 6 carácteres')
+    .max(70, 'A descrição deve ter no máxmio 70 carácteres')
     .trim(),
   photo: z
     .instanceof(Blob, {

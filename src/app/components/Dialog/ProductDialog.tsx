@@ -39,10 +39,15 @@ interface DialogRootProps {
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 
 const schema = z.object({
-  name: z.string().min(6, 'O nome deve ter no minimo 6 caracteres').trim(),
+  name: z
+    .string()
+    .min(6, 'O nome deve ter no minimo 6 caracteres')
+    .max(12, 'O nome deve ter no máximo 12 carácteres')
+    .trim(),
   description: z
     .string()
-    .min(6, 'A descrição me deve ter no minimo 6 caracteres')
+    .min(6, 'A descrição me deve ter no minimo 6 carácteres')
+    .max(170, 'A descrição deve ter no máxmio 170 carácteres')
     .trim(),
   quantity: z
     .number({
@@ -56,6 +61,7 @@ const schema = z.object({
       required_error: 'Digite o preço do producto',
       invalid_type_error: 'A preço do producto está invalido',
     })
+    .max(100000000, 'O preço máximo é 100.000.000')
     .positive('O preço deve ser um número positivo'),
   category: z
     .string({
