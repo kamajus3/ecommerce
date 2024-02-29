@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,6 +10,7 @@ import useCartStore from '@/store/CartStore'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { getProduct } from '@/lib/firebase/database'
 
 interface ClientHeaderProps {
   searchDefault?: string | null
@@ -32,12 +33,26 @@ export default function ClientHeader(props: ClientHeaderProps) {
     resolver: zodResolver(schema),
   })
   const cartProducts = useCartStore((state) => state.products)
+  const removeFromCart = useCartStore((state) => state.removeProduct)
   const [isSearchOn, setSearchOn] = useState(false)
   const router = useRouter()
 
   function onSubmit(data: FormData) {
     router.replace(`/search/${data.searchValue}`)
   }
+
+  useEffect(() => {
+    function unsubscribed() {
+      cartProducts.map(async (p) => {
+        const data = await getProduct(p.id)
+        if (!data) {
+          removeFromCart(p.id)
+        }
+      })
+    }
+
+    unsubscribed()
+  }, [cartProducts, removeFromCart])
 
   return (
     <header className="border-b">

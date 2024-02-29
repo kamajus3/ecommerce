@@ -49,7 +49,7 @@ const schema = z.object({
   title: z
     .string()
     .min(6, 'O título deve ter no minimo 6 caracteres')
-    .max(12, 'O título deve ter no máximo 12 carácteres')
+    .max(120, 'O título deve ter no máximo 120 carácteres')
     .trim(),
   reduction: z
     .number({
