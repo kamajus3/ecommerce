@@ -19,6 +19,7 @@ export default function Home() {
         title="Produtos em Destaque"
         query={{
           orderBy: 'mostViews',
+          limit: 10,
         }}
       />
       <div className="h-32 border-b" />
@@ -27,6 +28,7 @@ export default function Home() {
         title="Recém adicionados"
         query={{
           orderBy: 'updatedAt',
+          limit: 7,
         }}
       />
       <div className="h-32 border-b" />
@@ -37,6 +39,7 @@ export default function Home() {
         title="Produtos mais vendidos"
         query={{
           orderBy: 'bestSellers',
+          limit: 8,
         }}
       />
       <Advantages />

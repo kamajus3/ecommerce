@@ -2,12 +2,12 @@ import Header from '@/app/components/Header'
 import Image from 'next/image'
 import Footer from '@/app/components/Footer'
 import ProductList from '@/app/components/ProductList'
-import { FileImage } from 'lucide-react'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import PostAction from './action'
 import { getProduct } from '@/lib/firebase/database'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 export async function generateMetadata({
   params,
@@ -30,7 +30,7 @@ export async function generateMetadata({
         })
       } else {
         resolve({
-          title: `Producto não encontrado.`,
+          title: `Produto não encontrado.`,
         })
       }
     })
@@ -55,36 +55,67 @@ export default async function ProductPage({
             className="w-full sm:w-80 h-80 relative select-none"
             draggable={false}
           >
-            {product ? (
-              <Image
-                src={product.photo}
-                alt={product.name}
-                objectFit="cover"
-                objectPosition="center"
-                draggable={false}
-                className="select-none"
-                fill
-              />
-            ) : (
-              <div role="status" className="h-full w-full animate-pulse">
-                <div className="flex items-center justify-center h-full mb-4 bg-gray-700">
-                  <FileImage size={40} color="#f5f5f5" />
-                </div>
-                <span className="sr-only">Processando...</span>
-              </div>
+            {product && (
+              <>
+                {product.promotion?.reduction &&
+                  product.promotion?.reduction !== 0 && (
+                    <Link
+                      href="#"
+                      className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
+                    >
+                      Promoção: {`${product.promotion.reduction} %`}
+                    </Link>
+                  )}
+
+                {product.promotion?.reduction &&
+                  product.promotion?.reduction === 0 && (
+                    <Link
+                      href="#"
+                      className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 top-0"
+                    >
+                      Em campanha
+                    </Link>
+                  )}
+
+                <Image
+                  src={product.photo}
+                  alt={product.name}
+                  objectFit="cover"
+                  objectPosition="center"
+                  draggable={false}
+                  className="select-none"
+                  fill
+                />
+              </>
             )}
           </div>
           <div className="mt-4 sm:w-[30%] w-full flex flex-col items-start justify-center">
-            <span className="text-gray-600 font-medium">
+            <Link
+              href={`/search/category?value=${product.category}`}
+              className="text-gray-600 font-medium"
+            >
               {product.category}
-            </span>
+            </Link>
             <h2 className="text-2xl font-semibold text-gray-800">
               {product.name}
             </h2>
             <p className="text-gray-600">{product.description}</p>
+
             <span className="block mt-2 text-xl font-semibold text-gray-700">
-              {money.format(product.price)}
+              {product.promotion?.reduction &&
+              product.promotion?.reduction !== 0
+                ? money.format(
+                    product.price -
+                      product.price * (product.promotion.reduction / 100),
+                  )
+                : money.format(product.price)}
             </span>
+            {product.promotion?.reduction &&
+              product.promotion?.reduction !== 0 && (
+                <span className="font-medium line-through text-gray-500 text-sm">
+                  {money.format(product.price)}
+                </span>
+              )}
             <PostAction {...product} id={params.id} />
           </div>
         </div>

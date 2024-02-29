@@ -26,10 +26,7 @@ export default function ProductList(props: ProductListProps) {
 
   useEffect(() => {
     async function unsubscribed() {
-      await getProducts({
-        ...props.query,
-        limit: 15,
-      }).then((products) => {
+      await getProducts(props.query).then((products) => {
         setProductData(products)
       })
     }
