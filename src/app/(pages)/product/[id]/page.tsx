@@ -124,6 +124,7 @@ export default async function ProductPage({
         title="Produtos relacionados"
         query={{
           category: product.category,
+          except: params.id,
           limit: 15,
         }}
       />

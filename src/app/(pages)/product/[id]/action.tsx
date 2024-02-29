@@ -25,16 +25,22 @@ export default function PostAction(product: ProductItem) {
   return (
     <>
       <div className="flex mt-4">
-        <button className="bg-red-500 h-12 w-12" onClick={decreaseQuantity}>
+        <button
+          className="bg-red-500 hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+          onClick={decreaseQuantity}
+        >
           -
         </button>
         <input
-          className="w-16 h-12 text-center bg-gray-100 text-black outline-none border-b border-t"
+          className="w-16 h-12 text-center bg-gray-100 text-black font-medium outline-none border-b border-t"
           type="number"
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
         />
-        <button className="bg-red-500 h-12 w-12" onClick={increaseQuantity}>
+        <button
+          className="bg-red-500 hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+          onClick={increaseQuantity}
+        >
           +
         </button>
       </div>
@@ -46,7 +52,7 @@ export default function PostAction(product: ProductItem) {
               setQuantity(1)
             }
           }}
-          className="mt-4 bg-red-500 text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-75 flex items-center justify-center gap-2"
+          className="mt-4 bg-red-500 text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
         >
           <Minus size={15} /> Remover do carrinho
         </button>
@@ -60,7 +66,7 @@ export default function PostAction(product: ProductItem) {
               })
             }
           }}
-          className="mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-75 flex items-center justify-center gap-2"
+          className="mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
         >
           <Plus size={15} /> Adicionar ao carrinho
         </button>

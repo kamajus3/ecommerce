@@ -62,7 +62,8 @@ export default function ProductList(props: ProductListProps) {
       >
         {Object.entries(productData).map(([id, product]) => (
           <SwiperSlide key={id}>
-            <ProductCard {...product} id={id} />
+            {id !== props.query?.except ||
+              (!props.query?.except && <ProductCard {...product} id={id} />)}
           </SwiperSlide>
         ))}
       </Swiper>

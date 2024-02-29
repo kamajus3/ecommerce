@@ -57,6 +57,7 @@ export interface ProductQuery {
   limit?: number
   category?: string
   promotion?: string
+  except?: string
   exceptOthersProduct?: boolean
   orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
 }
