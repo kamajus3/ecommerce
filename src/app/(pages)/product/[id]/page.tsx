@@ -128,6 +128,7 @@ export default async function ProductPage({
           limit: 15,
         }}
       />
+      <div className="mb-4" />
       <Footer />
     </section>
   )

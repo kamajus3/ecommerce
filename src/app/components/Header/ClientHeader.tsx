@@ -56,7 +56,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
   return (
     <header className="border-b">
-      <article className="w-[98%] flex justify-between items-center py-2 mx-auto">
+      <article className="w-[98%] flex justify-between items-center py-3 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
