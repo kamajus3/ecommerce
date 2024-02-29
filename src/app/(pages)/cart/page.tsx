@@ -28,6 +28,7 @@ function CartTableRow({
 }: CartTableRowProps) {
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const money = useMoneyFormat()
 
   const notifyDelete = () =>
     toast.success('Produto removido com sucesso', {
@@ -80,12 +81,19 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {product.price}
+          {money.format(product.price)}
         </div>
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
           {product.quantity}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
+          {product.promotion?.reduction && product.promotion?.reduction > 0
+            ? `${product.promotion?.reduction} %`
+            : '-'}
         </div>
       </td>
       <td className="p-3">
@@ -131,7 +139,17 @@ export default function CartPage() {
         cartProducts.map(async (p) => {
           const product = await getProduct(p.id)
           if (product) {
-            return { ...product, id: p.id, quantity: p.quantity }
+            return {
+              ...product,
+              id: p.id,
+              quantity: p.quantity,
+              price:
+                product.promotion?.reduction &&
+                product.promotion?.reduction !== 0
+                  ? product.price -
+                    product.price * (product.promotion.reduction / 100)
+                  : product.price,
+            }
           }
           return null
         }),
@@ -196,6 +214,9 @@ export default function CartPage() {
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   Quantidade
+                </th>
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Em promoção
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   -
