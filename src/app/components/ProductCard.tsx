@@ -15,7 +15,7 @@ export default function ProductCard(product: ProductItem) {
 
   return (
     <div>
-      <div className="w-80 h-80 rounded-md group-hover:opacity-75  max-lg:h-64 max-lg:w-64">
+      <div className="w-72 h-72 rounded-md group-hover:opacity-75  max-lg:h-64 max-lg:w-64">
         <div className="w-full h-full relative select-none" draggable={false}>
           {cartProducts.find((p) => p.id === product.id) && (
             <button

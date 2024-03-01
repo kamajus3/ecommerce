@@ -3,7 +3,7 @@
 import Header from '@/app/components/Header'
 import ProductCard from '@/app/components/ProductCard'
 import Footer from '@/app/components/Footer'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 import { ProductItem } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
@@ -12,44 +12,37 @@ import { SearchX } from 'lucide-react'
 import Loading from '@/app/components/Loading'
 
 function SearchPageWithoutBoundary() {
-  const searchParams = useSearchParams()
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
   )
-
-  const category = searchParams.get('value') || ''
+  const [loading, setLoading] = useState(true)
   const { value: searchValue } = useParams<{ value: string }>()
   const search = decodeURIComponent(searchValue)
 
   useEffect(() => {
     async function unsubscribed() {
       await getProducts({
-        search: category ? undefined : search,
-        category,
+        search,
       }).then((products) => {
         setProductData(products)
       })
+      setLoading(false)
     }
 
     unsubscribed()
-  }, [search, category])
+  }, [search])
 
   const resultsCount = Object.keys(productData).length
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
-      <Header.Client searchDefault={category && search ? undefined : search} />
+      <Header.Client searchDefault={search} />
 
       <div>
-        {category && search ? (
-          <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
-            PRODUCTOS DA CATEGÓRIA &quot;{category}&quot;
-          </p>
-        ) : (
-          <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
-            PESQUISAR &quot;{search}&quot;
-          </p>
-        )}
+        <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
+          PESQUISAR &quot;{search}&quot;
+        </p>
+
         <p
           className={clsx(
             'text-black font-semibold text-3xl p-4 mb-2 max-sm:text-center',
@@ -64,7 +57,7 @@ function SearchPageWithoutBoundary() {
 
       <div
         className={clsx(
-          'w-screen min-h-[50vh] flex flex-wrap gap-6 p-4 max-sm:justify-center mb-8',
+          'w-screen min-h-[50vh] flex flex-wrap gap-6 p-6 max-sm:justify-center mb-8',
           {
             hidden: resultsCount === 0,
           },
@@ -79,7 +72,7 @@ function SearchPageWithoutBoundary() {
         className={clsx(
           'w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8',
           {
-            hidden: resultsCount !== 0,
+            hidden: resultsCount !== 0 || loading,
           },
         )}
       >
@@ -88,6 +81,15 @@ function SearchPageWithoutBoundary() {
           Nenhum resultado encontrado
         </p>
       </div>
+
+      {loading && (
+        <div className="w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8">
+          <div
+            className="inline-block h-8 w-8 animate-spin rounded-full border-main border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          />
+        </div>
+      )}
 
       <Footer />
     </section>
