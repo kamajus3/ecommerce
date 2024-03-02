@@ -62,7 +62,7 @@ export function SearchPageWithoutBoundary() {
           <h2 className="text-black font-semibold text-2xl">
             {promotionData.title}
           </h2>
-          <p className="text-[#212121] text-sm max-w-10">
+          <p className="text-[#212121] text-sm w-[80vw]">
             {promotionData.description}
           </p>
         </article>

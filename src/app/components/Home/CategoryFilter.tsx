@@ -16,7 +16,7 @@ interface CategoryFilterProps {
 
 function CategoryCard(props: Category) {
   return (
-    <Link href={`/category/${props.label}`}>
+    <Link href={`/categoria/${props.label}`}>
       <div
         style={{
           backgroundImage: `url(${props.img})`,

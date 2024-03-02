@@ -61,7 +61,7 @@ export default async function ProductPage({
                 {product.promotion &&
                   campaignValidator(product.promotion) === 'promotion' && (
                     <Link
-                      href={`/campaign/${product.promotion?.id}`}
+                      href={`/campanha/${product.promotion?.id}`}
                       className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
                     >
                       Promoção: {`${product.promotion?.reduction} %`}
@@ -71,7 +71,7 @@ export default async function ProductPage({
                 {product.promotion &&
                   campaignValidator(product.promotion) === 'campaign' && (
                     <Link
-                      href={`/campaign/${product.promotion?.id}`}
+                      href={`/campanha/${product.promotion?.id}`}
                       className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 top-0"
                     >
                       Em campanha
@@ -92,7 +92,7 @@ export default async function ProductPage({
           </div>
           <div className="mt-4 sm:w-[30%] w-full flex flex-col items-start justify-center">
             <Link
-              href={`/category/${product.category}`}
+              href={`/categoria/${product.category}`}
               className="text-gray-600 font-medium"
             >
               {product.category}

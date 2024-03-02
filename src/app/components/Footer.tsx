@@ -54,12 +54,12 @@ export default function Footer() {
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
-                  <Link href="/about-us" className="hover:underline">
+                  <Link href="/sobre" className="hover:underline">
                     Quem somos nós?
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="/terms" className="hover:underline">
+                  <Link href="/termos-gerais" className="hover:underline">
                     Termos e condições
                   </Link>
                 </li>

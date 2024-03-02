@@ -4,14 +4,12 @@ import useCartStore from '@/store/CartStore'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { X } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { campaignValidator } from '@/functions'
 
 export default function ProductCard(product: ProductItem) {
   const money = useMoneyFormat()
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
-  const router = useRouter()
 
   return (
     <div>
@@ -28,29 +26,25 @@ export default function ProductCard(product: ProductItem) {
 
           {product.promotion &&
             campaignValidator(product.promotion) === 'promotion' && (
-              <span
-                onClick={() => {
-                  router.push(`/campaign/${product.promotion?.id}`)
-                }}
+              <Link
+                href={`/campanha/${product.promotion?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
               >
                 Promoção: {`${product.promotion.reduction} %`}
-              </span>
+              </Link>
             )}
 
           {product.promotion &&
             campaignValidator(product.promotion) === 'campaign' && (
-              <span
-                onClick={() => {
-                  router.push(`/campaign/${product.promotion?.id}`)
-                }}
+              <Link
+                href={`/campanha/${product.promotion?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
               >
                 Em campanha
-              </span>
+              </Link>
             )}
 
-          <Link href={`/product/${product.id}`}>
+          <Link href={`/producto/${product.id}`}>
             <Image
               src={product.photo}
               alt={product.name}
@@ -83,9 +77,9 @@ export default function ProductCard(product: ProductItem) {
             )}
         </div>
         <div className="w-full flex justify-between items-center">
-          <p className="text-base text-gray-700 font-medium">
-            <Link href={`/product/${product.id}`}>{product.name}</Link>
-          </p>
+          <span className="text-base text-gray-700 font-medium">
+            {product.name}
+          </span>
         </div>
       </div>
     </div>
