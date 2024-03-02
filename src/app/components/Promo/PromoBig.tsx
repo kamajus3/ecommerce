@@ -39,7 +39,7 @@ export default function PromoBig({ serverTime }: { serverTime: Date }) {
   }, [serverTime])
 
   return (
-    <article className="w-full px-9 py-12 bg-main rounded flex flex-col lg:flex-row justify-between items-center">
+    <article className="w-full px-9 py-12 bg-main flex flex-col lg:flex-row justify-between items-center">
       <div className="w-full lg:w-2/5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
         <h4 className="text-white font-medium mb-3">Promoção</h4>
         <h5 className="text-white text-4xl font-semibold mt-1">
@@ -47,25 +47,25 @@ export default function PromoBig({ serverTime }: { serverTime: Date }) {
         </h5>
 
         <div className="flex flex-wrap gap-6 mt-5">
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
+          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
             <p className="font-semibold text-lg">{timeRemaining.days}</p>
             <p className="text-base font-medium">dias</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
+          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
             <p className="font-semibold text-lg">{timeRemaining?.hours}</p>
             <p className="text-base font-medium">horas</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
+          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
             <p className="font-semibold text-lg">{timeRemaining.minutes}</p>
             <p className="text-base font-medium">minutos</p>
           </div>
-          <div className="text-black h-20 w-20 flex flex-col items-center justify-center gap-y-2 bg-white rounded-full p-12 m-auto">
+          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
             <p className="font-semibold text-lg">{timeRemaining.seconds}</p>
             <p className="text-base font-medium">segundos</p>
           </div>
         </div>
 
-        <button className="mt-6 text-white bg-black font-medium rounded py-4 px-8 active:scale-95 hover:brightness-75">
+        <button className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white">
           Ver produtos
         </button>
       </div>
