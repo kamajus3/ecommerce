@@ -26,7 +26,7 @@ export function publishedSince(date: string) {
     })
 
     if (parseISO(date) > new Date()) {
-      return `Daqui à ${publishedSince}`
+      return `daqui à ${publishedSince}`
     }
     return `${publishedSince} atrás`
   } catch (e) {

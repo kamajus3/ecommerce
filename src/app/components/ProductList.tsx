@@ -25,10 +25,13 @@ export default function ProductList(props: ProductListProps) {
     {},
   )
 
+  const [loading, setLoading] = useState(true)
+
   useEffect(() => {
     async function unsubscribed() {
       await getProducts(props.query).then((products) => {
         setProductData(products)
+        setLoading(false)
       })
     }
 
@@ -71,7 +74,7 @@ export default function ProductList(props: ProductListProps) {
           </>
         ))}
 
-        {Object.entries(productData).length === 0 &&
+        {loading &&
           [1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => (
             <SwiperSlide key={id}>
               <ProductCardSkeleton />

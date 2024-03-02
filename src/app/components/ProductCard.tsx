@@ -15,7 +15,7 @@ export default function ProductCard(product: ProductItem) {
 
   return (
     <div>
-      <div className="w-72 h-72 rounded-md group-hover:opacity-75  max-lg:h-64 max-lg:w-64">
+      <div className="w-72 h-72 rounded-md group-hover:opacity-75">
         <div className="w-full h-full relative select-none" draggable={false}>
           {cartProducts.find((p) => p.id === product.id) && (
             <button
@@ -30,11 +30,9 @@ export default function ProductCard(product: ProductItem) {
             campaignValidator(product.promotion) === 'promotion' && (
               <span
                 onClick={() => {
-                  router.push(
-                    `/search/promotion?promotionId=${product.promotion?.id}`,
-                  )
+                  router.push(`/campaign/${product.promotion?.id}`)
                 }}
-                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 -bottom-1"
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
               >
                 Promoção: {`${product.promotion.reduction} %`}
               </span>
@@ -44,11 +42,9 @@ export default function ProductCard(product: ProductItem) {
             campaignValidator(product.promotion) === 'campaign' && (
               <span
                 onClick={() => {
-                  router.push(
-                    `/search/promotion?promotionId=${product.promotion?.id}`,
-                  )
+                  router.push(`/campaign/${product.promotion?.id}`)
                 }}
-                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 -bottom-1"
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
               >
                 Em campanha
               </span>
@@ -67,7 +63,7 @@ export default function ProductCard(product: ProductItem) {
           </Link>
         </div>
       </div>
-      <div className="w-80 max-lg:w-64 mt-4 flex flex-wrap flex-col">
+      <div className="w-full mt-4 flex flex-wrap flex-col">
         <div className="w-full flex items-center gap-x-2">
           <p className="text-lg font-semibold text-gray-900">
             {product.promotion &&

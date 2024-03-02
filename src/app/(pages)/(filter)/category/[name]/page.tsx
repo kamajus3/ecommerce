@@ -16,13 +16,13 @@ function SearchPageWithoutBoundary() {
     {},
   )
   const [loading, setLoading] = useState(true)
-  const { value: searchValue } = useParams<{ value: string }>()
-  const search = decodeURIComponent(searchValue)
+  const { name: categoryValue } = useParams<{ name: string }>()
+  const category = decodeURIComponent(categoryValue)
 
   useEffect(() => {
     async function unsubscribed() {
       await getProducts({
-        search,
+        category,
       }).then((products) => {
         setProductData(products)
       })
@@ -30,17 +30,17 @@ function SearchPageWithoutBoundary() {
     }
 
     unsubscribed()
-  }, [search])
+  }, [category])
 
   const resultsCount = Object.keys(productData).length
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
-      <Header.Client searchDefault={search} />
+      <Header.Client />
 
       <div>
         <p className="text-[#363b44] font-semibold text-base p-4 mt-8 max-sm:text-center">
-          PESQUISAR &quot;{search}&quot;
+          PRODUCTOS DA CATEGÓRIA &quot;{category}&quot;
         </p>
 
         <p
