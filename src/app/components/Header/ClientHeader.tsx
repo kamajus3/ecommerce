@@ -55,7 +55,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
   }, [cartProducts, removeFromCart])
 
   return (
-    <header className="border-b">
+    <header className="border-b sticky top-0 z-50 w-full shadow-sm lg:static lg:z-auto">
       <article className="w-[98%] flex justify-between items-center py-3 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
