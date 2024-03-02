@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import promoHeroe from '@/assets/images/promo-heroe.png'
 import Image from 'next/image'
+import Link from 'next/link'
 
 function calculateTimeRemaining(finishDate: Date) {
   const currentTime = new Date().getTime()
@@ -65,9 +66,12 @@ export default function PromoBig({ serverTime }: { serverTime: Date }) {
           </div>
         </div>
 
-        <button className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white">
+        <Link
+          href="#"
+          className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white"
+        >
           Ver produtos
-        </button>
+        </Link>
       </div>
 
       <div className="w-full lg:w-3/6 mt-6 lg:mt-0">
