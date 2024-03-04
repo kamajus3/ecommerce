@@ -6,7 +6,7 @@ import Image from 'next/image'
 import AboutHeroe from '@/assets/images/about-us-heroe.png'
 import Advantages from '@/app/components/Home/Advantages'
 
-export default function pages() {
+export default function AboutPage() {
   return (
     <section className="bg-white overflow-hidden">
       <Header.Client />
@@ -17,17 +17,20 @@ export default function pages() {
           <div className="w-full">
             <h2 className="text-5xl">Nossa História</h2>
             <p className="text-zinc-800 mt-6 leading-normal">
-              Launced in 2015, Exclusive is South Asia’s premier online shopping
-              makterplace with an active presense in Bangladesh. Supported by
-              wide range of tailored marketing, data and service solutions,
-              Exclusive has 10,500 sallers and 300 brands and serves 3 millioons
-              customers across the region.
+              Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
+              dedicada a oferecer produtos de alta qualidade para o seu
+              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
+              essencial para uma vida plena e feliz. Por isso, nos esforçamos
+              para fornecer aos nossos clientes os melhores produtos do mercado,
+              com preços acessíveis e um atendimento impecável.
             </p>
 
             <p className="text-zinc-800 mt-8 leading-normal">
-              Exclusive has more than 1 Million products to offer, growing at a
-              very fast. Exclusive offers a diverse assotment in categories
-              ranging from consumer.
+              Nossa missão é oferecer aos nossos clientes produtos e serviços
+              que contribuam para uma vida mais saudável e feliz. Acreditamos
+              que o cuidado com o corpo e a mente é fundamental para o bem-estar
+              geral, e por isso, nos dedicamos a fornecer soluções que atendam
+              às necessidades de cada cliente.
             </p>
           </div>
           <div className="bg-[#EB7EA8]">
