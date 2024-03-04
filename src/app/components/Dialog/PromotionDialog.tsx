@@ -175,6 +175,16 @@ export default function DialogRoot(props: DialogRootProps) {
 
   async function onSubmit(data: FormData) {
     if (isDirty) {
+      reset({
+        title: '',
+        description: '',
+        startDate: '',
+        fixed: false,
+        finishDate: '',
+        photo: '',
+        products: [],
+        reduction: 0,
+      })
       if (props.defaultData) {
         await props.action(data, props.defaultData)
       } else {
@@ -307,7 +317,12 @@ export default function DialogRoot(props: DialogRootProps) {
                         <input
                           type="checkbox"
                           id="fixed"
-                          defaultChecked={informationsData.promotionFixed}
+                          defaultChecked={
+                            props.defaultData
+                              ? informationsData.promotionFixed ===
+                                props.defaultData.id
+                              : false
+                          }
                           {...register('fixed')}
                           className="w-[90%] text-gray-500 bg-white outline-none"
                         />

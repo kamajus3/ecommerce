@@ -5,6 +5,7 @@ import AuthProvider from './contexts/AuthContext'
 import 'react-toastify/dist/ReactToastify.css'
 import { Bounce, ToastContainer } from 'react-toastify'
 import PromotionProvider from './contexts/PromotionContext'
+import InformationProvider from './contexts/InformationContext'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -74,7 +75,9 @@ export default function RootLayout({
     <html lang="pt">
       <body className={`${inter.className}`}>
         <AuthProvider>
-          <PromotionProvider>{children}</PromotionProvider>
+          <PromotionProvider>
+            <InformationProvider>{children}</InformationProvider>
+          </PromotionProvider>
         </AuthProvider>
         <ToastContainer
           position="top-center"

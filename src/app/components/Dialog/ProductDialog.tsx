@@ -131,6 +131,15 @@ export default function DialogRoot(props: DialogRootProps) {
 
   async function onSubmit(data: FormData) {
     if (isDirty) {
+      reset({
+        name: '',
+        category: '',
+        description: '',
+        price: '',
+        photo: '',
+        quantity: 0,
+      })
+
       if (props.defaultProduct) {
         await props.action(data, props.defaultProduct)
       } else {

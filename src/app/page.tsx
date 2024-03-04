@@ -6,7 +6,7 @@ import Advantages from './components/Home/Advantages'
 import Footer from './components/Footer'
 import dynamic from 'next/dynamic'
 
-const Promo = dynamic(() => import('./components/Promo/PromoBig'), {
+const PromoBig = dynamic(() => import('./components/Promo/PromoBig'), {
   ssr: false,
 })
 
@@ -32,9 +32,7 @@ export default function Home() {
         }}
       />
       <div className="h-32 border-b" />
-      <Promo
-        serverTime={new Date(new Date().setDate(new Date().getDate() + 2))}
-      />
+      <PromoBig />
       <ProductList
         title="Produtos mais vendidos"
         query={{

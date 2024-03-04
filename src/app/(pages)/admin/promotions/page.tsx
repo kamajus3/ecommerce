@@ -16,6 +16,7 @@ import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import { getProduct } from '@/lib/firebase/database'
+import { useInformation } from '@/hooks/useInformation'
 
 interface FormData {
   title: string
@@ -37,6 +38,7 @@ interface TableRowProps {
 function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const { informationsData } = useInformation()
 
   return (
     <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
@@ -56,6 +58,11 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
       <td className="p-3">
         <div className="text-center text-black font-medium">
           {data.products.length}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-black font-medium">
+          {informationsData.promotionFixed === data.id ? 'sim' : 'não'}
         </div>
       </td>
       <td className="p-3">
@@ -104,6 +111,7 @@ export default function PromotionPage() {
   >({})
 
   const [newModal, setNewModal] = useState(false)
+  const { informationsData } = useInformation()
 
   function postPromotion(data: FormData) {
     const postId = randomBytes(20).toString('hex')
@@ -142,10 +150,6 @@ export default function PromotionPage() {
             if (data.fixed) {
               set(ref(database, 'informations/'), {
                 promotionFixed: postId,
-              })
-            } else {
-              set(ref(database, 'informations/'), {
-                promotionFixed: null,
               })
             }
 
@@ -244,7 +248,9 @@ export default function PromotionPage() {
             set(ref(database, 'informations/'), {
               promotionFixed: oldData.id,
             })
-          } else {
+          }
+
+          if (informationsData.promotionFixed === oldData.id && !data.fixed) {
             set(ref(database, 'informations/'), {
               promotionFixed: null,
             })
@@ -383,6 +389,9 @@ export default function PromotionPage() {
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   <span className="max-sm:hidden">Nº de productos</span>
                   <span className="hidden max-sm:inline">Productos</span>
+                </th>
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Fixada
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   -

@@ -68,7 +68,7 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <Link
-          href={`/product/${product.id}`}
+          href={`/producto/${product.id}`}
           className="flex items-center justify-center"
         >
           <Image
@@ -83,7 +83,7 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-black font-medium">
-          <Link href={`/product/${product.id}`}>{product.name}</Link>
+          <Link href={`/producto/${product.id}`}>{product.name}</Link>
         </div>
       </td>
       <td className="p-3">

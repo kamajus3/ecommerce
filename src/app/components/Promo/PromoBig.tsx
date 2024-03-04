@@ -1,9 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import promoHeroe from '@/assets/images/promo-heroe.png'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePromotion } from '@/hooks/usePromotion'
+import { useInformation } from '@/hooks/useInformation'
+import { PromotionItemBase } from '@/@types'
+import { campaignValidator } from '@/functions'
 
 function calculateTimeRemaining(finishDate: Date) {
   const currentTime = new Date().getTime()
@@ -25,64 +28,91 @@ function calculateTimeRemaining(finishDate: Date) {
   return { days, hours, minutes, seconds }
 }
 
-export default function PromoBig({ serverTime }: { serverTime: Date }) {
+export default function PromoBig() {
+  const { promotionData } = usePromotion()
+  const { informationsData } = useInformation()
+  const [fixedPromo, setFixedPromo] = useState<PromotionItemBase>()
+
   const [timeRemaining, setTimeRemaining] = useState(
-    calculateTimeRemaining(new Date(serverTime)),
+    calculateTimeRemaining(
+      fixedPromo ? new Date(fixedPromo.finishDate) : new Date(),
+    ),
   )
 
   useEffect(() => {
-    const finishDate = new Date(serverTime)
+    if (informationsData.promotionFixed) {
+      Object.entries(promotionData).map(([id, promotion]) => {
+        if (id === informationsData.promotionFixed) {
+          setFixedPromo({
+            ...promotion,
+            id,
+          })
+        }
+        return null
+      })
+    }
+  }, [promotionData, informationsData.promotionFixed])
+
+  useEffect(() => {
+    const finishDate = new Date(
+      fixedPromo ? new Date(fixedPromo.finishDate) : new Date(),
+    )
     const timer = setInterval(() => {
       setTimeRemaining(calculateTimeRemaining(finishDate))
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [serverTime])
+  }, [fixedPromo])
 
   return (
-    <article className="w-full px-9 py-12 bg-main flex flex-col lg:flex-row justify-between items-center">
-      <div className="w-full lg:w-2/5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
-        <h4 className="text-white font-medium mb-3">Promoção</h4>
-        <h5 className="text-white text-4xl font-semibold mt-1">
-          Até 60% de desconto direito
-        </h5>
+    fixedPromo &&
+    campaignValidator(fixedPromo) && (
+      <article className="w-full px-9 py-12 bg-main flex flex-col lg:flex-row justify-between items-center">
+        <div className="w-full lg:w-2/5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
+          <h4 className="text-white font-medium mb-3">
+            {fixedPromo.reduction > 0 ? 'Promoção' : 'Campanha'}
+          </h4>
+          <h5 className="text-white text-4xl font-semibold mt-1">
+            {fixedPromo.title}
+          </h5>
 
-        <div className="flex flex-wrap gap-6 mt-5">
-          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
-            <p className="font-semibold text-lg">{timeRemaining.days}</p>
-            <p className="text-base font-medium">dias</p>
+          <div className="flex flex-wrap gap-6 mt-5">
+            <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
+              <p className="font-semibold text-lg">{timeRemaining.days}</p>
+              <p className="text-base font-medium">dias</p>
+            </div>
+            <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
+              <p className="font-semibold text-lg">{timeRemaining?.hours}</p>
+              <p className="text-base font-medium">horas</p>
+            </div>
+            <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
+              <p className="font-semibold text-lg">{timeRemaining.minutes}</p>
+              <p className="text-base font-medium">minutos</p>
+            </div>
+            <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
+              <p className="font-semibold text-lg">{timeRemaining.seconds}</p>
+              <p className="text-base font-medium">segundos</p>
+            </div>
           </div>
-          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
-            <p className="font-semibold text-lg">{timeRemaining?.hours}</p>
-            <p className="text-base font-medium">horas</p>
-          </div>
-          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
-            <p className="font-semibold text-lg">{timeRemaining.minutes}</p>
-            <p className="text-base font-medium">minutos</p>
-          </div>
-          <div className="text-black h-16 w-16 flex flex-col items-center justify-center gap-y-2 bg-white rounded p-12 m-auto select-none">
-            <p className="font-semibold text-lg">{timeRemaining.seconds}</p>
-            <p className="text-base font-medium">segundos</p>
-          </div>
+
+          <Link
+            href={`/campanha/${fixedPromo.id}`}
+            className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white"
+          >
+            Ver produtos
+          </Link>
         </div>
 
-        <Link
-          href="#"
-          className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white"
-        >
-          Ver produtos
-        </Link>
-      </div>
-
-      <div className="w-full lg:w-3/6 mt-6 lg:mt-0">
-        <Image
-          src={promoHeroe}
-          alt="Promoção"
-          width={568}
-          height={330}
-          className="m-auto"
-        />
-      </div>
-    </article>
+        <div className="w-full lg:w-3/6 mt-6 lg:mt-0">
+          <Image
+            src={fixedPromo.photo}
+            alt={fixedPromo.photo}
+            width={400}
+            height={400}
+            className="m-auto"
+          />
+        </div>
+      </article>
+    )
   )
 }

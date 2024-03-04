@@ -24,7 +24,7 @@ export default function PromotionProvider({
 
   useEffect(() => {
     async function unsubscribed() {
-      get(child(ref(database), `promotions`)).then((snapshot) => {
+      get(child(ref(database), 'promotions')).then((snapshot) => {
         if (snapshot.exists()) {
           setPromotionData(snapshot.val())
         }
