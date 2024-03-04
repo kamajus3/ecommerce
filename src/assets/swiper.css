@@ -1,6 +1,7 @@
 .mySwiper.swiper {
   width: 100%;
-  height: 55vh;
+  height: auto;
+  height: 90vh;
 }
 
 .product-card.swiper {
@@ -18,20 +19,18 @@
   text-align: center;
   font-size: 18px;
   color: #000;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.mySwiper.swiper-slide {
-  position: static;
+.mySwiper .swiper-slide {
   text-align: center;
   font-size: 18px;
   background: #201d63;
   color: #fff;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap-reverse;
   align-items: center;
 }
 

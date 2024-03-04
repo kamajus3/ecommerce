@@ -23,6 +23,7 @@ interface FormData {
   startDate: string
   finishDate: string
   description: string
+  fixed: boolean
   products: ProductInputProps[]
   photo: Blob
 }
@@ -138,6 +139,16 @@ export default function PromotionPage() {
               })
             })
 
+            if (data.fixed) {
+              set(ref(database, 'informations/'), {
+                promotionFixed: postId,
+              })
+            } else {
+              set(ref(database, 'informations/'), {
+                promotionFixed: null,
+              })
+            }
+
             toast.success(`Campanha postada com sucesso`, {
               position: 'top-right',
               autoClose: 5000,
@@ -226,6 +237,16 @@ export default function PromotionPage() {
                   },
                 })
               }
+            })
+          }
+
+          if (data.fixed) {
+            set(ref(database, 'informations/'), {
+              promotionFixed: oldData.id,
+            })
+          } else {
+            set(ref(database, 'informations/'), {
+              promotionFixed: null,
             })
           }
 

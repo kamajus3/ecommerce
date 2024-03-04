@@ -19,9 +19,11 @@ import { URLtoFile } from '@/functions'
 import ProductInput from '../ProductInput'
 import { Percent, X } from 'lucide-react'
 import { getProducts } from '@/lib/firebase/database'
+import { useInformation } from '@/hooks/useInformation'
 
 interface FormData {
   title: string
+  fixed: boolean
   reduction: number
   startDate: string
   finishDate: string
@@ -64,6 +66,7 @@ const schema = z.object({
       invalid_type_error: 'A data de início está invalida',
     })
     .regex(DATETIME_REGEX, 'A data de início está invalida'),
+  fixed: z.boolean(),
   finishDate: z
     .string({
       required_error: 'A data de termino é obrigatória',
@@ -119,6 +122,7 @@ export default function DialogRoot(props: DialogRootProps) {
   })
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const { informationsData } = useInformation()
   const promotionProducts = watch('products')
 
   useEffect(() => {
@@ -275,7 +279,7 @@ export default function DialogRoot(props: DialogRootProps) {
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="title"
+                          htmlFor="reduction"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Taxa de redução
@@ -292,6 +296,28 @@ export default function DialogRoot(props: DialogRootProps) {
                             className="w-[90%] text-gray-500 bg-white outline-none"
                           />
                         </div>
+
+                        {errors.reduction && (
+                          <p className="text-red-500 mt-1">
+                            {errors.reduction.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="mb-4 flex items-center gap-x-2">
+                        <input
+                          type="checkbox"
+                          id="fixed"
+                          defaultChecked={informationsData.promotionFixed}
+                          {...register('fixed')}
+                          className="w-[90%] text-gray-500 bg-white outline-none"
+                        />
+
+                        <label
+                          htmlFor="fixed"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          fixar campanha
+                        </label>
 
                         {errors.reduction && (
                           <p className="text-red-500 mt-1">
