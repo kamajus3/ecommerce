@@ -5,8 +5,9 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Bounce, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { Mail } from 'lucide-react'
+import { ProductItem } from '@/@types'
 
 interface FormData {
   name: string
@@ -14,10 +15,16 @@ interface FormData {
   phone: string
 }
 
+interface CartProduct extends ProductItem {
+  quantity: number
+}
+
 interface ConfirmOrderDialogProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   action: (data: FormData) => void | Promise<void>
+  selectedProducts: string[]
+  productData: CartProduct[]
 }
 
 const schema = z.object({
@@ -45,29 +52,44 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
-  async function onSubmit(data: FormData) {
-    if (isDirty) {
-      console.log(data)
-      props.setOpen(false)
-      router.replace(`https://wa.me/+244935420498?text=Apenas testando...`)
-    } else {
-      toast.warn('Nenhum campo foi alterado', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
-    }
+  function createDelivery(name: string, phone: string, address: string) {
+    const delivery = props.productData.map((p) => {
+      if (props.selectedProducts.includes(p.id)) {
+        return `${p.name}: x${p.quantity}`
+      }
+      return null
+    })
+
+    const deliveryMessage = delivery.filter((p) => p !== null).join(', ')
+
+    return `${deliveryMessage}. \nO meu nome é ${name}, o meu número do whatsapp é ${phone} e a morada da entrega é ${address}.`
+  }
+
+  function createWhatsappMessage(name: string, phone: string, address: string) {
+    const deliveryMessage = createDelivery(name, phone, address)
+    router.push(`https://wa.me/+244935420498?text=${deliveryMessage}`)
+  }
+
+  function createEmailMessage(name: string, phone: string, address: string) {
+    const deliveryMessage = createDelivery(name, phone, address)
+    router.push(
+      `mailto:geral@raciusedific.com?subject=Meu pedido para a Racius Care&body=${deliveryMessage}`,
+    )
+  }
+
+  function sendWhatsappMessage(data: FormData) {
+    props.setOpen(false)
+    createWhatsappMessage(data.name, data.phone, data.address)
+  }
+
+  function sendEmailMessage(data: FormData) {
+    props.setOpen(false)
+    createEmailMessage(data.name, data.phone, data.address)
   }
 
   return (
@@ -91,10 +113,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-          >
+          <form className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -112,7 +131,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                         as="h3"
                         className="text-2xl font-semibold leading-6 text-gray-900 mb-8 my-7"
                       >
-                        Confirme o seu pedido
+                        Enviar o seu pedido
                       </Dialog.Title>
                       <div className="mb-4">
                         <label
@@ -181,6 +200,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="submit"
+                    onClick={handleSubmit(sendWhatsappMessage)}
                     className="inline-flex w-full justify-center rounded-md bg-[#25D366] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
                   >
                     {isSubmitting ? (
@@ -214,17 +234,26 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                             strokeWidth="16"
                           />
                         </svg>
-                        Enviar pedido
+                        Pelo whatsapp
                       </p>
                     )}
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => props.setOpen(false)}
-                    ref={cancelButtonRef}
+                    onClick={handleSubmit(sendEmailMessage)}
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-[#212121] px-3 py-2 text-sm font-semibold text-gray-900 hover:brightness-75 sm:mt-0 sm:w-auto"
                   >
-                    Cancelar
+                    {isSubmitting ? (
+                      <div
+                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                        role="status"
+                      />
+                    ) : (
+                      <p className="text-white flex items-center gap-2">
+                        <Mail />
+                        Pelo e-mail
+                      </p>
+                    )}
                   </button>
                 </div>
               </Dialog.Panel>

@@ -93,7 +93,7 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {product.quantity}
+          x{product.quantity}
         </div>
       </td>
       <td className="p-3">
@@ -249,15 +249,18 @@ export default function CartPage() {
         </div>
         <button
           onClick={() => setModalOpen(true)}
+          disabled={selectedProducts.length === 0}
           className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
         >
-          Confirmar seu pedido
+          Enviar o pedido
         </button>
       </div>
       <Dialog.ConfirmOrder
         action={() => {}}
         isOpen={isModalOpened}
         setOpen={setModalOpen}
+        productData={productData}
+        selectedProducts={selectedProducts}
       />
       <Footer />
     </section>
