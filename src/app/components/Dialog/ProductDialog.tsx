@@ -135,7 +135,7 @@ export default function DialogRoot(props: DialogRootProps) {
         name: '',
         category: '',
         description: '',
-        price: '',
+        price: undefined,
         photo: '',
         quantity: 0,
       })
