@@ -75,8 +75,8 @@ export default function ProductList(props: ProductListProps) {
         ))}
 
         {loading &&
-          [1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => (
-            <SwiperSlide key={Math.random()}>
+          [1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => (
+            <SwiperSlide key={id}>
               <ProductCardSkeleton />
             </SwiperSlide>
           ))}
