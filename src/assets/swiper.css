@@ -17,25 +17,22 @@
 .swiper-slide {
   text-align: center;
   font-size: 18px;
-  background: #fff;
   color: #000;
-  background-size: cover;
-  background-repeat: no-repeat;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.mySwiper .swiper-slide::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.61);
-  opacity: 1;
+.mySwiper.swiper-slide {
+  position: static;
+  text-align: center;
+  font-size: 18px;
+  background: #201d63;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .swiper-button-prev:active,

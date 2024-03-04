@@ -17,13 +17,14 @@ import {
   Autoplay,
 } from 'swiper/modules'
 import useDimensions from '@/hooks/useDimesions'
-import { CAROUSEL } from '@/assets/data/carousel'
 import Link from 'next/link'
+import { usePromotion } from '@/hooks/usePromotion'
+import Image from 'next/image'
 
 function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
   return (
     <button
-      className="flex items-center gap-2 py-3 px-6 text-base bg-main text-white transition-all border-none active:brightness-75 hover:brightness-90"
+      className="flex items-center gap-2 py-3 px-6 text-base bg-white text-black transition-all border-none active:brightness-75 hover:brightness-90"
       {...props}
     >
       {props.children}
@@ -31,6 +32,7 @@ function CarouselButton(props: ButtonHTMLAttributes<HTMLElement>) {
   )
 }
 export default function Carousel() {
+  const { promotionData } = usePromotion()
   const [width] = useDimensions()
 
   return (
@@ -48,22 +50,31 @@ export default function Carousel() {
         }}
         className="mySwiper"
       >
-        {CAROUSEL.map((data) => (
-          <SwiperSlide
-            key={data.title}
-            style={{ backgroundImage: `url(${data.image})` }}
-          >
-            <div className="static left-24 z-50 flex w-[480px] select-none flex-col items-center justify-end gap-4 lg:absolute lg:items-start">
-              <h3 className="text-center text-3xl font-semibold text-white lg:text-left">
-                {data.title}
-              </h3>
-              <p className="text-center text-base text-white lg:text-left">
-                {data.content}
-              </p>
-              <Link href={data.url}>
-                <CarouselButton>Ver productos</CarouselButton>
-              </Link>
-            </div>
+        {Object.entries(promotionData).map(([id, promotion]) => (
+          <SwiperSlide key={id} className="bg-main flex">
+            <article className="w-1/2 h-full">
+              <div className="static left-24 z-50 flex w-[480px] select-none flex-col items-center justify-end gap-4 lg:absolute lg:items-start">
+                <h3 className="text-center text-3xl font-semibold text-white lg:text-left">
+                  {promotion.title}
+                </h3>
+                <p className="text-center text-base text-white lg:text-left">
+                  {promotion.description}
+                </p>
+                <Link href={`/campaign/${id}`}>
+                  <CarouselButton>Ver productos</CarouselButton>
+                </Link>
+              </div>
+            </article>
+            <article className="w-1/2 h-full flex items-center justify-center">
+              <Image
+                src={promotion.photo}
+                alt={promotion.title}
+                width={300}
+                height={300}
+                draggable={false}
+                className="select-none"
+              />
+            </article>
           </SwiperSlide>
         ))}
       </Swiper>
