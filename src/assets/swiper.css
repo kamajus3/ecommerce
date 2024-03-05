@@ -5,7 +5,7 @@
 }
 
 .product-card.swiper {
-  padding: 40px;
+  padding: 40px 0 40px 0;
 }
 
 @media (min-width: 1024px) {
@@ -22,6 +22,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .mySwiper .swiper-slide {

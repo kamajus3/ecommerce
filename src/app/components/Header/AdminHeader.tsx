@@ -10,8 +10,8 @@ export default function AdminHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="border-b">
-      <article className="w-screen flex sm:flex justify-between items-center px-4 py-4">
+    <header className="bg-white border-b w-full shadow-sm sticky top-0 left-0 z-20">
+      <article className="w-[98%] flex justify-between items-center py-4 px-6 mx-auto">
         <Link href="/">
           <Image
             src="/logo.png"

@@ -25,11 +25,7 @@ interface FormData {
 }
 
 export default function ClientHeader(props: ClientHeaderProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
   const cartProducts = useCartStore((state) => state.products)
@@ -56,7 +52,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
   return (
     <header className="bg-white border-b w-full shadow-sm sticky top-0 left-0 z-20">
-      <article className="w-[98%] flex justify-between items-center py-3 mx-auto">
+      <article className="w-[98%] flex justify-between items-center py-4 px-6 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
@@ -68,7 +64,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
         <button
           className={clsx(
-            'h-full w-[10%] flex items-center justify-center sm:hidden',
+            'h-full w-[10%] flex items-center justify-center sm:hidden p-2',
             {
               hidden: !isSearchOn,
             },
@@ -82,7 +78,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={clsx(
-              'max-sm:flex max-sm:w-[80vw] h-11 w-72 flex justify-between items-center bg-neutral-100',
+              'max-sm:flex max-sm:w-[70vw] h-11 w-72 flex justify-between items-center bg-neutral-100',
               {
                 'max-sm:hidden': !isSearchOn,
               },
@@ -93,10 +89,10 @@ export default function ClientHeader(props: ClientHeaderProps) {
               placeholder="Oque é que você precisa?"
               defaultValue={props.searchDefault || ''}
               {...register('searchValue')}
-              className={`pl-4 h-full w-[85%] bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main ${errors.searchValue && 'border-red-500'}`}
+              className="pl-4 h-full w-[85%] rounded-l bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
             ></input>
             <button
-              className="bg-main h-full w-[15%] flex items-center justify-center border-main"
+              className="bg-main h-full w-[15%] flex items-center justify-center border-main rounded-r"
               type="submit"
             >
               <Search color="#fff" size={18} />

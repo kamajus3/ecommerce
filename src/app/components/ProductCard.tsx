@@ -12,7 +12,7 @@ export default function ProductCard(product: ProductItem) {
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
   return (
-    <div>
+    <div className="flex-shrink-0 grow-0 overflow-hidden">
       <div className="w-72 h-72 rounded-md group-hover:opacity-75">
         <div className="w-full h-full relative select-none" draggable={false}>
           {cartProducts.find((p) => p.id === product.id) && (

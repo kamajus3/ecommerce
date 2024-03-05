@@ -50,10 +50,7 @@ export default function ProductList(props: ProductListProps) {
           enabled: true,
         }}
         breakpoints={{
-          320: {
-            slidesPerView: 1,
-          },
-          640: {
+          0: {
             slidesPerView: 1,
           },
           768: {
@@ -61,6 +58,9 @@ export default function ProductList(props: ProductListProps) {
           },
           1024: {
             slidesPerView: 3,
+          },
+          1280: {
+            slidesPerView: 4,
           },
         }}
       >
