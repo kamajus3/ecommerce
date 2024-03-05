@@ -34,9 +34,9 @@ export default function Home() {
       <div className="h-32 border-b" />
       <PromoBig />
       <ProductList
-        title="Produtos mais vendidos"
+        title="Produtos para a sua saúde"
         query={{
-          orderBy: 'bestSellers',
+          category: 'Saúde',
           limit: 8,
         }}
       />
