@@ -1,14 +1,16 @@
 'use client'
 
 import useCartStore from '@/store/CartStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import { ProductItem } from '@/@types'
+import useViewStore from '@/store/ViewStore'
 
 export default function PostAction(product: ProductItem) {
   const [quantity, setQuantity] = useState(1)
-  const cartProducts = useCartStore((state) => state.products)
+  const viewProduct = useViewStore((state) => state.viewProduct)
 
+  const cartProducts = useCartStore((state) => state.products)
   const AddToCart = useCartStore((state) => state.addProduct)
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
@@ -21,6 +23,10 @@ export default function PostAction(product: ProductItem) {
       setQuantity((quantity) => quantity - 1)
     }
   }
+
+  useEffect(() => {
+    viewProduct(product.id)
+  }, [viewProduct, product.id])
 
   return (
     <>

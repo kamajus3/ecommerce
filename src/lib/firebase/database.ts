@@ -8,6 +8,8 @@ import {
   query,
   ref,
   startAt,
+  get,
+  child,
 } from 'firebase/database'
 import { database } from './config'
 import { ProductItem, ProductQuery } from './../../@types'
@@ -26,14 +28,13 @@ export function getProduct(id: string): Promise<ProductItem | undefined> {
   })
 }
 
-export function getProducts(
+export async function getProducts(
   props?: ProductQuery,
 ): Promise<Record<string, ProductItem>> {
-  const reference = ref(database, `products/`)
+  const reference = ref(database, 'products/')
   const constraints: QueryConstraint[] = []
+  let productMostVieweds: string[] = []
   let productQuery = query(reference)
-
-  if (props?.limit) constraints.push(limitToLast(props.limit))
 
   if (props?.search) {
     constraints.push(
@@ -57,6 +58,31 @@ export function getProducts(
     constraints.push(orderByChild('promotion/id'), equalTo(props.promotion))
   }
 
+  if (props?.orderBy === 'mostViews') {
+    const dbRef = ref(database)
+    let productsViews: Record<
+      string,
+      {
+        views: number
+      }
+    >
+
+    await get(child(dbRef, 'views'))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          productsViews = snapshot.val()
+          productMostVieweds = Object.entries(productsViews)
+            .sort((a, b) => b[1].views - a[1].views)
+            .slice(0, props?.limit || 15)
+            .map(([id]) => id)
+        }
+      })
+      .catch(() => {})
+  }
+
+  if (props?.limit && props.orderBy !== 'mostViews')
+    constraints.push(limitToLast(props.limit))
+
   if (!props) {
     productQuery = reference
   } else {
@@ -67,6 +93,15 @@ export function getProducts(
     onValue(productQuery, (snapshot) => {
       const data = snapshot.val()
       if (data) {
+        if (productMostVieweds.length !== 0) {
+          const filteredData: Record<string, ProductItem> = {}
+          Object.entries(data).forEach(([id, item]) => {
+            if (productMostVieweds.includes(id)) {
+              filteredData[id] = item as ProductItem
+            }
+          })
+          resolve(filteredData)
+        }
         resolve(data)
       } else {
         resolve({})
