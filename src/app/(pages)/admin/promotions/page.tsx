@@ -350,7 +350,7 @@ export default function PromotionPage() {
   }, [])
 
   return (
-    <section className="bg-white overflow-hidden min-h-screen">
+    <section className="bg-white min-h-screen">
       <Header.Admin />
 
       <article className="mb-2 mt-12">

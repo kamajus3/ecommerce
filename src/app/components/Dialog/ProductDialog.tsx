@@ -165,7 +165,7 @@ export default function DialogRoot(props: DialogRootProps) {
     <Transition.Root show={props.isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-50"
         initialFocus={cancelButtonRef}
         onClose={props.setOpen}
       >

@@ -50,7 +50,9 @@ export default function AdminHeader() {
             Campanhas
           </Link>
           <div className="h-11 flex gap-4 items-center justify-between">
-            <Avatar />
+            <Avatar.Root>
+              <Avatar.Admin />
+            </Avatar.Root>
           </div>
         </div>
       </article>

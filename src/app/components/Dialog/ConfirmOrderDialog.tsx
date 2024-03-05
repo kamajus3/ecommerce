@@ -5,8 +5,6 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { useRouter } from 'next/navigation'
-import { Mail } from 'lucide-react'
 import { ProductItem } from '@/@types'
 
 interface FormData {
@@ -48,7 +46,6 @@ const schema = z.object({
 
 export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
   const cancelButtonRef = useRef(null)
-  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -57,46 +54,26 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
     resolver: zodResolver(schema),
   })
 
-  function createDelivery(name: string, phone: string, address: string) {
-    const delivery = props.productData.map((p) => {
-      if (props.selectedProducts.includes(p.id)) {
-        return `${p.name}: x${p.quantity}`
-      }
-      return null
-    })
-
-    const deliveryMessage = delivery.filter((p) => p !== null).join(', ')
-
-    return `${deliveryMessage}. \nO meu nome é ${name}, o meu número do whatsapp é ${phone} e a morada da entrega é ${address}.`
+  function onSubmit(data: FormData) {
+    console.log(data)
   }
 
-  function createWhatsappMessage(name: string, phone: string, address: string) {
-    const deliveryMessage = createDelivery(name, phone, address)
-    router.push(`https://wa.me/+244935420498?text=${deliveryMessage}`)
-  }
+  // function createDelivery(name: string, phone: string, address: string) {
+  //   const delivery = props.productData.map((p) => {
+  //     if (props.selectedProducts.includes(p.id)) {
+  //       return `${p.name}: x${p.quantity}`
+  //     }
+  //     return null
+  //   })
 
-  function createEmailMessage(name: string, phone: string, address: string) {
-    const deliveryMessage = createDelivery(name, phone, address)
-    router.push(
-      `mailto:geral@raciusedific.com?subject=Meu pedido para a Racius Care&body=${deliveryMessage}`,
-    )
-  }
-
-  function sendWhatsappMessage(data: FormData) {
-    props.setOpen(false)
-    createWhatsappMessage(data.name, data.phone, data.address)
-  }
-
-  function sendEmailMessage(data: FormData) {
-    props.setOpen(false)
-    createEmailMessage(data.name, data.phone, data.address)
-  }
+  //   const deliveryMessage = delivery.filter((p) => p !== null).join(', ')
+  // }
 
   return (
     <Transition.Root show={props.isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-10"
+        className="relative z-50"
         initialFocus={cancelButtonRef}
         onClose={props.setOpen}
       >
@@ -113,7 +90,10 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-          <form className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+          >
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -199,48 +179,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
-                    type="submit"
-                    onClick={handleSubmit(sendWhatsappMessage)}
-                    className="inline-flex w-full justify-center rounded-md bg-[#25D366] px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
-                  >
-                    {isSubmitting ? (
-                      <div
-                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                      />
-                    ) : (
-                      <p className="text-white flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 256 256"
-                          width="25"
-                          height="25"
-                        >
-                          <rect width="256" height="256" fill="none" />
-                          <path
-                            d="M72,104a32,32,0,0,1,32-32l16,32-12.32,18.47a48.19,48.19,0,0,0,25.85,25.85L152,136l32,16a32,32,0,0,1-32,32A80,80,0,0,1,72,104Z"
-                            fill="none"
-                            stroke="#fff"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="16"
-                          />
-                          <path
-                            d="M79.93,211.11a96,96,0,1,0-35-35h0L32.42,213.46a8,8,0,0,0,10.12,10.12l37.39-12.47Z"
-                            fill="none"
-                            stroke="#fff"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="16"
-                          />
-                        </svg>
-                        Pelo whatsapp
-                      </p>
-                    )}
-                  </button>
-                  <button
                     type="button"
-                    onClick={handleSubmit(sendEmailMessage)}
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-[#212121] px-3 py-2 text-sm font-semibold text-gray-900 hover:brightness-75 sm:mt-0 sm:w-auto"
                   >
                     {isSubmitting ? (
@@ -250,8 +189,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                       />
                     ) : (
                       <p className="text-white flex items-center gap-2">
-                        <Mail />
-                        Pelo e-mail
+                        Confirmar
                       </p>
                     )}
                   </button>

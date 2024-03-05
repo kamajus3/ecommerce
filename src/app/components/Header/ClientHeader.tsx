@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { getProduct } from '@/lib/firebase/database'
+import Avatar from '../Avatar'
 
 interface ClientHeaderProps {
   searchDefault?: string | null
@@ -134,6 +135,12 @@ export default function ClientHeader(props: ClientHeaderProps) {
                 </span>
               </div>
             </Link>
+
+            <div>
+              <Avatar.Root>
+                <Avatar.Client />
+              </Avatar.Root>
+            </div>
           </div>
         </div>
       </article>

@@ -6,6 +6,9 @@ import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
+import googleIcon from '@/assets/images/google.svg'
+import Image from 'next/image'
+import Header from '@/app/components/Header'
 
 const schema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -32,7 +35,7 @@ export default function SignIn() {
   function onSubmit(data: FormData) {
     signInWithEmail(data.email, data.password)
       .then(() => {
-        router.push('/admin/dashboard')
+        router.push('/')
       })
       .catch((e: Error) => {
         toast.error(e.message, {
@@ -51,10 +54,11 @@ export default function SignIn() {
 
   return (
     <section className="bg-white overflow-hidden">
+      <Header.Client />
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
-          <h3 className="text-black text-center text-2xl font-bold sm:text-3xl">
-            Entrando no BackOffice
+          <h3 className="text-black text-2xl font-bold sm:text-3xl">
+            Iniciar sessão
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -92,7 +96,18 @@ export default function SignIn() {
                 <p className="text-white">Entrar</p>
               )}
             </button>
+            <div>
+              <button className="w-full rounded flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">
+                <Image src={googleIcon} alt="Icone do Google" />
+                <p className="font-medium">Continuar com o Google</p>
+              </button>
+            </div>
           </form>
+          <div className="text-center">
+            <a href="/signup" className="hover:text-main">
+              Não tens uma conta? Crie uma
+            </a>
+          </div>
         </div>
       </article>
     </section>
