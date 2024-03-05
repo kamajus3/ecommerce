@@ -72,7 +72,7 @@ function SearchPageWithoutBoundary() {
 
       <div
         className={clsx(
-          'w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8',
+          'w-full min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8',
           {
             hidden: resultsCount !== 0 || loading,
           },
