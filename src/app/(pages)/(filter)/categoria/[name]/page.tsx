@@ -35,7 +35,7 @@ function SearchPageWithoutBoundary() {
   const resultsCount = Object.keys(productData).length
 
   return (
-    <section className="bg-white min-h-screen overflow-hidden">
+    <section className="bg-white min-h-screen">
       <Header.Client />
 
       <div>
@@ -85,7 +85,7 @@ function SearchPageWithoutBoundary() {
       </div>
 
       {loading && (
-        <div className="w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8">
+        <div className="w-full min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8">
           <div
             className="inline-block h-8 w-8 animate-spin rounded-full border-main border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status"

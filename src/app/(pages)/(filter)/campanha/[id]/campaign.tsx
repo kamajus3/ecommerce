@@ -49,7 +49,7 @@ export function SearchPageWithoutBoundary() {
   const resultsCount = Object.keys(productData).length
 
   return (
-    <section className="bg-white min-h-screen overflow-hidden">
+    <section className="bg-white min-h-screen">
       <Header.Client />
 
       {promotionData && (
@@ -83,7 +83,7 @@ export function SearchPageWithoutBoundary() {
 
       <div
         className={clsx(
-          'w-screen min-h-[120vh] flex flex-wrap gap-9 p-6 justify-center mb-8 max-w-[98vw]',
+          'w-full min-h-[120vh] flex flex-wrap gap-9 p-6 justify-center mb-8 max-w-[98vw]',
           {
             hidden: resultsCount === 0,
           },

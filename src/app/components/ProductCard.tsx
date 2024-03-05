@@ -28,7 +28,7 @@ export default function ProductCard(product: ProductItem) {
             campaignValidator(product.promotion) === 'promotion' && (
               <Link
                 href={`/campanha/${product.promotion?.id}`}
-                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
               >
                 Promoção: {`${product.promotion.reduction} %`}
               </Link>
@@ -38,7 +38,7 @@ export default function ProductCard(product: ProductItem) {
             campaignValidator(product.promotion) === 'campaign' && (
               <Link
                 href={`/campanha/${product.promotion?.id}`}
-                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 -bottom-1 cursor-pointer"
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
               >
                 Em campanha
               </Link>

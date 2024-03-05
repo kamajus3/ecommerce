@@ -55,7 +55,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
   }, [cartProducts, removeFromCart])
 
   return (
-    <header className="border-b sticky top-0 z-50 w-full shadow-sm lg:static lg:z-auto">
+    <header className="bg-white border-b w-full shadow-sm sticky top-0 left-0 z-20">
       <article className="w-[98%] flex justify-between items-center py-3 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
@@ -107,13 +107,11 @@ export default function ClientHeader(props: ClientHeaderProps) {
               hidden: isSearchOn,
             })}
           >
-            <button 
+            <button
               className="hidden max-sm:block"
-              onClick={() => setSearchOn(true)}>
-              <Search
-                color="#000"
-                size={27}
-              />
+              onClick={() => setSearchOn(true)}
+            >
+              <Search color="#000" size={27} />
             </button>
             <Link
               href="/carrinho"
