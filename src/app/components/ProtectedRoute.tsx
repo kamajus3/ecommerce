@@ -10,22 +10,31 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, initialized } = useAuth()
+  const { userDB, initialized } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (user && initialized && pathname === '/admin/login') {
-      router.replace('/admin/dashboard')
-    }
+    if (userDB) {
+      const userIsValid = 'admin' in userDB?.privileges
 
-    if (!user && initialized && pathname !== '/admin/login')
-      router.replace('/admin/login')
-  }, [user, router, pathname, initialized])
+      if (userIsValid && initialized && pathname === '/admin/login') {
+        router.replace('/admin/dashboard')
+      }
+
+      if (!userIsValid && initialized && pathname !== '/admin/login') {
+        router.replace('/admin/login')
+      }
+    } else {
+      if (!userDB && initialized && pathname !== '/admin/login') {
+        router.replace('/admin/login')
+      }
+    }
+  }, [userDB, router, pathname, initialized])
 
   return (
     <>
-      {(user && initialized) || pathname === '/admin/login' ? (
+      {(userDB && initialized) || pathname === '/admin/login' ? (
         children
       ) : (
         <Loading />

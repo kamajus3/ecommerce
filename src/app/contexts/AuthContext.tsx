@@ -14,57 +14,109 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { ref, set } from 'firebase/database'
+import { child, get, ref, set } from 'firebase/database'
+
+interface UserDatabase {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  privileges: string[]
+}
 
 interface AuthContextProps {
   user: User | null | undefined
+  userDB: UserDatabase | null | undefined
   initialized: boolean
-  signInWithEmail: (email: string, password: string) => Promise<void>
-  signUpWithEmail: (email: string, password: string) => Promise<void>
+  signInWithEmail: (
+    email: string,
+    password: string,
+  ) => Promise<UserDatabase | null>
+  signUpWithEmail: (
+    email: string,
+    password: string,
+  ) => Promise<UserDatabase | null>
+  logout(): Promise<void>
   setUser: Dispatch<SetStateAction<User | null | undefined>>
 }
 
 export const AuthContext = createContext<AuthContextProps>({
   user: null,
+  userDB: null,
   initialized: false,
   setUser: () => {},
-  signInWithEmail: () => Promise.resolve(),
-  signUpWithEmail: () => Promise.resolve(),
+  signInWithEmail: () => Promise.resolve(null),
+  signUpWithEmail: () => Promise.resolve(null),
+  logout: () => Promise.resolve(),
 })
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState<boolean>(false)
   const [user, setUser] = useState<User | null>()
+  const [userDB, setUserDB] = useState<UserDatabase | null>()
 
   async function signInWithEmail(email: string, password: string) {
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password)
+      const snapshot = await get(child(ref(database), `users/${user.uid}`))
+      if (snapshot.exists()) {
         setUser(user)
-      })
-      .catch(() => {
-        throw Error('Essa conta não existe')
-      })
+        setUserDB(snapshot.val())
+        return snapshot.val()
+      }
+      return null
+    } catch (error) {
+      throw new Error('Essa conta não existe')
+    }
   }
 
   async function signUpWithEmail(email: string, password: string) {
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
-        set(ref(database, `users/${user.uid}`), {
-          name: user.displayName,
-          email: user.email,
-          phone: user.phoneNumber,
-          rules: ['create-orders'],
-        })
-        setUser(user)
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      )
+      const userData = {
+        name: user.displayName || '',
+        email: user.email || '',
+        phone: user.phoneNumber || '',
+        privileges: ['create-orders'],
+      }
+
+      await set(ref(database, `users/${user.uid}`), userData)
+
+      setUser(user)
+      setUserDB({
+        id: user.uid,
+        ...userData,
       })
-      .catch(() => {
-        throw Error('Houve um erro ao tentar criar a conta')
-      })
+
+      return {
+        ...userData,
+        id: user.uid,
+      }
+    } catch (error) {
+      throw new Error('Houve um erro ao tentar criar a conta')
+    }
+  }
+
+  async function logout() {
+    await auth.signOut().then(() => {
+      setUser(null)
+      setUserDB(null)
+    })
   }
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        get(child(ref(database), `users/${user.uid}`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            setUserDB(snapshot.val())
+          }
+        })
+
         setUser(user)
       }
       setInitialized(true)
@@ -78,9 +130,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        userDB,
         initialized,
         signInWithEmail,
         signUpWithEmail,
+        logout,
         setUser,
       }}
     >
