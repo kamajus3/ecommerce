@@ -20,7 +20,7 @@ const useViewStore = create<ViewStore>()(
             get(child(dbRef, `views/${productId}`)).then((snapshot) => {
               if (snapshot.exists()) {
                 firebaseSet(ref(database, `views/${productId}`), {
-                  view: snapshot.val() + 1,
+                  view: snapshot.val().view + 1,
                 })
               } else {
                 firebaseSet(ref(database, `views/${productId}`), {
