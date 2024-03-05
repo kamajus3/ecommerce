@@ -107,9 +107,10 @@ export default function ClientHeader(props: ClientHeaderProps) {
               hidden: isSearchOn,
             })}
           >
-            <button className="hidden max-sm:block">
+            <button 
+              className="hidden max-sm:block"
+              onClick={() => setSearchOn(true)}>
               <Search
-                onClick={() => setSearchOn(true)}
                 color="#000"
                 size={27}
               />
