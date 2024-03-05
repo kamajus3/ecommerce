@@ -63,7 +63,7 @@ export async function getProducts(
     let productsViews: Record<
       string,
       {
-        views: number
+        view: number
       }
     >
 
@@ -72,7 +72,7 @@ export async function getProducts(
         if (snapshot.exists()) {
           productsViews = snapshot.val()
           productMostVieweds = Object.entries(productsViews)
-            .sort((a, b) => b[1].views - a[1].views)
+            .sort((a, b) => b[1].view - a[1].view)
             .slice(0, props?.limit || 15)
             .map(([id]) => id)
         }
@@ -95,13 +95,14 @@ export async function getProducts(
       if (data) {
         if (productMostVieweds.length !== 0) {
           const filteredData: Record<string, ProductItem> = {}
-          Object.entries(data).forEach(([id, item]) => {
-            if (productMostVieweds.includes(id)) {
-              filteredData[id] = item as ProductItem
+          productMostVieweds.forEach((id) => {
+            if (data[id]) {
+              filteredData[id] = data[id] as ProductItem
             }
           })
           resolve(filteredData)
         }
+
         resolve(data)
       } else {
         resolve({})
