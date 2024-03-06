@@ -85,5 +85,6 @@ export interface Order {
   lastName: string
   address: string
   phone: string
+  createdAt: string
   products: ProductOrder[]
 }

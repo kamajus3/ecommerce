@@ -224,6 +224,7 @@ export default function CartPage() {
         lastName: data.lastName,
         address: data.address,
         phone: data.phone,
+        createdAt: new Date(),
         products: productsList,
       })
         .then(() => {

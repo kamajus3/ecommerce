@@ -7,6 +7,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { onValue, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
+import { publishedSince } from '@/functions'
 
 function OrderTableRow(order: Order) {
   const money = useMoneyFormat()
@@ -34,6 +35,11 @@ function OrderTableRow(order: Order) {
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
           {order.address}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
+          {publishedSince(order.createdAt)}
         </div>
       </td>
       <td className="p-3">
@@ -130,6 +136,9 @@ export default function CartPage() {
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   Destinação
+                </th>
+                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                  Data do pedido
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Valor a pagar
