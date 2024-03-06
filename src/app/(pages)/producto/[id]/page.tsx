@@ -129,7 +129,7 @@ export default async function ProductPage({
         }}
       />
       <div className="mb-4" />
-      <Footer />
+      <Footer disableBackButton />
     </section>
   )
 }
