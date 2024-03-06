@@ -88,7 +88,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         firstName: user.displayName || '',
         email: user.email || '',
         phone: user.phoneNumber || '',
-        privileges: ['create-orders'],
+        privileges: ['client', 'create-orders'],
       }
 
       await set(ref(database, `users/${user.uid}`), userData)

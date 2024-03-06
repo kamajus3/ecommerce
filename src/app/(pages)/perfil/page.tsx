@@ -99,104 +99,107 @@ export default function PerfilPage() {
   })
 
   const onSubmit = (data: FormData) => {
-    if (
-      dirtyFields.firstName ||
-      dirtyFields.lastName ||
-      dirtyFields.email ||
-      dirtyFields.phone ||
-      dirtyFields.address
-    ) {
-      set(ref(database, 'users/' + user?.uid), {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-      })
-        .then(() => {
-          updateFieldAsDefault(data)
-          toast.success('A tua conta foi atualizada com sucesso', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+    if (user && userDB) {
+      if (
+        dirtyFields.firstName ||
+        dirtyFields.lastName ||
+        dirtyFields.email ||
+        dirtyFields.phone ||
+        dirtyFields.address
+      ) {
+        set(ref(database, 'users/' + user.uid), {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          address: data.address,
+          privileges: userDB.privileges,
         })
-        .catch(() => {
-          toast.error('Houve algum erro.', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
-        })
-    } else {
-      toast.warn('Você não atualizou nenhum campo', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
-    }
-
-    if (user && data.oldPassword) {
-      const credential = EmailAuthProvider.credential(
-        user.email || '',
-        data.oldPassword || '',
-      )
-
-      reauthenticateWithCredential(user, credential)
-        .then(() => {
-          updatePassword(user, data.newPassword || '')
-            .then(() => {
-              toast.success('Palavra-passe atualizada com sucesso', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                transition: Bounce,
-              })
+          .then(() => {
+            updateFieldAsDefault(data)
+            toast.success('A tua conta foi atualizada com sucesso', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
             })
-            .catch(() => {
-              toast.error('Erro ao atualizar palavra-passe', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                transition: Bounce,
-              })
+          })
+          .catch(() => {
+            toast.error('Houve algum erro.', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
             })
+          })
+      } else {
+        toast.warn('Você não atualizou nenhum campo', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
         })
-        .catch(() => {
-          setError(
-            'oldPassword',
-            { type: 'focus', message: 'A palavra-passe está incorrecta.' },
-            { shouldFocus: true },
-          )
-        })
+      }
+
+      if (data.oldPassword) {
+        const credential = EmailAuthProvider.credential(
+          user.email || '',
+          data.oldPassword || '',
+        )
+
+        reauthenticateWithCredential(user, credential)
+          .then(() => {
+            updatePassword(user, data.newPassword || '')
+              .then(() => {
+                toast.success('Palavra-passe atualizada com sucesso', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                })
+              })
+              .catch(() => {
+                toast.error('Erro ao atualizar palavra-passe', {
+                  position: 'top-right',
+                  autoClose: 5000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                })
+              })
+          })
+          .catch(() => {
+            setError(
+              'oldPassword',
+              { type: 'focus', message: 'A palavra-passe está incorrecta.' },
+              { shouldFocus: true },
+            )
+          })
+      }
     }
   }
 
