@@ -18,7 +18,9 @@ import { child, get, ref, set } from 'firebase/database'
 
 interface UserDatabase {
   id: string
-  name: string
+  firstName: string
+  lastName?: string
+  address?: string
   email: string
   phone?: string
   privileges: string[]
@@ -27,12 +29,16 @@ interface UserDatabase {
 interface AuthContextProps {
   user: User | null | undefined
   userDB: UserDatabase | null | undefined
+  setUserDB: React.Dispatch<
+    React.SetStateAction<UserDatabase | null | undefined>
+  >
   initialized: boolean
   signInWithEmail: (
     email: string,
     password: string,
   ) => Promise<UserDatabase | null>
   signUpWithEmail: (
+    name: string,
     email: string,
     password: string,
   ) => Promise<UserDatabase | null>
@@ -43,6 +49,7 @@ interface AuthContextProps {
 export const AuthContext = createContext<AuthContextProps>({
   user: null,
   userDB: null,
+  setUserDB: () => {},
   initialized: false,
   setUser: () => {},
   signInWithEmail: () => Promise.resolve(null),
@@ -78,7 +85,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         password,
       )
       const userData = {
-        name: user.displayName || '',
+        firstName: user.displayName || '',
         email: user.email || '',
         phone: user.phoneNumber || '',
         privileges: ['create-orders'],
@@ -131,6 +138,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         userDB,
+        setUserDB,
         initialized,
         signInWithEmail,
         signUpWithEmail,

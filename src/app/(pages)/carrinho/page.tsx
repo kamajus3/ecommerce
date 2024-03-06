@@ -1,7 +1,6 @@
 'use client'
 
 import Header from '../../components/Header'
-import Footer from '../../components/Footer'
 import Dialog from '../../components/Dialog'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
@@ -12,6 +11,11 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 import Link from 'next/link'
 import { campaignValidator } from '@/functions'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
+import { ref, set } from 'firebase/database'
+import { database } from '@/lib/firebase/config'
+import { randomBytes } from 'crypto'
 
 interface CartProduct extends ProductItem {
   quantity: number
@@ -132,7 +136,14 @@ function CartTableRow({
 export default function CartPage() {
   const [totalPrice, setTotalPrice] = useState(0)
   const [productData, setProductData] = useState<CartProduct[]>([])
+
+  // Modals
   const [isModalOpened, setModalOpen] = useState(false)
+  const [openLoginModal, setOpenLoginModal] = useState(false)
+  const [orderConfirmedModal, setOrderConfirmedModal] = useState(false)
+
+  const router = useRouter()
+  const { user, initialized } = useAuth()
 
   const cartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState(
@@ -180,8 +191,42 @@ export default function CartPage() {
     setTotalPrice(selectedProductsTotalPrice)
   }, [selectedProducts, cartProducts, productData])
 
+  interface FormData {
+    firstName: string
+    lastName: string
+    address: string
+    phone: string
+  }
+
+  async function createOrder(data: FormData) {
+    const orderId = randomBytes(20).toString('hex')
+    if (user) {
+      await set(ref(database, `orders/${user.uid}/${orderId}`), {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address: data.address,
+        phone: data.address,
+        products: selectedProducts,
+      })
+        .then(() => {})
+        .catch(() => {
+          toast.success('Houve um erro ao tentar fazer o teu pedido', {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          })
+        })
+    }
+  }
+
   return (
-    <section className="bg-white overflow-hidden">
+    <section className="bg-white min-h-screen overflow-hidden">
       <Header.Client />
       <article className="mb-2 mt-5">
         <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
@@ -243,26 +288,50 @@ export default function CartPage() {
         </div>
       </article>
       <div className="mt-10 mb-10 p-8 gap-y-5">
-        <div className="text-black font-medium text-lg mb-3 flex flex-col gap-3">
+        <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
           <span className="text-[#5e5f61] ">Total a pagar</span>
           <span className="font-bold text-4xl">{money.format(totalPrice)}</span>
         </div>
         <button
-          onClick={() => setModalOpen(true)}
+          onClick={() => {
+            if (initialized) {
+              if (user) {
+                setModalOpen(true)
+              } else {
+                setOpenLoginModal(true)
+              }
+            }
+          }}
           disabled={selectedProducts.length === 0}
-          className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+          className="border rounded disabled:cursor-not-allowed disabled:brightness-75 border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
         >
           Enviar o pedido
         </button>
       </div>
+      <Dialog.Delete
+        title="Iniciar sessão"
+        description="Você precisa estar com sessão iniciada para fazer um pedido?"
+        actionTitle="Entrar"
+        action={() => {
+          router.push('/login')
+        }}
+        isOpen={openLoginModal}
+        setOpen={setOpenLoginModal}
+      />
+
       <Dialog.ConfirmOrder
-        action={() => {}}
+        action={createOrder}
         isOpen={isModalOpened}
         setOpen={setModalOpen}
         productData={productData}
         selectedProducts={selectedProducts}
       />
-      <Footer />
+
+      <Dialog.OrderConfirmed
+        action={() => setOrderConfirmedModal(true)}
+        isOpen={orderConfirmedModal}
+        setOpen={setOrderConfirmedModal}
+      />
     </section>
   )
 }

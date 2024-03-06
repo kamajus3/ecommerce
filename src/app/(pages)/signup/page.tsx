@@ -1,7 +1,5 @@
 'use client'
 
-import Image from 'next/image'
-import googleIcon from '@/assets/images/google.svg'
 import Header from '@/app/components/Header'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
@@ -50,8 +48,19 @@ export default function SignUp() {
   const { signUpWithEmail } = useAuth()
 
   function onSubmit(data: FormData) {
-    signUpWithEmail(data.email, data.password)
+    signUpWithEmail(data.name, data.email, data.password)
       .then(() => {
+        toast.success('A conta foi criada com sucesso', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+          transition: Bounce,
+        })
         router.push('/')
       })
       .catch((e: Error) => {
@@ -60,7 +69,7 @@ export default function SignUp() {
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
           theme: 'light',
@@ -133,12 +142,6 @@ export default function SignUp() {
             >
               Continuar
             </button>
-            <div>
-              <button className="w-full rounded flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">
-                <Image src={googleIcon} alt="Icone do Google" />
-                <p className="font-medium">Continuar com o Google</p>
-              </button>
-            </div>
           </form>
           <div className="text-center">
             <a href="/login" className="hover:text-main">

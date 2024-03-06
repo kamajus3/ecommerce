@@ -6,8 +6,6 @@ import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
-import googleIcon from '@/assets/images/google.svg'
-import Image from 'next/image'
 import Header from '@/app/components/Header'
 
 const schema = z.object({
@@ -96,12 +94,6 @@ export default function SignIn() {
                 <p className="text-white">Entrar</p>
               )}
             </button>
-            <div>
-              <button className="w-full rounded flex items-center justify-center gap-3 py-2.5 border hover:bg-gray-50 duration-150 active:bg-gray-100">
-                <Image src={googleIcon} alt="Icone do Google" />
-                <p className="font-medium">Continuar com o Google</p>
-              </button>
-            </div>
           </form>
           <div className="text-center">
             <a href="/signup" className="hover:text-main">

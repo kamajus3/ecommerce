@@ -16,6 +16,17 @@ export default function Avatar() {
         Logado em <strong>{user?.email}</strong>
       </p>
       <Link
+        href="/perfil"
+        className={clsx(
+          'text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 block',
+          {
+            'bg-main text-white hover:bg-main': pathname === '/perfil',
+          },
+        )}
+      >
+        Configurações
+      </Link>
+      <Link
         href="/pedidos"
         className={clsx(
           'text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 block',
@@ -27,7 +38,7 @@ export default function Avatar() {
         Meus pedidos
       </Link>
       <Link
-        href="/admin/logout"
+        href="/logout"
         className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
       >
         Terminar sessão

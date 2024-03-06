@@ -1,14 +1,16 @@
 'use client'
 
-import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
+import { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { ProductItem } from '@/@types'
+import { useAuth } from '@/hooks/useAuth'
 
 interface FormData {
-  name: string
+  firstName: string
+  lastName: string
   address: string
   phone: string
 }
@@ -26,10 +28,15 @@ interface ConfirmOrderDialogProps {
 }
 
 const schema = z.object({
-  name: z
+  firstName: z
     .string()
     .min(6, 'O nome deve ter no minimo 6 caracteres')
-    .max(120, 'O nome deve ter no máximo 100 carácteres')
+    .max(40, 'O nome deve ter no máximo 40 carácteres')
+    .trim(),
+  lastName: z
+    .string()
+    .min(6, 'O sobrenome deve ter no minimo 6 caracteres')
+    .max(40, 'O sobrenome deve ter no máximo 40 carácteres')
     .trim(),
   address: z
     .string({
@@ -41,7 +48,7 @@ const schema = z.object({
     .string({
       required_error: 'O número de telefone é obrigatório',
     })
-    .regex(/^(?:\+244)?\d{9}$/, 'O número do whatsapp está inválido'),
+    .regex(/^(?:\+244)?\d{9}$/, 'O número de telefone está inválido'),
 })
 
 export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
@@ -49,25 +56,24 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
+  const { userDB } = useAuth()
+
   function onSubmit(data: FormData) {
-    console.log(data)
+    props.setOpen(false)
+    props.action(data)
   }
 
-  // function createDelivery(name: string, phone: string, address: string) {
-  //   const delivery = props.productData.map((p) => {
-  //     if (props.selectedProducts.includes(p.id)) {
-  //       return `${p.name}: x${p.quantity}`
-  //     }
-  //     return null
-  //   })
-
-  //   const deliveryMessage = delivery.filter((p) => p !== null).join(', ')
-  // }
+  useEffect(() => {
+    if (userDB) {
+      reset(userDB)
+    }
+  }, [reset, userDB])
 
   return (
     <Transition.Root show={props.isOpen} as={Fragment}>
@@ -111,7 +117,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                         as="h3"
                         className="text-2xl font-semibold leading-6 text-gray-900 mb-8 my-7"
                       >
-                        Enviar o seu pedido
+                        Confirmar o seu pedido
                       </Dialog.Title>
                       <div className="mb-4">
                         <label
@@ -122,14 +128,35 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                         </label>
                         <input
                           type="text"
-                          id="name"
+                          id="firstName"
                           autoComplete="given-name"
-                          {...register('name')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                          {...register('firstName')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.firstName && 'border-red-500'}`}
                         />
-                        {errors.name && (
+                        {errors.firstName && (
                           <p className="text-red-500 mt-1">
-                            {errors.name.message}
+                            {errors.firstName.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="mb-4">
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Sobrenome
+                        </label>
+                        <input
+                          type="text"
+                          id="lastName"
+                          autoComplete="given-name"
+                          {...register('lastName')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.lastName && 'border-red-500'}`}
+                        />
+                        {errors.lastName && (
+                          <p className="text-red-500 mt-1">
+                            {errors.lastName.message}
                           </p>
                         )}
                       </div>
@@ -139,7 +166,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                           htmlFor="phone"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Número do whatsapp
+                          Número de telefone
                         </label>
                         <input
                           type="text"
@@ -179,8 +206,8 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
-                    type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-[#212121] px-3 py-2 text-sm font-semibold text-gray-900 hover:brightness-75 sm:mt-0 sm:w-auto"
+                    type="submit"
+                    className="inline-flex w-full justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
                   >
                     {isSubmitting ? (
                       <div
@@ -192,6 +219,14 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                         Confirmar
                       </p>
                     )}
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    onClick={() => props.setOpen(false)}
+                    ref={cancelButtonRef}
+                  >
+                    Cancelar
                   </button>
                 </div>
               </Dialog.Panel>
