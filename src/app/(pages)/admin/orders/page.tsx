@@ -55,6 +55,16 @@ function OrderTableRow(order: Order) {
             onClick={() => {}}
             className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
           >
+            <span className="text-red-500 font-medium">Cancelar o pedido</span>
+          </button>
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="flex items-center justify-center">
+          <button
+            onClick={() => {}}
+            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          >
             <span className="text-red-500 font-medium">Baixar factura</span>
           </button>
         </div>
@@ -123,6 +133,9 @@ export default function CartPage() {
                 </th>
                 <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                   Valor a pagar
+                </th>
+                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                  -
                 </th>
                 <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                   -
