@@ -6,7 +6,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import Image from 'next/image'
 import { getProduct } from '@/lib/firebase/database'
-import { ProductItem } from '@/@types'
+import { ProductItem, ProductOrder } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 import Link from 'next/link'
@@ -134,6 +134,7 @@ function CartTableRow({
 }
 
 export default function CartPage() {
+  const removeFromCart = useCartStore((state) => state.removeProduct)
   const [totalPrice, setTotalPrice] = useState(0)
   const [productData, setProductData] = useState<CartProduct[]>([])
 
@@ -200,18 +201,39 @@ export default function CartPage() {
 
   async function createOrder(data: FormData) {
     const orderId = randomBytes(20).toString('hex')
-    if (user) {
+    const productsList: ProductOrder[] = []
+
+    for (const id of selectedProducts) {
+      const product = await getProduct(id)
+      const cartProduct = cartProducts.find((p) => p.id === id)
+
+      if (product && cartProduct) {
+        productsList.push({
+          id,
+          name: product.name,
+          quantity: cartProduct.quantity,
+          price: product.price,
+          promotion: product.promotion?.reduction || null,
+        })
+      }
+    }
+
+    if (user && productsList.length > 0) {
       await set(ref(database, `orders/${user.uid}/${orderId}`), {
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address,
-        phone: data.address,
-        products: selectedProducts,
+        phone: data.phone,
+        products: productsList,
       })
-        .then(() => {})
+        .then(() => {
+          selectedProducts.map((id) => removeFromCart(id))
+          setSelectedProduct([])
+          setOrderConfirmedModal(true)
+        })
         .catch(() => {
-          toast.success('Houve um erro ao tentar fazer o teu pedido', {
-            position: 'top-center',
+          toast.error('Houve um erro ao tentar fazer o teu pedido', {
+            position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -222,6 +244,18 @@ export default function CartPage() {
             transition: Bounce,
           })
         })
+    } else {
+      toast.error('Houve um erro ao tentar fazer o teu pedido', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
     }
   }
 

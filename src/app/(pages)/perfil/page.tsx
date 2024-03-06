@@ -11,6 +11,7 @@ import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { database } from '@/lib/firebase/config'
 import { Bounce, toast } from 'react-toastify'
 import { EmailAuthProvider } from 'firebase/auth/cordova'
+import ProtectedRoute from '@/app/components/ProtectedRoute'
 
 const schema = z
   .object({
@@ -238,231 +239,241 @@ export default function PerfilPage() {
   }, [updateFieldAsDefault])
 
   return (
-    <section className="bg-white overflow-hidden">
-      <Header.Client />
-      <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Meu perfil
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Essas informações vão ser usados para podermos falar contigo, nada
-              será partilhado com terceiros.
-            </p>
-          </div>
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Informação pessoal
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              Use um email activo para poderes receber mensagens.
-            </p>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="first-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Primeiro nome
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    autoComplete="given-name"
-                    {...register('firstName')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 mt-1">
-                      {errors.firstName.message}
-                    </p>
-                  )}
+    <ProtectedRoute
+      pathWhenAuthorizated="/"
+      pathWhenNotAuthorizated="/login"
+      privileges={['create-orders']}
+    >
+      <section className="bg-white overflow-hidden">
+        <Header.Client />
+        <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-12">
+            <div className="border-b border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Meu perfil
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                Essas informações vão ser usados para podermos falar contigo,
+                nada será partilhado com terceiros.
+              </p>
+            </div>
+            <div className="border-b border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Informação pessoal
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">
+                Use um email activo para poderes receber mensagens.
+              </p>
+              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="first-name"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Primeiro nome
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      autoComplete="given-name"
+                      {...register('firstName')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.firstName && (
+                      <p className="text-red-500 mt-1">
+                        {errors.firstName.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="last-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Sobrenome
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    autoComplete="family-name"
-                    {...register('lastName')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 mt-1">
-                      {errors.lastName.message}
-                    </p>
-                  )}
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Sobrenome
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      autoComplete="family-name"
+                      {...register('lastName')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.lastName && (
+                      <p className="text-red-500 mt-1">
+                        {errors.lastName.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Email{' '}
-                  {!user?.emailVerified && (
-                    <span className="text-main text-sm mt-1">
-                      (O seu endereço de e-mail ainda não foi confirmado)
-                    </span>
-                  )}
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    {...register('email')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                <div className="sm:col-span-4">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Email{' '}
+                    {!user?.emailVerified && (
+                      <span className="text-main text-sm mt-1">
+                        (O seu endereço de e-mail ainda não foi confirmado)
+                      </span>
+                    )}
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="email"
+                      type="email"
+                      autoComplete="email"
+                      {...register('email')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
 
-                  {errors.email && (
-                    <p className="text-red-500 mt-1">{errors.email.message}</p>
-                  )}
+                    {errors.email && (
+                      <p className="text-red-500 mt-1">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:col-span-2 sm:col-start-1">
+                  <label
+                    htmlFor="city"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Número de telefone
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="tel"
+                      id="phone"
+                      {...register('phone')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 mt-1">
+                        {errors.phone.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="col-span-full">
+                  <label
+                    htmlFor="street-address"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Morada
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      id="street-address"
+                      autoComplete="street-address"
+                      {...register('address')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.address && (
+                      <p className="text-red-500 mt-1">
+                        {errors.address.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-              <div className="sm:col-span-2 sm:col-start-1">
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Número de telefone
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="tel"
-                    id="phone"
-                    {...register('phone')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.phone && (
-                    <p className="text-red-500 mt-1">{errors.phone.message}</p>
-                  )}
+            </div>
+            <div className="border-b border-gray-900/10 pb-12">
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                Alterar palavra-passe
+              </h2>
+              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="first-name"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Palavra-passe actual
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="password"
+                      id="oldPassword"
+                      {...register('oldPassword')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.oldPassword && (
+                      <p className="text-red-500 mt-1">
+                        {errors.oldPassword.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="col-span-full">
-                <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Morada
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    id="street-address"
-                    autoComplete="street-address"
-                    {...register('address')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.address && (
-                    <p className="text-red-500 mt-1">
-                      {errors.address.message}
-                    </p>
-                  )}
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor="last-name"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Nova palavra-passe
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="password"
+                      id="newPassword"
+                      {...register('newPassword')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.newPassword && (
+                      <p className="text-red-500 mt-1">
+                        {errors.newPassword.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="sm:col-span-4">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Confirmar palavra-passe
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      id="confirmPassword"
+                      type="password"
+                      {...register('confirmPassword')}
+                      className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                    {errors.confirmPassword && (
+                      <p className="text-red-500 mt-1">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className="text-base font-semibold leading-7 text-gray-900">
-              Alterar palavra-passe
-            </h2>
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="first-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Palavra-passe actual
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="password"
-                    id="oldPassword"
-                    {...register('oldPassword')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.oldPassword && (
-                    <p className="text-red-500 mt-1">
-                      {errors.oldPassword.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="last-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Nova palavra-passe
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="password"
-                    id="newPassword"
-                    {...register('newPassword')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.newPassword && (
-                    <p className="text-red-500 mt-1">
-                      {errors.newPassword.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Confirmar palavra-passe
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    {...register('confirmPassword')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 mt-1">
-                      {errors.confirmPassword.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="button"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              {isSubmitting ? (
+                <div
+                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                  role="status"
+                />
+              ) : (
+                <p className="text-white">Guardar</p>
+              )}
+            </button>
           </div>
-        </div>
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="button"
-            className="text-sm font-semibold leading-6 text-gray-900"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            {isSubmitting ? (
-              <div
-                className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-              />
-            ) : (
-              <p className="text-white">Guardar</p>
-            )}
-          </button>
-        </div>
-      </form>
-    </section>
+        </form>
+      </section>
+    </ProtectedRoute>
   )
 }

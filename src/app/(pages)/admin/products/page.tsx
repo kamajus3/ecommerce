@@ -282,8 +282,6 @@ export default function ProductPage() {
                   .val()
                   .products.filter((p: string) => p !== id),
               })
-            } else {
-              console.log('No data available')
             }
           },
         )
@@ -326,7 +324,7 @@ export default function ProductPage() {
   }, [])
 
   return (
-    <section className="bg-white min-h-screen">
+    <section className="bg-white min-h-screen pb-12">
       <Header.Admin />
 
       <article className="mb-2 mt-12">
@@ -337,14 +335,14 @@ export default function ProductPage() {
             onClick={() => {
               setNewModal(true)
             }}
-            className="border border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+            className="border rounded border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
             Adicionar producto
           </button>
         </div>
       </article>
 
-      <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
+      <article className="container mx-auto mt-8 max-sm:p-9">
         <div className="overflow-x-auto">
           <table className="table-auto w-full border border-[#dddddd]">
             <thead>

@@ -70,3 +70,20 @@ export interface Category {
   label: string
   img: string
 }
+
+export interface ProductOrder {
+  id: string
+  name: string
+  quantity: number
+  price: number
+  promotion?: number | null
+}
+
+export interface Order {
+  id: string
+  firstName: string
+  lastName: string
+  address: string
+  phone: string
+  products: ProductOrder[]
+}

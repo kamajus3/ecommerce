@@ -38,6 +38,17 @@ export default function Avatar() {
         Produtos
       </Link>
       <Link
+        href="/admin/orders"
+        className={clsx(
+          'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
+          {
+            'bg-main text-white hover:bg-main': pathname === '/admin/orders',
+          },
+        )}
+      >
+        Pedidos
+      </Link>
+      <Link
         href="/admin/promotions"
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',

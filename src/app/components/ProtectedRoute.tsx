@@ -7,34 +7,68 @@ import Loading from './Loading'
 
 interface ProtectedRouteProps {
   children: ReactNode
+  privileges?: string[]
+  pathWhenAuthorizated?: string
+  pathWhenNotAuthorizated?: string
 }
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { userDB, initialized } = useAuth()
+export default function ProtectedRoute({
+  children,
+  privileges = ['admin'],
+  pathWhenAuthorizated = '/admin/dashboard',
+  pathWhenNotAuthorizated = '',
+}: ProtectedRouteProps) {
+  const { user, userDB, initialized } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
-  useEffect(() => {
-    if (userDB) {
-      const userIsValid = 'admin' in userDB?.privileges
-
-      if (userIsValid && initialized && pathname === '/admin/login') {
-        router.replace('/admin/dashboard')
-      }
-
-      if (!userIsValid && initialized && pathname !== '/admin/login') {
-        router.replace('/admin/login')
-      }
-    } else {
-      if (!userDB && initialized && pathname !== '/admin/login') {
-        router.replace('/admin/login')
+  function checkPrivileges(
+    userPrivileges: string[],
+    requiredPrivileges: string[],
+  ) {
+    for (let i = 0; i < requiredPrivileges.length; i++) {
+      if (!userPrivileges.includes(requiredPrivileges[i])) {
+        return false
       }
     }
-  }, [userDB, router, pathname, initialized])
+
+    return true
+  }
+
+  useEffect(() => {
+    if (userDB && user && privileges && initialized) {
+      const userIsValid = checkPrivileges(userDB.privileges, privileges)
+
+      if (userIsValid && pathname === pathWhenNotAuthorizated) {
+        router.replace(pathWhenAuthorizated)
+      }
+
+      if (!userIsValid && pathname !== pathWhenNotAuthorizated) {
+        router.replace(pathWhenNotAuthorizated)
+      }
+    }
+
+    if (!user && initialized && pathname !== pathWhenNotAuthorizated) {
+      router.replace(pathWhenNotAuthorizated)
+    }
+  }, [
+    pathWhenAuthorizated,
+    pathWhenNotAuthorizated,
+    userDB,
+    user,
+    router,
+    pathname,
+    initialized,
+    privileges,
+  ])
 
   return (
     <>
-      {(userDB && initialized) || pathname === '/admin/login' ? (
+      {(userDB &&
+        user &&
+        checkPrivileges(userDB.privileges, privileges) &&
+        initialized) ||
+      pathname === pathWhenNotAuthorizated ? (
         children
       ) : (
         <Loading />
