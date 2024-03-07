@@ -4,14 +4,13 @@ import Header from '@/app/components/Header'
 import ProductCard from '@/app/components/ProductCard'
 import Footer from '@/app/components/Footer'
 import { useParams } from 'next/navigation'
-import { Suspense, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ProductItem } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import clsx from 'clsx'
 import { SearchX } from 'lucide-react'
-import Loading from '@/app/components/Loading'
 
-function SearchPageWithoutBoundary() {
+export default function SearchPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
   )
@@ -95,13 +94,5 @@ function SearchPageWithoutBoundary() {
 
       <Footer />
     </section>
-  )
-}
-
-export default function SearchPage() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <SearchPageWithoutBoundary />
-    </Suspense>
   )
 }

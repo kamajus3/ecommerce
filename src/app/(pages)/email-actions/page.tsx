@@ -3,9 +3,9 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 
 import Loading from '@/app/components/Loading'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 
-export default function EmailActions() {
+function EmailActions() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -30,4 +30,12 @@ export default function EmailActions() {
   }, [router, mode, actionCode])
 
   return <Loading />
+}
+
+export default function EmailActionSuspenseBoundary() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <EmailActions />
+    </Suspense>
+  )
 }
