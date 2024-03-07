@@ -25,7 +25,9 @@ export default function RecoverAccount() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: FormData) {
-    sendPasswordResetEmail(auth, data.email)
+    sendPasswordResetEmail(auth, data.email, {
+      url: 'https://raciuscare.com/alterar-senha/<code>',
+    })
       .then(() => {
         reset({
           email: '',
