@@ -1,10 +1,9 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 import Loading from '@/app/components/Loading'
 import { useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 export default function EmailActions() {
   const searchParams = useSearchParams()
