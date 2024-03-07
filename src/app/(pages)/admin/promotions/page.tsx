@@ -2,7 +2,7 @@
 
 import Header from '@/app/components/Header'
 import { ProductInputProps, PromotionItemEdit } from '@/@types'
-import Dialog from '@/app/components/Dialog'
+import Modal from '@/app/components/Modal'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import { onValue, ref, remove, set, update } from 'firebase/database'
@@ -74,10 +74,11 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
             <span className="text-red-500 font-medium">Apagar</span>
           </button>
         </div>
-        <Dialog.Delete
+        <Modal.Dialog
           title="Apagar a campanha"
           description="Você tem certeza que queres apagar essa campanha?"
           actionTitle="Apagar"
+          mainColor="#dc2626"
           action={deletePromotion}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
@@ -92,7 +93,7 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
             <span className="text-violet-600 font-medium">Editar</span>
           </button>
         </div>
-        <Dialog.Promotion
+        <Modal.Promotion
           title="Editar campanha"
           actionTitle="Editar"
           isOpen={openEditModal}
@@ -419,7 +420,7 @@ export default function PromotionPage() {
           </table>
         </div>
       </article>
-      <Dialog.Promotion
+      <Modal.Promotion
         title="Nova campanha"
         actionTitle="Postar"
         isOpen={newModal}

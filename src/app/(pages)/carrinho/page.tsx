@@ -1,7 +1,7 @@
 'use client'
 
 import Header from '../../components/Header'
-import Dialog from '../../components/Dialog'
+import Modal from '../../components/Modal'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import Image from 'next/image'
@@ -117,10 +117,11 @@ function CartTableRow({
             <span className="text-red-500 font-medium">Remover</span>
           </button>
         </div>
-        <Dialog.Delete
+        <Modal.Dialog
           title="Remover producto"
           description="Você tem certeza que queres remover esse producto do carinho?"
           actionTitle="Remover"
+          mainColor="#dc2626"
           action={() => {
             removeFromCart(product.id)
             notifyDelete()
@@ -141,7 +142,10 @@ export default function CartPage() {
   // Modals
   const [isModalOpened, setModalOpen] = useState(false)
   const [openLoginModal, setOpenLoginModal] = useState(false)
+  const [confirmOrderModal, setConfirmOrderModal] = useState(false)
   const [orderConfirmedModal, setOrderConfirmedModal] = useState(false)
+
+  const [orderData, setOrderData] = useState({})
 
   const router = useRouter()
   const { user, initialized } = useAuth()
@@ -199,34 +203,11 @@ export default function CartPage() {
     phone: string
   }
 
-  async function createOrder(data: FormData) {
+  async function createOrder() {
     const orderId = randomBytes(20).toString('hex')
-    const productsList: ProductOrder[] = []
 
-    for (const id of selectedProducts) {
-      const product = await getProduct(id)
-      const cartProduct = cartProducts.find((p) => p.id === id)
-
-      if (product && cartProduct) {
-        productsList.push({
-          id,
-          name: product.name,
-          quantity: cartProduct.quantity,
-          price: product.price,
-          promotion: product.promotion?.reduction || null,
-        })
-      }
-    }
-
-    if (user && productsList.length > 0) {
-      await set(ref(database, `orders/${user.uid}/${orderId}`), {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address,
-        phone: data.phone,
-        createdAt: new Date().toISOString(),
-        products: productsList,
-      })
+    if (user) {
+      await set(ref(database, `orders/${user.uid}/${orderId}`), orderData)
         .then(() => {
           selectedProducts.map((id) => removeFromCart(id))
           setSelectedProduct([])
@@ -245,6 +226,38 @@ export default function CartPage() {
             transition: Bounce,
           })
         })
+    }
+  }
+
+  async function confirmOrder(data: FormData) {
+    const productsList: ProductOrder[] = []
+
+    for (const id of selectedProducts) {
+      const product = await getProduct(id)
+      const cartProduct = cartProducts.find((p) => p.id === id)
+
+      if (product && cartProduct) {
+        productsList.push({
+          id,
+          name: product.name,
+          quantity: cartProduct.quantity,
+          price: product.price,
+          promotion: product.promotion?.reduction || null,
+        })
+      }
+    }
+
+    if (user && productsList.length > 0) {
+      setOrderData({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        address: data.address,
+        phone: data.phone,
+        createdAt: new Date().toISOString(),
+        products: productsList,
+      })
+
+      setConfirmOrderModal(true)
     } else {
       toast.error('Houve um erro ao tentar fazer o teu pedido', {
         position: 'top-right',
@@ -343,10 +356,12 @@ export default function CartPage() {
           Enviar o pedido
         </button>
       </div>
-      <Dialog.Delete
+
+      <Modal.Dialog
         title="Iniciar sessão"
         description="Você precisa estar com sessão iniciada para fazer um pedido?"
         actionTitle="Entrar"
+        mainColor="#201D63"
         action={() => {
           router.push('/login')
         }}
@@ -354,15 +369,25 @@ export default function CartPage() {
         setOpen={setOpenLoginModal}
       />
 
-      <Dialog.ConfirmOrder
+      <Modal.Dialog
+        title="Confirmar pedido"
+        description="Você tem certeza que deseja realizar esse pedido? (accção irreversível)"
+        actionTitle="Confirmar"
+        mainColor="#201D63"
         action={createOrder}
+        isOpen={confirmOrderModal}
+        setOpen={setConfirmOrderModal}
+      />
+
+      <Modal.ConfirmOrder
+        action={confirmOrder}
         isOpen={isModalOpened}
         setOpen={setModalOpen}
         productData={productData}
         selectedProducts={selectedProducts}
       />
 
-      <Dialog.OrderConfirmed
+      <Modal.OrderConfirmed
         action={() => setOrderConfirmedModal(true)}
         isOpen={orderConfirmedModal}
         setOpen={setOrderConfirmedModal}

@@ -47,12 +47,12 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                     <article className="mt-2 m-auto w-full">
                       <Dialog.Title
                         as="h3"
-                        className="text-3xl font-semibold leading-6 text-green-400 mb-5 my-7"
+                        className="text-3xl font-semibold leading-6 text-black mb-5 my-7"
                       >
                         Parabéns
                       </Dialog.Title>
                       <div className="mb-2">
-                        <p className="text-[#c2c2c2]">
+                        <p className="text-[#575656]">
                           O seu pedido foi realizado com sucesso.
                         </p>
                       </div>
@@ -62,7 +62,7 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-green-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       props.setOpen(false)
                       props.action()

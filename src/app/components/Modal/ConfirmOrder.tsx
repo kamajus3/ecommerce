@@ -19,7 +19,7 @@ interface CartProduct extends ProductItem {
   quantity: number
 }
 
-interface ConfirmOrderDialogProps {
+interface ConfirmOrderProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   action: (data: FormData) => void | Promise<void>
@@ -51,7 +51,7 @@ const schema = z.object({
     .regex(/^(?:\+244)?\d{9}$/, 'O número de telefone está inválido'),
 })
 
-export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
+export default function ConfirmOrder(props: ConfirmOrderProps) {
   const cancelButtonRef = useRef(null)
   const {
     register,
@@ -207,7 +207,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="submit"
-                    className="inline-flex w-full justify-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
                   >
                     {isSubmitting ? (
                       <div
@@ -216,7 +216,7 @@ export default function ConfirmOrderDialog(props: ConfirmOrderDialogProps) {
                       />
                     ) : (
                       <p className="text-white flex items-center gap-2">
-                        Confirmar
+                        Continuar
                       </p>
                     )}
                   </button>

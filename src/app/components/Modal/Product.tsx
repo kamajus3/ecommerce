@@ -12,71 +12,62 @@ import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { ProductInputProps, PromotionItemEdit } from '@/@types'
+import CATEGORIES from '@/assets/data/categories'
+import { ProductItem } from '@/@types'
 import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
-import ProductInput from '../ProductInput'
-import { Percent, X } from 'lucide-react'
-import { getProducts } from '@/lib/firebase/database'
-import { useInformation } from '@/hooks/useInformation'
 
 interface FormData {
-  title: string
-  fixed: boolean
-  reduction: number
-  startDate: string
-  finishDate: string
+  name: string
   description: string
-  products: ProductInputProps[]
+  quantity: number
+  price: number
+  category: string
   photo: Blob
 }
 
-interface DialogRootProps {
+interface ProductModalProps {
   title: string
   actionTitle: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (
-    data: FormData,
-    oldProduct?: PromotionItemEdit,
-  ) => void | Promise<void>
-  defaultData?: PromotionItemEdit
+  action: (data: FormData, oldProduct?: ProductItem) => void | Promise<void>
+  defaultProduct?: ProductItem
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
-const DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 
 const schema = z.object({
-  title: z
+  name: z
     .string()
-    .min(6, 'O título deve ter no minimo 6 caracteres')
-    .max(120, 'O título deve ter no máximo 120 carácteres')
+    .min(6, 'O nome deve ter no minimo 6 caracteres')
+    .max(120, 'O nome deve ter no máximo 120 carácteres')
     .trim(),
-  reduction: z
-    .number({
-      required_error: 'Digite a taxa de redução',
-      invalid_type_error: 'A taxa de redução está invalida',
-    })
-    .min(0, 'A taxa não pode ser inferior à 0')
-    .max(100, 'A taxa não pode ser inferior à 100'),
-  startDate: z
-    .string({
-      required_error: 'A data de início é obrigatória',
-      invalid_type_error: 'A data de início está invalida',
-    })
-    .regex(DATETIME_REGEX, 'A data de início está invalida'),
-  fixed: z.boolean(),
-  finishDate: z
-    .string({
-      required_error: 'A data de termino é obrigatória',
-      invalid_type_error: 'A data de termino está invalida',
-    })
-    .regex(DATETIME_REGEX, 'A data de termino está invalida'),
   description: z
     .string()
     .min(6, 'A descrição me deve ter no minimo 6 carácteres')
-    .max(70, 'A descrição deve ter no máximo 70 carácteres')
+    .max(180, 'A descrição deve ter no máximo 180 carácteres')
+    .trim(),
+  quantity: z
+    .number({
+      required_error: 'Digite a quantidade do producto',
+      invalid_type_error: 'A quantidade do producto está invalida',
+    })
+    .positive('A quantidade deve ser um número positivo')
+    .max(10000, 'A quantidade máxima permitida é 10.000'),
+  price: z
+    .number({
+      required_error: 'Digite o preço do producto',
+      invalid_type_error: 'A preço do producto está invalido',
+    })
+    .max(100000000, 'O preço máximo é 100.000.000')
+    .positive('O preço deve ser um número positivo'),
+  category: z
+    .string({
+      invalid_type_error: 'Digite uma categória válida',
+      required_error: 'A categória é obrigatória',
+    })
     .trim(),
   photo: z
     .instanceof(Blob, {
@@ -90,21 +81,9 @@ const schema = z.object({
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
       'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
     ),
-  products: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
-      {
-        required_error: 'Escolha os productos desta campanha',
-      },
-    )
-    .min(1, 'O mínimo de productos por campanha é 1')
-    .max(40, 'O máximo de productos por campanha é 40'),
 })
 
-export default function DialogRoot(props: DialogRootProps) {
+export default function ProductModal(props: ProductModalProps) {
   const cancelButtonRef = useRef(null)
   const {
     register,
@@ -112,52 +91,29 @@ export default function DialogRoot(props: DialogRootProps) {
     reset,
     getValues,
     setValue,
-    watch,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      products: [],
-    },
   })
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
-  const { informationsData } = useInformation()
-  const promotionProducts = watch('products')
 
   useEffect(() => {
-    if (props.defaultData?.photo) {
-      setPhotoPreview(props.defaultData?.photo)
+    if (props.defaultProduct?.photo) {
+      setPhotoPreview(props.defaultProduct?.photo)
     } else {
       setPhotoPreview(null)
     }
-  }, [props.defaultData, getValues])
+  }, [props.defaultProduct, getValues])
 
   useEffect(() => {
     async function unsubscribed() {
-      if (props.defaultData) {
-        const products = await getProducts({
-          promotion: props.defaultData.id,
-        })
-
-        const finalProducts: ProductInputProps[] = []
-
-        Object.entries(products).map(([id, product]) => {
-          const promotion = {
-            id,
-            name: product.name,
-          }
-
-          finalProducts.push(...finalProducts, promotion)
-          return promotion
-        })
-
-        const photo = await URLtoFile(props.defaultData.photo)
+      if (props.defaultProduct) {
+        const photo = await URLtoFile(props.defaultProduct.photo)
 
         reset(
           {
-            ...props.defaultData,
-            products: finalProducts,
+            ...props.defaultProduct,
             photo,
           },
           {
@@ -171,22 +127,21 @@ export default function DialogRoot(props: DialogRootProps) {
     }
 
     unsubscribed()
-  }, [reset, props.defaultData, getValues])
+  }, [reset, props.defaultProduct])
 
   async function onSubmit(data: FormData) {
     if (isDirty) {
       reset({
-        title: '',
+        name: '',
+        category: '',
         description: '',
-        startDate: '',
-        fixed: false,
-        finishDate: '',
+        price: undefined,
         photo: '',
-        products: [],
-        reduction: 0,
+        quantity: 0,
       })
-      if (props.defaultData) {
-        await props.action(data, props.defaultData)
+
+      if (props.defaultProduct) {
+        await props.action(data, props.defaultProduct)
       } else {
         props.action(data)
       }
@@ -204,24 +159,6 @@ export default function DialogRoot(props: DialogRootProps) {
         transition: Bounce,
       })
     }
-  }
-
-  function appendProduct(product: ProductInputProps) {
-    const allProducts = getValues('products')
-    pushProduct(allProducts, product)
-  }
-
-  function pushProduct(
-    products: ProductInputProps[],
-    product: ProductInputProps,
-  ) {
-    products.push(product)
-    setValue('products', products)
-  }
-
-  function removeProduct(id: string) {
-    const allProducts = getValues('products').filter((p) => p.id !== id)
-    setValue('products', allProducts)
   }
 
   return (
@@ -270,113 +207,80 @@ export default function DialogRoot(props: DialogRootProps) {
                       </Dialog.Title>
                       <div className="mb-4">
                         <label
-                          htmlFor="title"
+                          htmlFor="name"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Título
+                          Nome
                         </label>
                         <input
                           type="text"
-                          id="title"
-                          {...register('title')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.title && 'border-red-500'}`}
+                          id="name"
+                          {...register('name')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
                         />
-                        {errors.title && (
+                        {errors.name && (
                           <p className="text-red-500 mt-1">
-                            {errors.title.message}
+                            {errors.name.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="reduction"
+                          htmlFor="quantity"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Taxa de redução
+                          Quantidade
                         </label>
-                        <div
-                          className={`w-full rounded-lg bg-white mt-2 px-3 py-2 border flex items-center gap-2 ${errors.reduction && 'border-red-500'}`}
-                        >
-                          <Percent size={15} color="#6B7280" />
-                          <input
-                            type="number"
-                            id="reduction"
-                            defaultValue={0}
-                            {...register('reduction', { valueAsNumber: true })}
-                            className="w-[90%] text-gray-500 bg-white outline-none"
-                          />
-                        </div>
-
-                        {errors.reduction && (
-                          <p className="text-red-500 mt-1">
-                            {errors.reduction.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="mb-4 flex items-center gap-x-2">
                         <input
-                          type="checkbox"
-                          id="fixed"
-                          defaultChecked={
-                            props.defaultData
-                              ? informationsData.promotionFixed ===
-                                props.defaultData.id
-                              : false
-                          }
-                          {...register('fixed')}
-                          className="w-[90%] text-gray-500 bg-white outline-none"
+                          type="number"
+                          id="quantity"
+                          defaultValue={1}
+                          {...register('quantity', { valueAsNumber: true })}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.quantity && 'border-red-500'}`}
                         />
-
-                        <label
-                          htmlFor="fixed"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          fixar campanha
-                        </label>
-
-                        {errors.reduction && (
+                        {errors.quantity && (
                           <p className="text-red-500 mt-1">
-                            {errors.reduction.message}
+                            {errors.quantity.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="start-date"
+                          htmlFor="price"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Início da campanha
+                          Preço
                         </label>
                         <input
-                          type="datetime-local"
-                          id="startDate"
-                          {...register('startDate')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.startDate && 'border-red-500'}`}
+                          id="price"
+                          type="number"
+                          {...register('price', { valueAsNumber: true })}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.price && 'border-red-500'}`}
                         />
-                        {errors.startDate && (
+                        {errors.price && (
                           <p className="text-red-500 mt-1">
-                            {errors.startDate.message}
+                            {errors.price.message}
                           </p>
                         )}
                       </div>
                       <div className="mb-4">
                         <label
-                          htmlFor="start-date"
+                          htmlFor="category"
                           className="block text-sm font-medium text-gray-700"
                         >
-                          Fim da campanha
+                          Categória
                         </label>
-                        <input
-                          type="datetime-local"
-                          id="finishDate"
-                          {...register('finishDate')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.finishDate && 'border-red-500'}`}
-                        />
-                        {errors.finishDate && (
-                          <p className="text-red-500 mt-1">
-                            {errors.finishDate.message}
-                          </p>
-                        )}
+
+                        <select
+                          {...register('category')}
+                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.category && 'border-red-500'}`}
+                        >
+                          {CATEGORIES.map((category) => (
+                            <option key={category.label}>
+                              {category.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="mb-4">
                         <label
@@ -393,51 +297,6 @@ export default function DialogRoot(props: DialogRootProps) {
                         {errors.description && (
                           <p className="text-red-500 mt-1">
                             {errors.description.message}
-                          </p>
-                        )}
-                      </div>
-                      <div className="mb-4">
-                        <label
-                          htmlFor="products"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Productos
-                        </label>
-                        <ProductInput
-                          products={promotionProducts}
-                          appendProduct={appendProduct}
-                          removeProduct={removeProduct}
-                          promotionId={props?.defaultData?.id}
-                          error={!!errors.products}
-                        />
-                        {promotionProducts && promotionProducts.length > 0 && (
-                          <div className="mt-2">
-                            {promotionProducts.map((p) => (
-                              <div
-                                key={p.id}
-                                className="flex items-center justify-between relative py-3 bg-white text-sm text-gray-800 select-none"
-                              >
-                                <p className="text-black">{p.name}</p>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    removeProduct(p.id)
-                                  }}
-                                  className="py-3 pl-3 rounded-full"
-                                >
-                                  <X
-                                    className="left-4 "
-                                    color="#000"
-                                    size={15}
-                                  />
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        {errors.products && (
-                          <p className="text-red-500 mt-1">
-                            {errors.products.message}
                           </p>
                         )}
                       </div>

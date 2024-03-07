@@ -3,7 +3,7 @@
 import Header from '@/app/components/Header'
 import { ProductItem } from '@/@types'
 import Image from 'next/image'
-import Dialog from '@/app/components/Dialog'
+import Modal from '@/app/components/Modal'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -97,10 +97,11 @@ function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
             <span className="text-red-500 font-medium">Apagar</span>
           </button>
         </div>
-        <Dialog.Delete
+        <Modal.Dialog
           title="Apagar producto"
           description="Você tem certeza que queres apagar esse producto difinitivamente?"
           actionTitle="Apagar"
+          mainColor="#dc2626"
           action={deleteProduct}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
@@ -115,7 +116,7 @@ function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
             <span className="text-violet-600 font-medium">Editar</span>
           </button>
         </div>
-        <Dialog.Product
+        <Modal.Product
           title="Editar producto"
           actionTitle="Editar"
           isOpen={openEditModal}
@@ -394,7 +395,7 @@ export default function ProductPage() {
           </table>
         </div>
       </article>
-      <Dialog.Product
+      <Modal.Product
         title="Novo producto"
         actionTitle="Postar"
         isOpen={newModal}
