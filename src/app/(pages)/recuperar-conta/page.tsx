@@ -26,7 +26,7 @@ export default function RecoverAccount() {
 
   function onSubmit(data: FormData) {
     sendPasswordResetEmail(auth, data.email, {
-      url: 'https://raciuscare.com/alterar-senha/<code>',
+      url: 'https://raciuscare.com/alterar-senha/code',
     })
       .then(() => {
         reset({
