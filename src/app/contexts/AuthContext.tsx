@@ -34,7 +34,10 @@ interface AuthContextProps {
     React.SetStateAction<UserDatabase | null | undefined>
   >
   initialized: boolean
-  signInWithEmail: (email: string, password: string) => Promise<void>
+  signInWithEmail: (
+    email: string,
+    password: string,
+  ) => Promise<UserDatabase | null>
   signUpWithEmail: (
     name: string,
     email: string,
@@ -50,7 +53,7 @@ export const AuthContext = createContext<AuthContextProps>({
   setUserDB: () => {},
   initialized: false,
   setUser: () => {},
-  signInWithEmail: () => Promise.resolve(),
+  signInWithEmail: () => Promise.resolve(null),
   signUpWithEmail: () => Promise.resolve(null),
   logout: () => Promise.resolve(),
 })
@@ -61,7 +64,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [userDB, setUserDB] = useState<UserDatabase | null>()
 
   async function signInWithEmail(email: string, password: string) {
-    await signInWithEmailAndPassword(auth, email, password)
+    const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
         const snapshot = await get(
           child(ref(database), `users/${user.uid}`),
@@ -72,8 +75,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (snapshot.exists()) {
           setUser(user)
           setUserDB(snapshot.val())
-          return snapshot.val()
+          return snapshot.val() as UserDatabase
         }
+        throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })
       .catch((error: AuthError) => {
         let errorMessage = ''
@@ -89,6 +93,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         }
         throw new Error(errorMessage)
       })
+
+    return userData
   }
 
   async function signUpWithEmail(
