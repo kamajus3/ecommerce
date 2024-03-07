@@ -1,5 +1,6 @@
 'use client'
 
+import Loading from '@/app/components/Loading'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -17,5 +18,5 @@ export default function Logout() {
     unsubscribed()
   }, [logout, router])
 
-  return <p>Terminando sessão...</p>
+  return <Loading />
 }

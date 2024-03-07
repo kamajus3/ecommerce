@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>Factura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            margin: 0 0 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        td {
+            text-align: center;
+        }
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Factura</h1>
+        <p><strong>Nome:</strong> {{ firstName }} {{ lastName }}</p>
+        <p><strong>Morada:</strong> {{ address }}</p>
+        <p><strong>Número de telefone:</strong> {{ phone }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ quantity }}</td>
+                        <td>{{ price.toFixed(2) }}</td>
+                        <td>{{ total.toFixed(2) }}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <p class="total">Total: {{ totalAmount.toFixed(2) }}</p>
+    </div>
+</body>
+</html>
