@@ -7,7 +7,13 @@ import { useForm } from 'react-hook-form'
 import { useCallback, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
-import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
+import {
+  reauthenticateWithCredential,
+  sendEmailVerification,
+  updateEmail,
+  updatePassword,
+  updateProfile,
+} from 'firebase/auth'
 import { database } from '@/lib/firebase/config'
 import { Bounce, toast } from 'react-toastify'
 import { EmailAuthProvider } from 'firebase/auth/cordova'
@@ -115,8 +121,30 @@ export default function PerfilPage() {
           address: data.address,
           privileges: userDB.privileges,
         })
-          .then(() => {
+          .then(async () => {
+            await updateProfile(user, {
+              displayName: `${data.firstName} ${data.lastName}`,
+            })
+
+            if (user.email !== data.email) {
+              await updateEmail(user, data.email)
+              toast.success(
+                'Foi enviado um código de verificação no seu email',
+                {
+                  position: 'top-right',
+                  autoClose: 7000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: false,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'light',
+                  transition: Bounce,
+                },
+              )
+            }
             updateFieldAsDefault(data)
+
             toast.success('A tua conta foi atualizada com sucesso', {
               position: 'top-right',
               autoClose: 5000,
@@ -313,13 +341,52 @@ export default function PerfilPage() {
                 <div className="sm:col-span-4">
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium leading-6 text-gray-900"
+                    className=" text-sm font-medium leading-6 text-gray-900 flex items-center gap-x-3"
                   >
-                    Email{' '}
-                    {!user?.emailVerified && (
-                      <span className="text-main text-sm mt-1">
-                        (O seu endereço de e-mail ainda não foi confirmado)
-                      </span>
+                    <span>Email</span>
+
+                    {user && !user?.emailVerified && (
+                      <button
+                        className="bg-main px-3 py-1 text-sm text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                        type="button"
+                        onClick={() => {
+                          sendEmailVerification(user)
+                            .then(() => {
+                              toast.success(
+                                'Foi enviado um código de verificação no seu email',
+                                {
+                                  position: 'top-right',
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: false,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: 'light',
+                                  transition: Bounce,
+                                },
+                              )
+                            })
+                            .catch(() => {
+                              toast.error(
+                                'Erro ao enviar código de verificação, tente novamente mais tarde',
+                                {
+                                  position: 'top-right',
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: false,
+                                  draggable: true,
+                                  progress: undefined,
+                                  theme: 'light',
+                                  transition: Bounce,
+                                },
+                              )
+                            })
+                        }}
+                      >
+                        Verificar o seu email
+                      </button>
                     )}
                   </label>
                   <div className="mt-2">
@@ -463,7 +530,7 @@ export default function PerfilPage() {
             </button>
             <button
               type="submit"
-              className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               {isSubmitting ? (
                 <div
