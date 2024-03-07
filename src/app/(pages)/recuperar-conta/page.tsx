@@ -3,46 +3,56 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
 import Header from '@/app/components/Header'
-import Link from 'next/link'
+import { sendPasswordResetEmail } from 'firebase/auth'
+import { auth } from '@/lib/firebase/config'
 
 const schema = z.object({
   email: z.string().email('E-mail inválido'),
-  password: z
-    .string()
-    .min(6, 'A palavra-passe precisa de no minimo 6 caracteres'),
 })
 
 interface FormData {
   email: string
-  password: string
 }
 
-export default function SignIn() {
-  const router = useRouter()
-  const { signInWithEmail } = useAuth()
-
+export default function RecoverAccount() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: FormData) {
-    signInWithEmail(data.email, data.password)
+    sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        router.push('/')
+        reset({
+          email: '',
+        })
+
+        toast.success(
+          'Uma mensagem mensagem nesse email foi enviada para recuperar a sua conta',
+          {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          },
+        )
       })
-      .catch((e: Error) => {
-        toast.error(e.message, {
+      .catch(() => {
+        toast.error('Houve algum erro ao resetar a tua conta', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
           theme: 'light',
@@ -57,7 +67,7 @@ export default function SignIn() {
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
-            Iniciar sessão
+            Recuperar a sua conta
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -71,22 +81,7 @@ export default function SignIn() {
                 <p className="text-red-500 mt-1">{errors.email.message}</p>
               )}
             </div>
-            <div>
-              <label className="font-medium">Palavra-passe</label>
-              <input
-                type="password"
-                {...register('password')}
-                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
-              />
-              {errors.password && (
-                <p className="text-red-500 mt-1">{errors.password.message}</p>
-              )}
-            </div>
-            <div className="mt-5">
-              <Link href="/recuperar-conta" className="hover:text-main">
-                Esqueceu a sua senha?
-              </Link>
-            </div>
+
             <button
               type="submit"
               className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
@@ -97,15 +92,10 @@ export default function SignIn() {
                   role="status"
                 />
               ) : (
-                <p className="text-white">Entrar</p>
+                <p className="text-white">Continuar</p>
               )}
             </button>
           </form>
-          <div className="text-center">
-            <Link href="/signup" className="hover:text-main">
-              Não tens uma conta? Crie uma
-            </Link>
-          </div>
         </div>
       </article>
     </section>

@@ -38,9 +38,11 @@ function OrderTableRow(order: Order) {
           {money.format(
             order.products.reduce((total, product) => {
               if (product.promotion) {
-                return total + (product.price - product.promotion)
+                return (
+                  total + (product.price * product.quantity - product.promotion)
+                )
               } else {
-                return total + product.price
+                return total + product.price * product.quantity
               }
             }, 0),
           )}
