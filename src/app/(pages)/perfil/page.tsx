@@ -277,7 +277,7 @@ export default function PerfilPage() {
           shouldTouch: false,
           shouldValidate: false,
         })
-        setValue('email', userData.email, {
+        setValue('email', user.email || '', {
           shouldDirty: false,
           shouldTouch: false,
           shouldValidate: false,

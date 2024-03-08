@@ -27,7 +27,7 @@ export default function ChangeEmail({ params }: { params: { code: string } }) {
           })
 
           setTimeout(() => {
-            router.replace('/')
+            router.replace('/logout')
           }, 2000)
         })
         .catch(() => {

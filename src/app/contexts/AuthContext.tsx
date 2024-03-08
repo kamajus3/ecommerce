@@ -22,7 +22,6 @@ interface UserDatabase {
   firstName: string
   lastName?: string
   address?: string
-  email: string
   phone?: string
   privileges: string[]
 }
@@ -106,7 +105,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       .then(async ({ user }) => {
         const userData = {
           firstName: name,
-          email: user.email || '',
           phone: user.phoneNumber || '',
           privileges: ['client', 'create-orders'],
         }
@@ -131,7 +129,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (error.code === 'auth/email-already-in-use') {
           errorMessage = 'Já existe uma conta usando esse endereço de e-mail'
         } else {
-          errorMessage = 'Acounteceu algum erro ao criar uma conta'
+          errorMessage = 'Acounteceu algum erro ao tentar criar a conta'
         }
         throw new Error(errorMessage)
       })
