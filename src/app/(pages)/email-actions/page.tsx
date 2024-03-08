@@ -18,9 +18,10 @@ function EmailActions() {
         case 'resetPassword':
           router.replace(`/alterar-senha/${actionCode}`)
           break
-        case 'recoverEmail':
+        case 'verifyAndChangeEmail':
+          router.replace(`/alterar-email/${actionCode}`)
           break
-        case 'verifyEmail':
+        case 'recoverEmail':
           break
         default:
       }

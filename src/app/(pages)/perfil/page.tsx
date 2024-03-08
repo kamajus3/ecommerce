@@ -4,20 +4,21 @@ import Header from '@/app/components/Header'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
 import {
   reauthenticateWithCredential,
   sendEmailVerification,
-  updateEmail,
   updatePassword,
   updateProfile,
+  verifyBeforeUpdateEmail,
 } from 'firebase/auth'
 import { database } from '@/lib/firebase/config'
 import { Bounce, toast } from 'react-toastify'
 import { EmailAuthProvider } from 'firebase/auth/cordova'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
+import Modal from '@/app/components/Modal'
 
 const schema = z
   .object({
@@ -99,13 +100,26 @@ export default function PerfilPage() {
     handleSubmit,
     setError,
     setValue,
+    watch,
     formState: { errors, isSubmitting, dirtyFields },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
+  const newUserEmail = watch('email')
+  const [openPasswordModal, setPasswordModal] = useState(false)
+
   const onSubmit = (data: FormData) => {
     if (user && userDB) {
+      const userdData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: user.email,
+        phone: data.phone,
+        address: data.address,
+        privileges: userDB.privileges,
+      }
+
       if (
         dirtyFields.firstName ||
         dirtyFields.lastName ||
@@ -113,36 +127,16 @@ export default function PerfilPage() {
         dirtyFields.phone ||
         dirtyFields.address
       ) {
-        set(ref(database, 'users/' + user.uid), {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          phone: data.phone,
-          address: data.address,
-          privileges: userDB.privileges,
-        })
+        set(ref(database, 'users/' + user.uid), userdData)
           .then(async () => {
             await updateProfile(user, {
               displayName: `${data.firstName} ${data.lastName}`,
             })
 
             if (user.email !== data.email) {
-              await updateEmail(user, data.email)
-              toast.success(
-                'Foi enviado um código de verificação no seu email',
-                {
-                  position: 'top-right',
-                  autoClose: 7000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: false,
-                  draggable: true,
-                  progress: undefined,
-                  theme: 'light',
-                  transition: Bounce,
-                },
-              )
+              setPasswordModal(true)
             }
+
             updateFieldAsDefault(data)
 
             toast.success('A tua conta foi atualizada com sucesso', {
@@ -158,7 +152,7 @@ export default function PerfilPage() {
             })
           })
           .catch(() => {
-            toast.error('Houve algum erro.', {
+            toast.error('Houve algum erro ao tentar atualizar a seus dados', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -228,6 +222,44 @@ export default function PerfilPage() {
             )
           })
       }
+    }
+  }
+
+  async function sendEmailUpdateLink() {
+    if (user) {
+      await verifyBeforeUpdateEmail(user, newUserEmail)
+        .then(() => {
+          toast.success(
+            'Foi enviado um código de verificação no seu novo email',
+            {
+              position: 'top-right',
+              autoClose: 7000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            },
+          )
+        })
+        .catch(() => {
+          toast.error(
+            'Houve algum erro ao tentar enviar um código de verificação no seu email',
+            {
+              position: 'top-right',
+              autoClose: 7000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            },
+          )
+        })
     }
   }
 
@@ -544,6 +576,11 @@ export default function PerfilPage() {
           </div>
         </form>
       </section>
+      <Modal.Password
+        action={sendEmailUpdateLink}
+        isOpen={openPasswordModal}
+        setOpen={setPasswordModal}
+      />
     </ProtectedRoute>
   )
 }

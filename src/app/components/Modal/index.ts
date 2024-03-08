@@ -1,6 +1,7 @@
 import ConfirmOrderModal from './ConfirmOrder'
 import DialogModal from './Dialog'
 import OrderConfirmedModal from './OrderConfirmed'
+import PasswordModal from './Password'
 import ProductModal from './Product'
 import PromotionModal from './Promotion'
 
@@ -11,4 +12,5 @@ export default {
   Promotion: PromotionModal,
   ConfirmOrder: ConfirmOrderModal,
   OrderConfirmed: OrderConfirmedModal,
+  Password: PasswordModal,
 }
