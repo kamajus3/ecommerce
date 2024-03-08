@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
-import { SearchPageWithoutBoundary } from './campaign'
-import Loading from '@/app/components/Loading'
+import { CampaingPage } from './campaign'
 import { Metadata } from 'next'
 import { child, get, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
@@ -39,10 +37,6 @@ export async function generateMetadata({
   })
 }
 
-export default function SearchPage() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <SearchPageWithoutBoundary />
-    </Suspense>
-  )
+export default function CampaingSearchPage() {
+  return <CampaingPage />
 }

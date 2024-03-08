@@ -17,6 +17,7 @@ import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import { getProduct } from '@/lib/firebase/database'
 import { useInformation } from '@/hooks/useInformation'
+import DataState from '@/app/components/DataState'
 
 interface FormData {
   title: string
@@ -110,6 +111,7 @@ export default function PromotionPage() {
   const [promotionData, setPromotionData] = useState<
     Record<string, PromotionItemEdit>
   >({})
+  const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
   const { informationsData } = useInformation()
@@ -346,6 +348,7 @@ export default function PromotionPage() {
       const data = snapshot.val()
       if (data) {
         setPromotionData(data)
+        setLoading(true)
       }
     })
   }, [])
@@ -372,53 +375,59 @@ export default function PromotionPage() {
       </article>
 
       <article className="container mx-auto mt-8 max-sm:p-9">
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border border-[#dddddd]">
-            <thead>
-              <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Título
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  <span className="max-sm:hidden">Início da campanha</span>
-                  <span className="hidden max-sm:inline">Início</span>
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  <span className="max-sm:hidden">Fim da campanha</span>
-                  <span className="hidden max-sm:inline">Fim</span>
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  <span className="max-sm:hidden">Nº de productos</span>
-                  <span className="hidden max-sm:inline">Productos</span>
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Fixada
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  -
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  -
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {Object.entries(promotionData).map(([id, promotion]) => (
-                <TableRow
-                  key={id}
-                  data={{
-                    ...promotion,
-                    id,
-                  }}
-                  deletePromotion={() => {
-                    deletePromotion(id, promotion.products)
-                  }}
-                  editPromotion={editPromotion}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataState
+          dataCount={Object.entries(promotionData).length}
+          loading={loading}
+          noDataMessage="As promoções que fizer aparecerão aqui"
+        >
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full border border-[#dddddd]">
+              <thead>
+                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Título
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    <span className="max-sm:hidden">Início da campanha</span>
+                    <span className="hidden max-sm:inline">Início</span>
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    <span className="max-sm:hidden">Fim da campanha</span>
+                    <span className="hidden max-sm:inline">Fim</span>
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    <span className="max-sm:hidden">Nº de productos</span>
+                    <span className="hidden max-sm:inline">Productos</span>
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Fixada
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {Object.entries(promotionData).map(([id, promotion]) => (
+                  <TableRow
+                    key={id}
+                    data={{
+                      ...promotion,
+                      id,
+                    }}
+                    deletePromotion={() => {
+                      deletePromotion(id, promotion.products)
+                    }}
+                    editPromotion={editPromotion}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DataState>
       </article>
       <Modal.Promotion
         title="Nova campanha"

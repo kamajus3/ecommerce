@@ -25,6 +25,7 @@ import {
 import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
+import DataState from '@/app/components/DataState'
 
 interface FormData {
   name: string
@@ -133,6 +134,7 @@ export default function ProductPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
   )
+  const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
 
@@ -320,6 +322,7 @@ export default function ProductPage() {
       const data = snapshot.val()
       if (data) {
         setProductData(data)
+        setLoading(true)
       }
     })
   }, [])
@@ -344,56 +347,62 @@ export default function ProductPage() {
       </article>
 
       <article className="container mx-auto mt-8 max-sm:p-9">
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border border-[#dddddd]">
-            <thead>
-              <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Foto
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Nome
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Categória
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Preço
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Quantidade
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Data de criação
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Data de atualização
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  -
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  -
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {Object.entries(productData).map(([id, product]) => (
-                <TableRow
-                  key={id}
-                  product={{
-                    ...product,
-                    id,
-                  }}
-                  deleteProduct={() => {
-                    deleteProduct(id, product?.promotion)
-                  }}
-                  editProduct={editProduct}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataState
+          dataCount={Object.entries(productData).length}
+          loading={loading}
+          noDataMessage="Os productos cadastrados aparecerão aqui"
+        >
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full border border-[#dddddd]">
+              <thead>
+                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Foto
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Nome
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Categória
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Preço
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Quantidade
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Data de criação
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Data de atualização
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {Object.entries(productData).map(([id, product]) => (
+                  <TableRow
+                    key={id}
+                    product={{
+                      ...product,
+                      id,
+                    }}
+                    deleteProduct={() => {
+                      deleteProduct(id, product?.promotion)
+                    }}
+                    editProduct={editProduct}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DataState>
       </article>
       <Modal.Product
         title="Novo producto"

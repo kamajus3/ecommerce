@@ -8,6 +8,7 @@ import { onValue, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import { publishedSince } from '@/functions'
+import DataState from '@/app/components/DataState'
 
 function OrderTableRow(order: Order) {
   const money = useMoneyFormat()
@@ -83,6 +84,7 @@ function OrderTableRow(order: Order) {
 
 export default function CartPage() {
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
+  const [loading, setLoading] = useState(true)
   const { user } = useAuth()
 
   useEffect(() => {
@@ -103,6 +105,8 @@ export default function CartPage() {
             ...prevOrders,
             ...newOrders,
           }))
+
+          setLoading(false)
         })
       }
     }
@@ -119,47 +123,53 @@ export default function CartPage() {
         </p>
       </article>
       <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
-        <div className="overflow-x-auto">
-          <table className="table-auto w-full border border-[#dddddd]">
-            <thead>
-              <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Referência
-                </th>
+        <DataState
+          dataCount={Object.entries(orderData).length}
+          loading={loading}
+          noDataMessage="Os pedidos dos clientes aparecerão aqui"
+        >
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full border border-[#dddddd]">
+              <thead>
+                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Referência
+                  </th>
 
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Nº de entidades
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Nome
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Telefone
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Destinação
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Data do pedido
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Valor a pagar
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  -
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  -
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {Object.entries(orderData).map(([id, order]) => (
-                <OrderTableRow key={id} {...order} id={id} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Nº de entidades
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Nome
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Telefone
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Destinação
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Data do pedido
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Valor a pagar
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {Object.entries(orderData).map(([id, order]) => (
+                  <OrderTableRow key={id} {...order} id={id} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DataState>
       </article>
     </section>
   )

@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
+import DataState from '@/app/components/DataState'
 
 interface CartProduct extends ProductItem {
   quantity: number
@@ -146,6 +147,7 @@ export default function CartPage() {
   const [orderConfirmedModal, setOrderConfirmedModal] = useState(false)
 
   const [orderData, setOrderData] = useState({})
+  const [loading, setLoading] = useState(true)
 
   const router = useRouter()
   const { user, initialized } = useAuth()
@@ -160,41 +162,41 @@ export default function CartPage() {
     setSelectedProduct(cartProducts.map((p) => p.id))
 
     const fetchProducts = async () => {
-      const fetchedProducts = await Promise.all(
-        cartProducts.map(async (p) => {
-          const product = await getProduct(p.id)
-          if (product) {
-            return {
-              ...product,
-              id: p.id,
-              quantity: p.quantity,
-              price:
+      const fetchedProducts: CartProduct[] = []
+
+      if (cartProducts.length > 0) {
+        for (const p of cartProducts) {
+          getProduct(p.id).then((product) => {
+            if (product) {
+              const productPrice =
                 product.promotion?.reduction &&
                 product.promotion?.reduction !== 0
                   ? product.price -
                     product.price * (product.promotion.reduction / 100)
-                  : product.price,
+                  : product.price
+
+              fetchedProducts.push({
+                ...product,
+                id: p.id,
+                quantity: p.quantity,
+                price: productPrice,
+              })
+
+              setTotalPrice((prevPrice) => prevPrice + productPrice)
             }
-          }
-          return null
-        }),
-      )
-      setProductData(fetchedProducts.filter((p) => p !== null) as CartProduct[])
+          })
+        }
+
+        setProductData(fetchedProducts)
+        setLoading(false)
+      } else {
+        setProductData([])
+        setLoading(false)
+      }
     }
 
     fetchProducts()
   }, [cartProducts])
-
-  useEffect(() => {
-    const selectedProductsTotalPrice = productData.reduce((total, product) => {
-      if (product && selectedProducts.includes(product.id)) {
-        return total + product.price * product.quantity
-      }
-      return total
-    }, 0)
-
-    setTotalPrice(selectedProductsTotalPrice)
-  }, [selectedProducts, cartProducts, productData])
 
   interface FormData {
     firstName: string
@@ -204,7 +206,7 @@ export default function CartPage() {
   }
 
   async function createOrder() {
-    const orderId = randomBytes(20).toString('hex')
+    const orderId = randomBytes(11).toString('hex')
 
     if (user) {
       await set(ref(database, `orders/${user.uid}/${orderId}`), orderData)
@@ -283,79 +285,88 @@ export default function CartPage() {
       </article>
       <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
         <div className="overflow-x-auto">
-          <table className="table-auto w-full border border-[#dddddd]">
-            <thead>
-              <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
-                  <input
-                    type="checkbox"
-                    id="select-all-products"
-                    name="select-all-products"
-                    checked={selectedProducts.length === cartProducts.length}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedProduct(cartProducts.map((p) => p.id))
-                      } else {
-                        setSelectedProduct([])
-                      }
-                    }}
-                    className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
+          <DataState
+            dataCount={cartProducts.length}
+            loading={loading}
+            noDataMessage="Os productos que adicionar no carrinho aparecerão aqui"
+          >
+            <table className="table-auto w-full border border-[#dddddd]">
+              <thead>
+                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
+                    <input
+                      type="checkbox"
+                      id="select-all-products"
+                      name="select-all-products"
+                      checked={selectedProducts.length === cartProducts.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedProduct(cartProducts.map((p) => p.id))
+                        } else {
+                          setSelectedProduct([])
+                        }
+                      }}
+                      className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
+                    />
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Foto
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Nome
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Preço
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    Quantidade
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Promoção
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    -
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-600 text-sm font-light">
+                {productData.map((product) => (
+                  <CartTableRow
+                    key={product.id}
+                    product={product}
+                    setSelectedProduct={setSelectedProduct}
+                    selectedProducts={selectedProducts}
                   />
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Foto
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Nome
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Preço
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  Quantidade
-                </th>
-                <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                  Promoção
-                </th>
-                <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                  -
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 text-sm font-light">
-              {productData.map((product) => (
-                <CartTableRow
-                  key={product.id}
-                  product={product}
-                  setSelectedProduct={setSelectedProduct}
-                  selectedProducts={selectedProducts}
-                />
-              ))}
-            </tbody>
-          </table>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="mt-10 mb-10 p-8 gap-y-5">
+              <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
+                <span className="text-[#5e5f61] ">Total a pagar</span>
+                <span className="font-bold text-4xl">
+                  {money.format(totalPrice)}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  if (initialized) {
+                    if (user) {
+                      setModalOpen(true)
+                    } else {
+                      setOpenLoginModal(true)
+                    }
+                  }
+                }}
+                disabled={selectedProducts.length === 0}
+                className="border rounded disabled:cursor-not-allowed disabled:brightness-75 border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+              >
+                Enviar o pedido
+              </button>
+            </div>
+          </DataState>
         </div>
       </article>
-      <div className="mt-10 mb-10 p-8 gap-y-5">
-        <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
-          <span className="text-[#5e5f61] ">Total a pagar</span>
-          <span className="font-bold text-4xl">{money.format(totalPrice)}</span>
-        </div>
-        <button
-          onClick={() => {
-            if (initialized) {
-              if (user) {
-                setModalOpen(true)
-              } else {
-                setOpenLoginModal(true)
-              }
-            }
-          }}
-          disabled={selectedProducts.length === 0}
-          className="border rounded disabled:cursor-not-allowed disabled:brightness-75 border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
-        >
-          Enviar o pedido
-        </button>
-      </div>
 
       <Modal.Dialog
         title="Iniciar sessão"

@@ -8,12 +8,12 @@ import { useEffect, useState } from 'react'
 import { ProductItem, PromotionItemBase } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import clsx from 'clsx'
-import { SearchX } from 'lucide-react'
 import { child, get, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { campaignValidator, publishedSince } from '@/functions'
+import DataState from '@/app/components/DataState'
 
-export function SearchPageWithoutBoundary() {
+export function CampaingPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
   )
@@ -81,41 +81,24 @@ export function SearchPageWithoutBoundary() {
           : `Mais de ${resultsCount} resultados encontrados`}
       </p>
 
-      <div
-        className={clsx(
-          'w-full min-h-[120vh] flex flex-wrap gap-9 p-6 justify-center mb-8 max-w-[98vw]',
-          {
-            hidden: resultsCount === 0,
-          },
-        )}
+      <DataState
+        dataCount={resultsCount}
+        loading={loading}
+        noDataMessage="Nenhum resultado foi encontrado"
       >
-        {Object.entries(productData).map(([id, product]) => (
-          <ProductCard key={id} {...product} id={id} />
-        ))}
-      </div>
-
-      <div
-        className={clsx(
-          'w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8',
-          {
-            hidden: resultsCount !== 0 || loading,
-          },
-        )}
-      >
-        <SearchX size={60} color="#000" />
-        <p className="text-black font-semibold text-xl">
-          Nenhum resultado encontrado
-        </p>
-      </div>
-
-      {loading && (
-        <div className="w-screen min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8">
-          <div
-            className="inline-block h-8 w-8 animate-spin rounded-full border-main border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          />
+        <div
+          className={clsx(
+            'w-screen min-h-[120vh] flex flex-wrap gap-9 p-6 justify-center mb-8 max-w-[98vw]',
+            {
+              hidden: resultsCount === 0,
+            },
+          )}
+        >
+          {Object.entries(productData).map(([id, product]) => (
+            <ProductCard key={id} {...product} id={id} />
+          ))}
         </div>
-      )}
+      </DataState>
 
       <Footer />
     </section>
