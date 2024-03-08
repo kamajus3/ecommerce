@@ -169,8 +169,8 @@ export default function ProductPage() {
               transition: Bounce,
             })
           })
-          .catch((error: string) => {
-            toast.error(`Erro a fazer a postagem ${error}`, {
+          .catch(() => {
+            toast.error(`Erro a fazer a postagem`, {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -183,8 +183,8 @@ export default function ProductPage() {
             })
           })
       })
-      .catch((error) => {
-        toast.error(`Erro a fazer a postagem ${error}`, {
+      .catch(() => {
+        toast.error(`Erro a fazer a postagem`, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -230,8 +230,8 @@ export default function ProductPage() {
             transition: Bounce,
           })
         })
-        .catch((error) => {
-          toast.error(`Erro a fazer a postagem ${error}`, {
+        .catch(() => {
+          toast.error(`Erro a fazer a postagem`, {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -277,8 +277,6 @@ export default function ProductPage() {
         get(child(ref(database), `promotions/${promotion.id}`)).then(
           (snapshot) => {
             if (snapshot.exists()) {
-              console.error(snapshot.val())
-
               set(ref(database, 'promotions/' + promotion.id), {
                 ...snapshot.val(),
                 products: snapshot
@@ -322,7 +320,7 @@ export default function ProductPage() {
       const data = snapshot.val()
       if (data) {
         setProductData(data)
-        setLoading(true)
+        setLoading(false)
       }
     })
   }, [])

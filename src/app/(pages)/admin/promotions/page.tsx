@@ -168,8 +168,8 @@ export default function PromotionPage() {
               transition: Bounce,
             })
           })
-          .catch((error: string) => {
-            toast.error(`Erro a fazer a campanha ${error}`, {
+          .catch(() => {
+            toast.error('Erro criar a campanha', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -182,8 +182,8 @@ export default function PromotionPage() {
             })
           })
       })
-      .catch((error) => {
-        toast.error(`Erro a fazer a campanha ${error}`, {
+      .catch(() => {
+        toast.error('Erro a criar campanha', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -271,8 +271,8 @@ export default function PromotionPage() {
             transition: Bounce,
           })
         })
-        .catch((error) => {
-          toast.error(`Erro a criar a campanha ${error}`, {
+        .catch(() => {
+          toast.error(`Erro ao criar a campanha`, {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -348,7 +348,7 @@ export default function PromotionPage() {
       const data = snapshot.val()
       if (data) {
         setPromotionData(data)
-        setLoading(true)
+        setLoading(false)
       }
     })
   }, [])
