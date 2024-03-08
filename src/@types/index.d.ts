@@ -46,6 +46,8 @@ export interface PromotionItemBase {
   finishDate: string
   description: string
   photo: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface PromotionItemEdit extends PromotionItemBase {

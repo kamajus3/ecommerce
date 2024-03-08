@@ -5,12 +5,15 @@ import { ProductItem } from '@/@types'
 import Image from 'next/image'
 import Modal from '@/app/components/Modal'
 import { useEffect, useState } from 'react'
+import * as z from 'zod'
 import { toast, Bounce } from 'react-toastify'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import {
   child,
   get,
   onValue,
+  orderByChild,
+  query,
   ref,
   remove,
   set,
@@ -26,6 +29,9 @@ import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import DataState from '@/app/components/DataState'
+import { Search } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
   name: string
@@ -34,6 +40,11 @@ interface FormData {
   category: string
   description: string
   photo: Blob
+}
+
+interface FilterFormData {
+  search: string
+  orderBy: string
 }
 
 interface TableRowProps {
@@ -130,6 +141,11 @@ function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
   )
 }
 
+const schema = z.object({
+  search: z.string().trim(),
+  orderBy: z.string().trim(),
+})
+
 export default function ProductPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
@@ -137,6 +153,15 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
+
+  const { register, watch } = useForm<FilterFormData>({
+    defaultValues: {
+      orderBy: 'updatedAt',
+    },
+    resolver: zodResolver(schema),
+  })
+  // const searchValue = watch('search')
+  const orderByValue = watch('orderBy')
 
   function postProduct(data: FormData) {
     const postId = randomBytes(20).toString('hex')
@@ -316,14 +341,21 @@ export default function ProductPage() {
 
   useEffect(() => {
     const reference = ref(database, 'products/')
-    onValue(reference, (snapshot) => {
+    const productQuery = query(reference, orderByChild(orderByValue))
+
+    onValue(productQuery, (snapshot) => {
       const data = snapshot.val()
+      const results: Record<string, ProductItem> = {}
+      snapshot.forEach(function (child) {
+        results[child.key] = child.val()
+      })
+
       if (data) {
-        setProductData(data)
+        setProductData(results)
         setLoading(false)
       }
     })
-  }, [])
+  }, [orderByValue])
 
   return (
     <section className="bg-white min-h-screen pb-12">
@@ -332,14 +364,33 @@ export default function ProductPage() {
       <article className="mb-2 mt-12">
         <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
 
-        <div className="mb-10 px-8 gap-y-5">
+        <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
+          <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
+            <Search size={15} color="#6B7280" />
+            <input
+              type="text"
+              placeholder="Pesquisar pelo nome"
+              {...register('search')}
+              className="max-sm:w-full text-gray-500 bg-white outline-none"
+            />
+          </div>
+
+          <select
+            {...register('orderBy')}
+            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
+          >
+            <option value="updatedAt">Ordernar pela data de atualização</option>
+            <option value="createdAt">Ordernar pela data de criação</option>
+            <option value="name">Ordernar pelo nome</option>
+          </select>
+
           <button
             onClick={() => {
               setNewModal(true)
             }}
-            className="border rounded border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+            className="max-sm:w-full border rounded-md border-gray-300 p-3 px-4 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
-            Adicionar producto
+            Adicionar novo
           </button>
         </div>
       </article>

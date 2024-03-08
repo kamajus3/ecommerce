@@ -5,7 +5,16 @@ import { ProductInputProps, PromotionItemEdit } from '@/@types'
 import Modal from '@/app/components/Modal'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
-import { onValue, ref, remove, set, update } from 'firebase/database'
+import * as z from 'zod'
+import {
+  onValue,
+  orderByChild,
+  query,
+  ref,
+  remove,
+  set,
+  update,
+} from 'firebase/database'
 import {
   ref as storageRef,
   uploadBytes,
@@ -18,6 +27,9 @@ import { URLtoFile, publishedSince } from '@/functions'
 import { getProduct } from '@/lib/firebase/database'
 import { useInformation } from '@/hooks/useInformation'
 import DataState from '@/app/components/DataState'
+import { Search } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
   title: string
@@ -34,6 +46,11 @@ interface TableRowProps {
   data: PromotionItemEdit
   deletePromotion(): void
   editPromotion(data: FormData, oldData?: PromotionItemEdit): Promise<void>
+}
+
+interface FilterFormData {
+  search: string
+  orderBy: string
 }
 
 function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
@@ -54,6 +71,16 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
           {publishedSince(data.finishDate)}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
+          {publishedSince(data.createdAt)}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
+          {publishedSince(data.updatedAt)}
         </div>
       </td>
       <td className="p-3">
@@ -107,6 +134,11 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
   )
 }
 
+const schema = z.object({
+  search: z.string().trim(),
+  orderBy: z.string().trim(),
+})
+
 export default function PromotionPage() {
   const [promotionData, setPromotionData] = useState<
     Record<string, PromotionItemEdit>
@@ -114,6 +146,16 @@ export default function PromotionPage() {
   const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
+
+  const { register, watch } = useForm<FilterFormData>({
+    defaultValues: {
+      orderBy: 'updatedAt',
+    },
+    resolver: zodResolver(schema),
+  })
+  // const searchValue = watch('search')
+  const orderByValue = watch('orderBy')
+
   const { informationsData } = useInformation()
 
   function postPromotion(data: FormData) {
@@ -129,6 +171,8 @@ export default function PromotionPage() {
           startDate: data.startDate,
           finishDate: data.finishDate,
           reduction: data.reduction,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           products: data.products.map((p) => p.id),
           photo,
         })
@@ -145,8 +189,6 @@ export default function PromotionPage() {
                   startDate: data.startDate,
                   finishDate: data.finishDate,
                 },
-              }).catch((e) => {
-                console.error(e)
               })
             })
 
@@ -217,6 +259,7 @@ export default function PromotionPage() {
         finishDate: data.finishDate,
         products: newDataProductsId,
         photo: oldData.photo,
+        updatedAt: new Date().toISOString(),
       })
         .then(() => {
           if (newDataProductsId !== oldDataProductsId) {
@@ -344,32 +387,55 @@ export default function PromotionPage() {
 
   useEffect(() => {
     const reference = ref(database, 'promotions/')
-    onValue(reference, (snapshot) => {
-      const data = snapshot.val()
-      if (data) {
-        setPromotionData(data)
-        setLoading(false)
-      }
+    const promotionQuery = query(reference, orderByChild(orderByValue))
+
+    onValue(promotionQuery, (snapshot) => {
+      const results: Record<string, PromotionItemEdit> = {}
+      snapshot.forEach(function (child) {
+        results[child.key] = child.val()
+      })
+
+      setPromotionData(results)
+      setLoading(false)
     })
-  }, [])
+  }, [orderByValue])
 
   return (
     <section className="bg-white min-h-screen pb-12">
       <Header.Admin />
 
       <article className="mb-2 mt-12">
-        <p className="text-black font-semibold text-3xl p-9">
+        <h1 className="text-black font-semibold text-3xl p-9">
           Minhas campanhas
-        </p>
+        </h1>
 
-        <div className="mb-10 px-8 gap-y-5">
+        <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
+          <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
+            <Search size={15} color="#6B7280" />
+            <input
+              type="text"
+              placeholder="Pesquisar pelo título"
+              {...register('search')}
+              className="max-sm:w-full text-gray-500 bg-white outline-none"
+            />
+          </div>
+
+          <select
+            {...register('orderBy')}
+            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
+          >
+            <option value="updatedAt">Ordernar pela data de atualização</option>
+            <option value="createdAt">Ordernar pela data de criação</option>
+            <option value="name">Ordernar pelo título</option>
+          </select>
+
           <button
             onClick={() => {
               setNewModal(true)
             }}
-            className="border rounded border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
+            className="max-sm:w-full border rounded-md border-gray-300 p-3 px-4 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
-            Criar uma campanha
+            Criar campanha
           </button>
         </div>
       </article>
@@ -378,7 +444,7 @@ export default function PromotionPage() {
         <DataState
           dataCount={Object.entries(promotionData).length}
           loading={loading}
-          noDataMessage="As promoções que fizer aparecerão aqui"
+          noDataMessage="As suas promoções aparecerão aqui"
         >
           <div className="overflow-x-auto">
             <table className="table-auto w-full border border-[#dddddd]">
@@ -396,9 +462,16 @@ export default function PromotionPage() {
                     <span className="hidden max-sm:inline">Fim</span>
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Data de criação
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Data de atualização
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                     <span className="max-sm:hidden">Nº de productos</span>
                     <span className="hidden max-sm:inline">Productos</span>
                   </th>
+
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                     Fixada
                   </th>

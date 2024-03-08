@@ -182,7 +182,9 @@ export default function CartPage() {
                 price: productPrice,
               })
 
-              setTotalPrice((prevPrice) => prevPrice + productPrice)
+              setTotalPrice(
+                (prevPrice) => prevPrice + productPrice * p.quantity,
+              )
             }
           })
         }
