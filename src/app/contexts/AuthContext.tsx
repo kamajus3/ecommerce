@@ -16,15 +16,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import { child, get, ref, set } from 'firebase/database'
-
-interface UserDatabase {
-  id: string
-  firstName: string
-  lastName?: string
-  address?: string
-  phone?: string
-  privileges: string[]
-}
+import { UserDatabase } from '@/@types'
 
 interface AuthContextProps {
   user: User | null | undefined

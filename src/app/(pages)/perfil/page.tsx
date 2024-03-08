@@ -111,15 +111,6 @@ export default function PerfilPage() {
 
   const onSubmit = (data: FormData) => {
     if (user && userDB) {
-      const userdData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: user.email,
-        phone: data.phone,
-        address: data.address,
-        privileges: userDB.privileges,
-      }
-
       if (
         dirtyFields.firstName ||
         dirtyFields.lastName ||
@@ -127,7 +118,13 @@ export default function PerfilPage() {
         dirtyFields.phone ||
         dirtyFields.address
       ) {
-        set(ref(database, 'users/' + user.uid), userdData)
+        set(ref(database, 'users/' + user.uid), {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          address: data.address,
+          privileges: userDB.privileges,
+        })
           .then(async () => {
             await updateProfile(user, {
               displayName: `${data.firstName} ${data.lastName}`,
