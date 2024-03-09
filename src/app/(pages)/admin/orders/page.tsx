@@ -12,6 +12,8 @@ import {
   orderByKey,
   query,
   ref,
+  remove,
+  update,
 } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
@@ -21,81 +23,151 @@ import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import Modal from '@/app/components/Modal'
+import { Bounce, toast } from 'react-toastify'
+import clsx from 'clsx'
 
 interface FilterFormData {
   code: string
   orderBy: string
 }
 
-function OrderTableRow(order: Order) {
+interface OrderTableRowProps {
+  order: Order
+  deleteOrder(): void
+  putAsSold(): void
+}
+
+function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
   const money = useMoneyFormat()
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [openSoldModal, setOpenSoldModal] = useState(false)
 
   return (
-    <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="text-center text-black font-medium">{order.id}</div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.products.length}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {`${order.firstName} ${order.lastName}`}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.phone}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.address}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {publishedSince(order.createdAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {money.format(
-            order.products.reduce((total, product) => {
-              if (product.promotion) {
-                return (
-                  total + (product.price * product.quantity - product.promotion)
-                )
-              } else {
-                return total + product.price * product.quantity
-              }
-            }, 0),
-          )}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => {}}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-red-500 font-medium">Cancelar o pedido</span>
-          </button>
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => {}}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-red-500 font-medium">Baixar factura</span>
-          </button>
-        </div>
-      </td>
-    </tr>
+    <>
+      <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
+        <td className="p-3">
+          <div className="text-center text-black font-medium">{order.id}</div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {order.products.length}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {`${order.firstName} ${order.lastName}`}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {order.phone}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {order.address}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {order.state === 'not-sold' ? 'Não vendido' : 'Vendido'}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {publishedSince(order.createdAt)}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="text-center text-[#919298] font-medium">
+            {money.format(
+              order.products.reduce((total, product) => {
+                if (product.promotion) {
+                  return (
+                    total +
+                    (product.price * product.quantity - product.promotion)
+                  )
+                } else {
+                  return total + product.price * product.quantity
+                }
+              }, 0),
+            )}
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => {
+                if (order.state === 'not-sold') {
+                  setOpenDeleteModal(true)
+                }
+              }}
+              disabled={order.state === 'sold'}
+              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 disabled:cursor-not-allowed"
+            >
+              <span
+                className={clsx('text-[#adadad]  font-medium', {
+                  'text-red-500': order.state !== 'sold',
+                })}
+              >
+                Cancelar
+              </span>
+            </button>
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => {
+                if (order.state === 'not-sold') {
+                  setOpenSoldModal(true)
+                }
+              }}
+              disabled={order.state === 'sold'}
+              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 disabled:cursor-not-allowed"
+            >
+              <span
+                className={clsx('text-[#00A4C7] font-medium', {
+                  'text-[#adadad]': order.state === 'sold',
+                })}
+              >
+                Vendido
+              </span>
+            </button>
+          </div>
+        </td>
+        <td className="p-3">
+          <div className="flex items-center justify-center">
+            <button
+              onClick={() => {}}
+              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+            >
+              <span className="text-main font-medium">Baixar</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <Modal.Dialog
+        title={`Cancelar pedido`}
+        description="Você tem certeza que queres cancelar esse pedido?"
+        actionTitle="Confirmar"
+        mainColor="#dc2626"
+        action={deleteOrder}
+        isOpen={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+      />
+
+      <Modal.Dialog
+        title="Colocar como vendido"
+        description="Você tem queres colocar o estado desse pedido para vendido?"
+        actionTitle="Confirmar"
+        mainColor="#201D63"
+        action={putAsSold}
+        isOpen={openSoldModal}
+        setOpen={setOpenSoldModal}
+      />
+    </>
   )
 }
 
@@ -152,6 +224,67 @@ export default function CartPage() {
     fetchProducts()
   }, [user, setOrderData, code])
 
+  async function updateOrderState(orderId: string, state: string) {
+    try {
+      update(ref(database, `orders/${orderId}`), {
+        state,
+      })
+      toast.success('O estado do pedido foi alterado com sucesso', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    } catch {
+      toast.error('Erro ao alterar o estado do pedido', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    }
+  }
+
+  async function deleteOrder(orderId: string) {
+    try {
+      const databaseReference = ref(database, `orders/${orderId}`)
+      await remove(databaseReference)
+      toast.success('Pedido cancelado com sucesso', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    } catch {
+      toast.error('Erro a apagar o pedido', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+        transition: Bounce,
+      })
+    }
+  }
+
   return (
     <section className="bg-white min-h-screen overflow-hidden">
       <Header.Admin />
@@ -202,10 +335,16 @@ export default function CartPage() {
                     Destinação
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Estado
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                     Data
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Valor a pagar
+                    A pagar
+                  </th>
+                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                    -
                   </th>
                   <th className="p-3 capitalize font-semibold text-base text-[#111827]">
                     -
@@ -217,7 +356,15 @@ export default function CartPage() {
               </thead>
               <tbody className="text-gray-600 text-sm font-light">
                 {Object.entries(orderData).map(([id, order]) => (
-                  <OrderTableRow key={id} {...order} id={id} />
+                  <OrderTableRow
+                    key={id}
+                    order={{
+                      ...order,
+                      id,
+                    }}
+                    deleteOrder={() => deleteOrder(id)}
+                    putAsSold={() => updateOrderState(id, 'sold')}
+                  />
                 ))}
               </tbody>
             </table>

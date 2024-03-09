@@ -89,6 +89,7 @@ export interface Order {
   address: string
   phone: string
   createdAt: string
+  state: 'not-sold' | 'sold'
   products: ProductOrder[]
 }
 

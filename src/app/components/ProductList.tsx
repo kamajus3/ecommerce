@@ -14,6 +14,7 @@ import { ProductItem, ProductQuery } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import { useEffect, useState } from 'react'
 import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
+import clsx from 'clsx'
 
 interface ProductListProps {
   title: string
@@ -39,7 +40,11 @@ export default function ProductList(props: ProductListProps) {
   }, [props.query])
 
   return (
-    <div className="p-6 mt-6">
+    <div
+      className={clsx('p-6 mt-6', {
+        hidden: !loading && Object.entries(productData).length === 1,
+      })}
+    >
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>
       <Swiper
         modules={[Scrollbar]}

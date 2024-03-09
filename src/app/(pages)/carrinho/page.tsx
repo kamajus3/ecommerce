@@ -261,6 +261,7 @@ export default function CartPage() {
         address: data.address,
         phone: data.phone,
         userId: user.uid,
+        state: 'not-sold',
         createdAt: new Date().toISOString(),
         products: productsList,
       })

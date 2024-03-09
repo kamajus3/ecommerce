@@ -311,7 +311,7 @@ export default function ProductPage() {
         get(child(ref(database), `promotions/${promotion.id}`)).then(
           (snapshot) => {
             if (snapshot.exists()) {
-              set(ref(database, 'promotions/' + promotion.id), {
+              set(ref(database, `promotions/${promotion.id}`), {
                 ...snapshot.val(),
                 products: snapshot
                   .val()
@@ -322,7 +322,7 @@ export default function ProductPage() {
         )
       }
 
-      toast.success(`Produto eliminado com sucesso`, {
+      toast.success('Produto apagado com sucesso', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -334,7 +334,7 @@ export default function ProductPage() {
         transition: Bounce,
       })
     } catch (error) {
-      toast.error(`Erro a apagar o produto`, {
+      toast.error('Erro a apagar o produto', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,

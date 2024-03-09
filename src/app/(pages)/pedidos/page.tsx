@@ -31,6 +31,11 @@ function OrderTableRow(order: Order) {
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
+          {order.state === 'not-sold' ? 'Em processamento' : 'Já pago'}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-[#919298] font-medium">
           {publishedSince(order.createdAt)}
         </div>
       </td>
@@ -136,7 +141,10 @@ export default function CartPage() {
                       Destinação
                     </th>
                     <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Data do pedido
+                      Estado
+                    </th>
+                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                      Data da realização
                     </th>
                     <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                       Valor a pagar
