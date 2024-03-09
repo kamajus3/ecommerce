@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/useAuth'
 import { Bounce, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const schema = z
   .object({
@@ -24,6 +25,9 @@ const schema = z
       .string()
       .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
       .max(40, 'A palavra-passe não pode exceder de 40 carácteres'),
+    consent: z.boolean().refine((val) => val === true, {
+      message: 'Por favor aceite os termos e condições antes de continuar',
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'As palavras-passe não são semelhantes',
@@ -35,6 +39,7 @@ interface FormData {
   email: string
   password: string
   confirmPassword: string
+  consent: boolean
 }
 
 export default function SignUp() {
@@ -136,6 +141,26 @@ export default function SignUp() {
               )}
             </div>
 
+            <div>
+              <div className="flex gap-2">
+                <input
+                  type="checkbox"
+                  id="consent"
+                  {...register('consent')}
+                  className="w-[90%] text-gray-500 bg-white outline-none"
+                ></input>
+                <label htmlFor="consent" className="font-medium">
+                  Concordo com os{' '}
+                  <Link href="/termos-gerais" className="text-main underline">
+                    termos e condições
+                  </Link>
+                </label>
+              </div>
+              {errors.consent && (
+                <p className="text-red-500 mt-1">{errors.consent.message}</p>
+              )}
+            </div>
+
             <button
               type="submit"
               className="w-full rounded px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
@@ -143,11 +168,12 @@ export default function SignUp() {
               Continuar
             </button>
           </form>
-          <div className="text-center">
-            <a href="/login" className="hover:text-main">
-              Você já tem uma conta? Iniciar sessão
-            </a>
-          </div>
+          <p className="text-center font-medium">
+            Você já tem uma conta?{' '}
+            <Link href="/login" className="text-main">
+              Iniciar sessão
+            </Link>
+          </p>
         </div>
       </article>
     </section>

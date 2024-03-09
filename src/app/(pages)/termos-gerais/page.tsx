@@ -8,7 +8,7 @@ export default function TermsAndContions() {
     <section className="bg-white overflow-hidden">
       <Header.Client />
       <main className="max-w-5xl w-full mx-auto my-20 max-sm:w-[80%]">
-        <h1 className="text-zinc-800 font-bold text-3xl">Termos & Condições</h1>
+        <h1 className="text-zinc-800 font-bold text-3xl">Termos e condições</h1>
         <p className="font-medium text-base text-zinc-800 mt-4">
           Prezado(a) Cliente,
         </p>

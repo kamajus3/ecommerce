@@ -4,12 +4,20 @@ import Header from '@/app/components/Header'
 import { useEffect, useState } from 'react'
 import { Order } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { onValue, orderByChild, query, ref } from 'firebase/database'
+import {
+  Query,
+  equalTo,
+  onValue,
+  orderByChild,
+  orderByKey,
+  query,
+  ref,
+} from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import { publishedSince } from '@/functions'
 import DataState from '@/app/components/DataState'
-import { SearchCode } from 'lucide-react'
+import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -96,6 +104,15 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
+function reverseData(obj: Record<string, Order>) {
+  const newObj: Record<string, Order> = {}
+  const revObj = Object.keys(obj).reverse()
+  revObj.forEach(function (i) {
+    newObj[i] = obj[i]
+  })
+  return newObj
+}
+
 export default function CartPage() {
   const { register, watch } = useForm<FilterFormData>({
     defaultValues: {
@@ -103,8 +120,7 @@ export default function CartPage() {
     },
     resolver: zodResolver(schema),
   })
-  // const code = watch('search')
-  const orderByValue = watch('orderBy')
+  const code = watch('code')
 
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
   const [loading, setLoading] = useState(true)
@@ -114,30 +130,27 @@ export default function CartPage() {
     const fetchProducts = async () => {
       if (user) {
         const reference = ref(database, 'orders/')
-        const orderQuery = query(reference, orderByChild(orderByValue))
+        let orderQuery: Query
+        if (code) {
+          orderQuery = query(reference, orderByKey(), equalTo(code))
+        } else {
+          orderQuery = query(reference, orderByChild('createdAt'))
+        }
 
         onValue(orderQuery, (snapshot) => {
-          const newOrders = {}
-          snapshot.forEach(function (childSnapshot) {
-            const userOrders = childSnapshot.val()
-
-            if (userOrders) {
-              Object.assign(newOrders, userOrders)
-            }
+          const results: Record<string, Order> = {}
+          snapshot.forEach(function (child) {
+            results[child.key] = child.val()
           })
 
-          setOrderData((prevOrders) => ({
-            ...prevOrders,
-            ...newOrders,
-          }))
-
+          setOrderData(reverseData(results))
           setLoading(false)
         })
       }
     }
 
     fetchProducts()
-  }, [user, orderByValue, setOrderData])
+  }, [user, setOrderData, code])
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
@@ -149,7 +162,7 @@ export default function CartPage() {
 
         <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
           <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
-            <SearchCode size={15} color="#6B7280" />
+            <Hash size={15} color="#6B7280" />
             <input
               type="text"
               placeholder="Referência"
@@ -157,22 +170,17 @@ export default function CartPage() {
               className="max-sm:w-full text-gray-500 bg-white outline-none"
             />
           </div>
-
-          <select
-            {...register('orderBy')}
-            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
-          >
-            <option value="createdAt">Ordenar pela data de criação</option>
-            <option value="name">Ordenar pelo número de entidades</option>
-            <option value="name">Ordenar pelo valor pago</option>
-          </select>
         </div>
       </article>
       <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
         <DataState
           dataCount={Object.entries(orderData).length}
           loading={loading}
-          noDataMessage="Os pedidos dos clientes aparecerão aqui"
+          noDataMessage={
+            code
+              ? 'Nenhum pedido com essa referência foi encontrado'
+              : 'Os pedidos dos clientes aparecerão aqui'
+          }
         >
           <div className="overflow-x-auto">
             <table className="table-auto w-full border border-[#dddddd]">

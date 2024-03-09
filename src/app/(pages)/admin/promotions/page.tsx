@@ -27,7 +27,7 @@ import { URLtoFile, publishedSince } from '@/functions'
 import { getProduct } from '@/lib/firebase/database'
 import { useInformation } from '@/hooks/useInformation'
 import DataState from '@/app/components/DataState'
-import { Search } from 'lucide-react'
+// import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -139,6 +139,15 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
+function reverseData(obj: Record<string, PromotionItemEdit>) {
+  const newObj: Record<string, PromotionItemEdit> = {}
+  const revObj = Object.keys(obj).reverse()
+  revObj.forEach(function (i) {
+    newObj[i] = obj[i]
+  })
+  return newObj
+}
+
 export default function PromotionPage() {
   const [promotionData, setPromotionData] = useState<
     Record<string, PromotionItemEdit>
@@ -165,7 +174,7 @@ export default function PromotionPage() {
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        set(ref(database, 'promotions/' + postId), {
+        update(ref(database, 'promotions/' + postId), {
           title: data.title,
           description: data.description,
           startDate: data.startDate,
@@ -180,7 +189,7 @@ export default function PromotionPage() {
             data.products.map(async (p) => {
               const product = await getProduct(p.id)
 
-              set(ref(database, 'products/' + p.id), {
+              update(ref(database, 'products/' + p.id), {
                 ...product,
                 promotion: {
                   id: postId,
@@ -193,7 +202,7 @@ export default function PromotionPage() {
             })
 
             if (data.fixed) {
-              set(ref(database, 'informations/'), {
+              update(ref(database, 'informations/'), {
                 promotionFixed: postId,
               })
             }
@@ -395,7 +404,7 @@ export default function PromotionPage() {
         results[child.key] = child.val()
       })
 
-      setPromotionData(results)
+      setPromotionData(reverseData(results))
       setLoading(false)
     })
   }, [orderByValue])
@@ -410,7 +419,7 @@ export default function PromotionPage() {
         </h1>
 
         <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
-          <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
+          {/* <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
             <Search size={15} color="#6B7280" />
             <input
               type="text"
@@ -418,16 +427,7 @@ export default function PromotionPage() {
               {...register('search')}
               className="max-sm:w-full text-gray-500 bg-white outline-none"
             />
-          </div>
-
-          <select
-            {...register('orderBy')}
-            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
-          >
-            <option value="updatedAt">Ordernar pela data de atualização</option>
-            <option value="createdAt">Ordernar pela data de criação</option>
-            <option value="name">Ordernar pelo título</option>
-          </select>
+          </div> */}
 
           <button
             onClick={() => {
@@ -437,6 +437,15 @@ export default function PromotionPage() {
           >
             Criar campanha
           </button>
+
+          <select
+            {...register('orderBy')}
+            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
+          >
+            <option value="updatedAt">Ordernar pela data de atualização</option>
+            <option value="createdAt">Ordernar pela data de criação</option>
+            <option value="name">Ordernar pelo título</option>
+          </select>
         </div>
       </article>
 
@@ -454,12 +463,10 @@ export default function PromotionPage() {
                     Título
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    <span className="max-sm:hidden">Início da campanha</span>
-                    <span className="hidden max-sm:inline">Início</span>
+                    Início
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    <span className="max-sm:hidden">Fim da campanha</span>
-                    <span className="hidden max-sm:inline">Fim</span>
+                    Fim
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                     Data de criação

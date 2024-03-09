@@ -29,7 +29,7 @@ import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import DataState from '@/app/components/DataState'
-import { Search } from 'lucide-react'
+// import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -145,6 +145,15 @@ const schema = z.object({
   search: z.string().trim(),
   orderBy: z.string().trim(),
 })
+
+function reverseData(obj: Record<string, ProductItem>) {
+  const newObj: Record<string, ProductItem> = {}
+  const revObj = Object.keys(obj).reverse()
+  revObj.forEach(function (i) {
+    newObj[i] = obj[i]
+  })
+  return newObj
+}
 
 export default function ProductPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
@@ -344,16 +353,13 @@ export default function ProductPage() {
     const productQuery = query(reference, orderByChild(orderByValue))
 
     onValue(productQuery, (snapshot) => {
-      const data = snapshot.val()
       const results: Record<string, ProductItem> = {}
       snapshot.forEach(function (child) {
         results[child.key] = child.val()
       })
 
-      if (data) {
-        setProductData(results)
-        setLoading(false)
-      }
+      setProductData(reverseData(results))
+      setLoading(false)
     })
   }, [orderByValue])
 
@@ -365,7 +371,7 @@ export default function ProductPage() {
         <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
 
         <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
-          <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
+          {/* <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
             <Search size={15} color="#6B7280" />
             <input
               type="text"
@@ -373,16 +379,7 @@ export default function ProductPage() {
               {...register('search')}
               className="max-sm:w-full text-gray-500 bg-white outline-none"
             />
-          </div>
-
-          <select
-            {...register('orderBy')}
-            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
-          >
-            <option value="updatedAt">Ordernar pela data de atualização</option>
-            <option value="createdAt">Ordernar pela data de criação</option>
-            <option value="name">Ordernar pelo nome</option>
-          </select>
+          </div> */}
 
           <button
             onClick={() => {
@@ -392,6 +389,15 @@ export default function ProductPage() {
           >
             Adicionar novo
           </button>
+
+          <select
+            {...register('orderBy')}
+            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
+          >
+            <option value="updatedAt">Ordernar pela data de atualização</option>
+            <option value="createdAt">Ordernar pela data de criação</option>
+            <option value="name">Ordernar pelo nome</option>
+          </select>
         </div>
       </article>
 

@@ -131,6 +131,12 @@ export default function ProductModal(props: ProductModalProps) {
 
   async function onSubmit(data: FormData) {
     if (isDirty) {
+      if (props.defaultProduct) {
+        await props.action(data, props.defaultProduct)
+      } else {
+        props.action(data)
+      }
+      props.setOpen(false)
       reset({
         name: '',
         category: '',
@@ -139,13 +145,6 @@ export default function ProductModal(props: ProductModalProps) {
         photo: '',
         quantity: 0,
       })
-
-      if (props.defaultProduct) {
-        await props.action(data, props.defaultProduct)
-      } else {
-        props.action(data)
-      }
-      props.setOpen(false)
     } else {
       toast.warn('Nenhum campo foi alterado', {
         position: 'top-right',

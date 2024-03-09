@@ -39,7 +39,7 @@ export async function getProducts(
   if (props?.search) {
     constraints.push(
       orderByChild('nameLowerCase'),
-      startAt(props.search.toLowerCase()),
+      startAt(`%${props.search.toLowerCase()}%`),
       endAt(props.search.toLowerCase() + '\uf8ff'),
     )
   }

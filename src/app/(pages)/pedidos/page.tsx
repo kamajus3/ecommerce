@@ -4,7 +4,7 @@ import Header from '../../components/Header'
 import { useEffect, useState } from 'react'
 import { Order } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { onValue, ref } from 'firebase/database'
+import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
@@ -63,6 +63,15 @@ function OrderTableRow(order: Order) {
   )
 }
 
+function reverseData(obj: Record<string, Order>) {
+  const newObj: Record<string, Order> = {}
+  const revObj = Object.keys(obj).reverse()
+  revObj.forEach(function (i) {
+    newObj[i] = obj[i]
+  })
+  return newObj
+}
+
 export default function CartPage() {
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
   const [loading, setLoading] = useState(true)
@@ -71,13 +80,21 @@ export default function CartPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       if (user) {
-        const reference = ref(database, `orders/${user.uid}`)
-        onValue(reference, (snapshot) => {
-          const data = snapshot.val()
-          if (data) {
-            setOrderData(data)
-            setLoading(false)
-          }
+        const reference = ref(database, 'orders/')
+        const orderQuery = query(
+          reference,
+          orderByChild('userId'),
+          equalTo(user.uid),
+        )
+
+        onValue(orderQuery, (snapshot) => {
+          const results: Record<string, Order> = {}
+          snapshot.forEach(function (child) {
+            results[child.key] = child.val()
+          })
+
+          setOrderData(reverseData(results))
+          setLoading(false)
         })
       }
     }

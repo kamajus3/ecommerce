@@ -83,7 +83,10 @@ export default function SignIn() {
               )}
             </div>
             <div className="mt-5">
-              <Link href="/recuperar-conta" className="hover:text-main">
+              <Link
+                href="/recuperar-conta"
+                className="hover:text-main font-medium"
+              >
                 Esqueceu a sua senha?
               </Link>
             </div>
@@ -101,11 +104,12 @@ export default function SignIn() {
               )}
             </button>
           </form>
-          <div className="text-center">
-            <Link href="/signup" className="hover:text-main">
-              Não tens uma conta? Crie uma
+          <p className="text-center font-medium">
+            Não tens uma conta?{' '}
+            <Link href="/signup" className="text-main">
+              Crie uma
             </Link>
-          </div>
+          </p>
         </div>
       </article>
     </section>

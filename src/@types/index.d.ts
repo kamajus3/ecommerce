@@ -83,6 +83,7 @@ export interface ProductOrder {
 
 export interface Order {
   id: string
+  userId: string
   firstName: string
   lastName: string
   address: string

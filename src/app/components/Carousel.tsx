@@ -47,7 +47,7 @@ export default function Carousel() {
               <h3 className="text-center text-3xl font-semibold text-white lg:text-left">
                 {promotion.title}
               </h3>
-              <p className="text-center w-[80vw] text-base text-white lg:text-left">
+              <p className="text-center w-[40vw] max-sm:w-[75vw] text-base text-white lg:text-left">
                 {promotion.description}
               </p>
               <Link href={`/campanha/${id}`}>

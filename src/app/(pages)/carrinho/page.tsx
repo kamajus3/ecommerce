@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
-import { randomBytes } from 'crypto'
+import { nanoid } from 'nanoid'
 import DataState from '@/app/components/DataState'
 
 interface CartProduct extends ProductItem {
@@ -153,14 +153,10 @@ export default function CartPage() {
   const { user, initialized } = useAuth()
 
   const cartProducts = useCartStore((state) => state.products)
-  const [selectedProducts, setSelectedProduct] = useState(
-    cartProducts.map((p) => p.id),
-  )
+  const [selectedProducts, setSelectedProduct] = useState<string[]>([])
   const money = useMoneyFormat()
 
   useEffect(() => {
-    setSelectedProduct(cartProducts.map((p) => p.id))
-
     const fetchProducts = async () => {
       const fetchedProducts: CartProduct[] = []
 
@@ -181,10 +177,6 @@ export default function CartPage() {
                 quantity: p.quantity,
                 price: productPrice,
               })
-
-              setTotalPrice(
-                (prevPrice) => prevPrice + productPrice * p.quantity,
-              )
             }
           })
         }
@@ -200,6 +192,17 @@ export default function CartPage() {
     fetchProducts()
   }, [cartProducts])
 
+  useEffect(() => {
+    const selectedTotalPrice = productData.reduce((total, product) => {
+      if (product && selectedProducts.includes(product.id)) {
+        return total + product.price * product.quantity
+      }
+      return total
+    }, 0)
+
+    setTotalPrice(selectedTotalPrice)
+  }, [selectedProducts, cartProducts, productData])
+
   interface FormData {
     firstName: string
     lastName: string
@@ -208,10 +211,10 @@ export default function CartPage() {
   }
 
   async function createOrder() {
-    const orderId = randomBytes(11).toString('hex')
+    const orderId = nanoid(10)
 
     if (user) {
-      await set(ref(database, `orders/${user.uid}/${orderId}`), orderData)
+      await set(ref(database, `orders/${orderId}`), orderData)
         .then(() => {
           selectedProducts.map((id) => removeFromCart(id))
           setSelectedProduct([])
@@ -257,6 +260,7 @@ export default function CartPage() {
         lastName: data.lastName,
         address: data.address,
         phone: data.phone,
+        userId: user.uid,
         createdAt: new Date().toISOString(),
         products: productsList,
       })
