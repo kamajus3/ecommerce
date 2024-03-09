@@ -33,11 +33,10 @@ export default function SignIn() {
     signInWithEmail(data.email, data.password)
       .then(async (user) => {
         if (user) {
-          if ('admin' in user.privileges) {
+          if (user.privileges.includes('admin')) {
             router.push('/admin/dashboard')
           } else {
             await logout()
-
             toast.error('Essa conta não existe', {
               position: 'top-right',
               autoClose: 5000,

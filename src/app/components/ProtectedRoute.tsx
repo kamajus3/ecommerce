@@ -16,7 +16,7 @@ export default function ProtectedRoute({
   children,
   privileges = ['admin'],
   pathWhenAuthorizated = '/admin/dashboard',
-  pathWhenNotAuthorizated = '',
+  pathWhenNotAuthorizated = '/admin/login',
 }: ProtectedRouteProps) {
   const { user, userDB, initialized } = useAuth()
   const router = useRouter()
