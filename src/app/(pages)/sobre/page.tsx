@@ -5,6 +5,28 @@ import Header from '@/app/components/Header'
 import Image from 'next/image'
 import AboutHeroe from '@/assets/images/about-us-heroe.png'
 import Advantages from '@/app/components/Home/Advantages'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Sobre Nós',
+  description: `Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
+              dedicada a oferecer produtos de alta qualidade para o seu
+              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
+              essencial para uma vida plena e feliz. Por isso, nos esforçamos
+              para fornecer aos nossos clientes os melhores produtos do mercado,
+              com preços acessíveis e um atendimento impecável.`,
+  openGraph: {
+    type: 'website',
+    title: 'Sobre Nós',
+    description: `Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
+              dedicada a oferecer produtos de alta qualidade para o seu
+              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
+              essencial para uma vida plena e feliz. Por isso, nos esforçamos
+              para fornecer aos nossos clientes os melhores produtos do mercado,
+              com preços acessíveis e um atendimento impecável.`,
+    images: ['https://raciuscare.com/logo.png'],
+  },
+}
 
 export default function AboutPage() {
   return (

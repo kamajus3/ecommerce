@@ -1,7 +1,19 @@
 import Footer from '@/app/components/Footer'
 import Header from '@/app/components/Header'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'
+
+export const metadata: Metadata = {
+  title: 'Termos e condições',
+  description: 'Termos e condições de uso da Racius Care',
+  openGraph: {
+    type: 'website',
+    title: 'Sobre Nós',
+    description: 'Termos e condições de uso da Racius Care',
+    images: ['https://raciuscare.com/logo.png'],
+  },
+}
 
 export default function TermsAndContions() {
   return (
