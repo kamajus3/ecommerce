@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { ProductItem } from '@/@types'
 import { useAuth } from '@/hooks/useAuth'
+import Field from '../Field'
+import Button from '../Button'
 
 interface FormData {
   firstName: string
@@ -120,106 +122,55 @@ export default function ConfirmOrder(props: ConfirmOrderProps) {
                         Confirmar o seu pedido
                       </Dialog.Title>
                       <div className="mb-4">
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Seu nome
-                        </label>
-                        <input
+                        <Field.Label htmlFor="firstName">Seu nome</Field.Label>
+                        <Field.Input
                           type="text"
-                          id="firstName"
-                          autoComplete="given-name"
                           {...register('firstName')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.firstName && 'border-red-500'}`}
+                          error={errors.firstName}
                         />
-                        {errors.firstName && (
-                          <p className="text-red-500 mt-1">
-                            {errors.firstName.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.firstName} />
                       </div>
 
                       <div className="mb-4">
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Sobrenome
-                        </label>
-                        <input
+                        <Field.Label htmlFor="lastName">Sobrenome</Field.Label>
+                        <Field.Input
                           type="text"
-                          id="lastName"
-                          autoComplete="given-name"
                           {...register('lastName')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.lastName && 'border-red-500'}`}
+                          error={errors.lastName}
                         />
-                        {errors.lastName && (
-                          <p className="text-red-500 mt-1">
-                            {errors.lastName.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.lastName} />
                       </div>
 
                       <div className="mb-4">
-                        <label
-                          htmlFor="phone"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="phone">
                           Número de telefone
-                        </label>
-                        <input
-                          type="text"
-                          id="phone"
+                        </Field.Label>
+                        <Field.Input
+                          type="tel"
                           {...register('phone')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.phone && 'border-red-500'}`}
+                          error={errors.phone}
                         />
-                        {errors.phone && (
-                          <p className="text-red-500 mt-1">
-                            {errors.phone.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.phone} />
                       </div>
 
                       <div className="mb-4">
-                        <label
-                          htmlFor="address"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Morada
-                        </label>
-                        <input
+                        <Field.Label htmlFor="address">Morada</Field.Label>
+                        <Field.Input
                           type="text"
                           id="address"
                           autoComplete="street-address"
                           {...register('address')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.address && 'border-red-500'}`}
+                          error={errors.address}
                         />
-                        {errors.address && (
-                          <p className="text-red-500 mt-1">
-                            {errors.address.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.address} />
                       </div>
                     </article>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
-                  >
-                    {isSubmitting ? (
-                      <div
-                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                      />
-                    ) : (
-                      <p className="text-white flex items-center gap-2">
-                        Continuar
-                      </p>
-                    )}
-                  </button>
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
+                  <Button type="submit" loading={isSubmitting}>
+                    Continuar
+                  </Button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"

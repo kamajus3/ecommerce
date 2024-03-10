@@ -1,5 +1,6 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import Button from '../Button'
 
 interface OrderConfirmedProps {
   action: () => void
@@ -60,16 +61,15 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
+                  <Button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
                     onClick={() => {
                       props.setOpen(false)
                       props.action()
                     }}
                   >
-                    Baixar a prefactura
-                  </button>
+                    Baixar a factura
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

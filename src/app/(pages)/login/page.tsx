@@ -8,9 +8,10 @@ import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
 import Header from '@/app/components/Header'
 import Link from 'next/link'
+import Field from '@/app/components/Field'
 
 const schema = z.object({
-  email: z.string().email('E-mail inválido'),
+  email: z.string().email('Preencha com um e-mail válido'),
   password: z
     .string()
     .min(6, 'A palavra-passe precisa de no minimo 6 caracteres'),
@@ -55,32 +56,28 @@ export default function SignIn() {
     <section className="bg-white overflow-hidden">
       <Header.Client />
       <article className="flex justify-center items-center h-screen">
-        <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
+        <div className="space-y-6 text-gray-600 max-w-md lg:min-w-96 max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
             Iniciar sessão
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">E-mail</label>
-              <input
+              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Input
                 type="email"
                 {...register('email')}
-                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
+                error={errors.email}
               />
-              {errors.email && (
-                <p className="text-red-500 mt-1">{errors.email.message}</p>
-              )}
+              <Field.Error error={errors.email} />
             </div>
             <div>
-              <label className="font-medium">Palavra-passe</label>
-              <input
+              <Field.Label htmlFor="password">Palavra-passe</Field.Label>
+              <Field.Input
                 type="password"
                 {...register('password')}
-                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
+                error={errors.password}
               />
-              {errors.password && (
-                <p className="text-red-500 mt-1">{errors.password.message}</p>
-              )}
+              <Field.Error error={errors.password} />
             </div>
             <div className="mt-5">
               <Link

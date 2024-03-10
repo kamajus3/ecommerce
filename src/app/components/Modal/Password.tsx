@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth'
+import Field from '../Field'
+import Button from '../Button'
 
 interface FormData {
   password: string
@@ -28,6 +30,7 @@ export default function PasswordModal(props: PasswordModalProps) {
   const cancelButtonRef = useRef(null)
   const {
     register,
+    reset,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
@@ -44,6 +47,7 @@ export default function PasswordModal(props: PasswordModalProps) {
       reauthenticateWithCredential(user, credential)
         .then(async () => {
           props.setOpen(false)
+          reset()
           props.action()
         })
         .catch(() => {
@@ -101,41 +105,23 @@ export default function PasswordModal(props: PasswordModalProps) {
                         Digita a sua palavra-passe para continuar
                       </Dialog.Title>
                       <div className="mb-4">
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="password">
                           Palavra-passe
-                        </label>
-                        <input
-                          type="text"
-                          id="password"
+                        </Field.Label>
+                        <Field.Input
+                          type="password"
                           {...register('password')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
+                          error={errors.password}
                         />
-                        {errors.password && (
-                          <p className="text-red-500 mt-1">
-                            {errors.password.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.password} />
                       </div>
                     </article>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
-                  >
-                    {isSubmitting ? (
-                      <div
-                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                      />
-                    ) : (
-                      <p className="text-white">Continuar</p>
-                    )}
-                  </button>
+                  <Button type="submit" loading={isSubmitting}>
+                    Continuar
+                  </Button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"

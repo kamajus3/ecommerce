@@ -5,11 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Bounce, toast } from 'react-toastify'
 import Header from '@/app/components/Header'
+import FieldError from '@/app/components/FieldError'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase/config'
 
 const schema = z.object({
-  email: z.string().email('E-mail inválido'),
+  email: z.string().email('Preencha um e-mail válido'),
 })
 
 interface FormData {
@@ -67,7 +68,7 @@ export default function RecoverAccount() {
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
-            Recuperar a sua conta
+            Recupere a sua conta
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -77,9 +78,7 @@ export default function RecoverAccount() {
                 {...register('email')}
                 className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
               />
-              {errors.email && (
-                <p className="text-red-500 mt-1">{errors.email.message}</p>
-              )}
+              <FieldError error={errors.email} />
             </div>
 
             <button

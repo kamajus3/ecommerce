@@ -6,9 +6,10 @@ import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
+import CustomFieldError from '@/app/components/CustomFieldError'
 
 const schema = z.object({
-  email: z.string().email('E-mail inválido'),
+  email: z.string().email('Preencha um e-mail válido'),
   password: z
     .string()
     .min(6, 'A palavra-passe precisa de no minimo 6 caracteres'),
@@ -83,7 +84,7 @@ export default function SignIn() {
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-black text-center text-2xl font-bold sm:text-3xl">
-            Entrando no BackOffice
+            Entrando no Back-office
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
@@ -93,9 +94,7 @@ export default function SignIn() {
                 {...register('email')}
                 className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
               />
-              {errors.email && (
-                <p className="text-red-500 mt-1">{errors.email.message}</p>
-              )}
+              <CustomFieldError>{errors.email}</CustomFieldError>
             </div>
             <div>
               <label className="font-medium">Palavra-passe</label>
@@ -104,9 +103,7 @@ export default function SignIn() {
                 {...register('password')}
                 className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
               />
-              {errors.password && (
-                <p className="text-red-500 mt-1">{errors.password.message}</p>
-              )}
+              <CustomFieldError>{errors.password}</CustomFieldError>
             </div>
             <button
               type="submit"

@@ -14,6 +14,8 @@ import {
 import { database } from '@/lib/firebase/config'
 import { Bounce, toast } from 'react-toastify'
 import Modal from '@/app/components/Modal'
+import Field from '@/app/components/Field'
+import Button from '@/app/components/Button'
 
 const schema = z.object({
   firstName: z
@@ -208,6 +210,41 @@ export default function PerfilUpdate() {
     updateFieldAsDefault()
   }, [updateFieldAsDefault])
 
+  function sendVerificationEmail() {
+    if (user) {
+      sendEmailVerification(user)
+        .then(() => {
+          toast.success('Foi enviado um código de verificação no seu email', {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+            transition: Bounce,
+          })
+        })
+        .catch(() => {
+          toast.error(
+            'Erro ao enviar código de verificação, tente novamente mais tarde',
+            {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            },
+          )
+        })
+    }
+  }
+
   return (
     <article>
       <form className="p-10" onSubmit={handleSubmit(onSubmit)}>
@@ -230,170 +267,73 @@ export default function PerfilUpdate() {
             </p>
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
-                <label
-                  htmlFor="first-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Primeiro nome
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    autoComplete="given-name"
-                    {...register('firstName')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.firstName && (
-                    <p className="text-red-500 mt-1">
-                      {errors.firstName.message}
-                    </p>
-                  )}
-                </div>
+                <Field.Label htmlFor="firstName">Primeiro nome</Field.Label>
+                <Field.Input
+                  type="text"
+                  autoComplete="given-name"
+                  {...register('firstName')}
+                  error={errors.firstName}
+                />
+                <Field.Error error={errors.firstName} />
               </div>
               <div className="sm:col-span-3">
-                <label
-                  htmlFor="last-name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Sobrenome
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    autoComplete="family-name"
-                    {...register('lastName')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.lastName && (
-                    <p className="text-red-500 mt-1">
-                      {errors.lastName.message}
-                    </p>
-                  )}
-                </div>
+                <Field.Label htmlFor="lastName">Sobrenome</Field.Label>
+                <Field.Input
+                  type="text"
+                  autoComplete="family-name"
+                  {...register('lastName')}
+                  error={errors.lastName}
+                />
+                <Field.Error error={errors.lastName} />
               </div>
               <div className="sm:col-span-4">
-                <label
-                  htmlFor="email"
-                  className=" text-sm font-medium leading-6 text-gray-900 flex items-center gap-x-3"
-                >
-                  <span>Email</span>
+                <Field.Label htmlFor="email">
+                  <span>E-mail</span>
 
                   {user && !user?.emailVerified && (
                     <button
                       className="bg-main px-3 py-1 text-sm text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                       type="button"
-                      onClick={() => {
-                        sendEmailVerification(user)
-                          .then(() => {
-                            toast.success(
-                              'Foi enviado um código de verificação no seu email',
-                              {
-                                position: 'top-right',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: false,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'light',
-                                transition: Bounce,
-                              },
-                            )
-                          })
-                          .catch(() => {
-                            toast.error(
-                              'Erro ao enviar código de verificação, tente novamente mais tarde',
-                              {
-                                position: 'top-right',
-                                autoClose: 5000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: false,
-                                draggable: true,
-                                progress: undefined,
-                                theme: 'light',
-                                transition: Bounce,
-                              },
-                            )
-                          })
-                      }}
+                      onClick={sendVerificationEmail}
                     >
                       Verificar o seu email
                     </button>
                   )}
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    {...register('email')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-
-                  {errors.email && (
-                    <p className="text-red-500 mt-1">{errors.email.message}</p>
-                  )}
-                </div>
+                </Field.Label>
+                <Field.Input
+                  type="email"
+                  autoComplete="email"
+                  {...register('email')}
+                  error={errors.email}
+                />
+                <Field.Error error={errors.email} />
               </div>
               <div className="sm:col-span-2 sm:col-start-1">
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Número de telefone
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="tel"
-                    id="phone"
-                    {...register('phone')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.phone && (
-                    <p className="text-red-500 mt-1">{errors.phone.message}</p>
-                  )}
-                </div>
+                <Field.Label htmlFor="phone">Número de telefone</Field.Label>
+                <Field.Input
+                  type="tel"
+                  {...register('phone')}
+                  error={errors.phone}
+                />
+                <Field.Error error={errors.phone} />
               </div>
               <div className="col-span-full">
-                <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Morada
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    id="street-address"
-                    autoComplete="street-address"
-                    {...register('address')}
-                    className="block w-full border-0 px-3 py-2 bg-neutral-100 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.address && (
-                    <p className="text-red-500 mt-1">
-                      {errors.address.message}
-                    </p>
-                  )}
-                </div>
+                <Field.Label htmlFor="phone">Morada</Field.Label>
+                <Field.Input
+                  type="text"
+                  autoComplete="street-address"
+                  {...register('address')}
+                  error={errors.address}
+                />
+                <Field.Error error={errors.address} />
               </div>
             </div>
           </div>
         </div>
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="submit"
-            className="bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            {isSubmitting ? (
-              <div
-                className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                role="status"
-              />
-            ) : (
-              <p className="text-white">Atualizar perfil</p>
-            )}
-          </button>
+          <Button type="submit" loading={isSubmitting}>
+            Atualizar perfil
+          </Button>
         </div>
       </form>
       <Modal.Password

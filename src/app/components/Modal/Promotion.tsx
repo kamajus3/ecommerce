@@ -13,13 +13,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { ProductInputProps, PromotionItemEdit } from '@/@types'
-import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
 import ProductInput from '../ProductInput'
-import { Percent, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { getProducts } from '@/lib/firebase/database'
 import { useInformation } from '@/hooks/useInformation'
+import Field from '../Field'
+import Button from '../Button'
 
 interface FormData {
   title: string
@@ -173,24 +174,20 @@ export default function PromotionModal(props: PromotionModalProps) {
     unsubscribed()
   }, [reset, props.defaultData, getValues])
 
+  function closeModal() {
+    props.setOpen(false)
+    reset()
+    setPhotoPreview('')
+  }
+
   async function onSubmit(data: FormData) {
     if (isDirty) {
-      reset({
-        title: '',
-        description: '',
-        startDate: '',
-        fixed: false,
-        finishDate: '',
-        photo: '',
-        products: [],
-        reduction: 0,
-      })
       if (props.defaultData) {
         await props.action(data, props.defaultData)
       } else {
         props.action(data)
       }
-      props.setOpen(false)
+      closeModal()
     } else {
       toast.warn('Nenhum campo foi alterado', {
         position: 'top-right',
@@ -230,7 +227,7 @@ export default function PromotionModal(props: PromotionModalProps) {
         as="div"
         className="relative z-50"
         initialFocus={cancelButtonRef}
-        onClose={props.setOpen}
+        onClose={closeModal}
       >
         <Transition.Child
           as={Fragment}
@@ -269,49 +266,24 @@ export default function PromotionModal(props: PromotionModalProps) {
                         {props.title}
                       </Dialog.Title>
                       <div className="mb-4">
-                        <label
-                          htmlFor="title"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Título
-                        </label>
-                        <input
+                        <Field.Label htmlFor="title">Título</Field.Label>
+                        <Field.Input
                           type="text"
-                          id="title"
                           {...register('title')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.title && 'border-red-500'}`}
+                          error={errors.title}
                         />
-                        {errors.title && (
-                          <p className="text-red-500 mt-1">
-                            {errors.title.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.title} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="reduction"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="reduction">
                           Taxa de redução
-                        </label>
-                        <div
-                          className={`w-full rounded-lg bg-white mt-2 px-3 py-2 border flex items-center gap-2 ${errors.reduction && 'border-red-500'}`}
-                        >
-                          <Percent size={15} color="#6B7280" />
-                          <input
-                            type="number"
-                            id="reduction"
-                            defaultValue={0}
-                            {...register('reduction', { valueAsNumber: true })}
-                            className="w-[90%] text-gray-500 bg-white outline-none"
-                          />
-                        </div>
-
-                        {errors.reduction && (
-                          <p className="text-red-500 mt-1">
-                            {errors.reduction.message}
-                          </p>
-                        )}
+                        </Field.Label>
+                        <Field.Input
+                          type="number"
+                          {...register('reduction', { valueAsNumber: true })}
+                          error={errors.reduction}
+                        />
+                        <Field.Error error={errors.reduction} />
                       </div>
                       <div className="mb-4 flex items-center gap-x-2">
                         <input
@@ -324,85 +296,46 @@ export default function PromotionModal(props: PromotionModalProps) {
                               : false
                           }
                           {...register('fixed')}
-                          className="w-[90%] text-gray-500 bg-white outline-none"
                         />
 
-                        <label
-                          htmlFor="fixed"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="fixed">
                           fixar campanha
-                        </label>
-
-                        {errors.reduction && (
-                          <p className="text-red-500 mt-1">
-                            {errors.reduction.message}
-                          </p>
-                        )}
+                        </Field.Label>
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="start-date"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="startDate">
                           Início da campanha
-                        </label>
-                        <input
+                        </Field.Label>
+                        <Field.Input
                           type="datetime-local"
-                          id="startDate"
                           {...register('startDate')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.startDate && 'border-red-500'}`}
+                          error={errors.startDate}
                         />
-                        {errors.startDate && (
-                          <p className="text-red-500 mt-1">
-                            {errors.startDate.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.startDate} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="start-date"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="finishDate">
                           Fim da campanha
-                        </label>
-                        <input
+                        </Field.Label>
+                        <Field.Input
                           type="datetime-local"
-                          id="finishDate"
                           {...register('finishDate')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.finishDate && 'border-red-500'}`}
+                          error={errors.finishDate}
                         />
-                        {errors.finishDate && (
-                          <p className="text-red-500 mt-1">
-                            {errors.finishDate.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.finishDate} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="description"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="description">
                           Descrição
-                        </label>
-                        <textarea
-                          id="description"
+                        </Field.Label>
+                        <Field.TextArea
                           {...register('description')}
-                          className={`w-full rounded-lg h-40 resize-none bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.description && 'border-red-500'}`}
+                          error={errors.description}
                         />
-                        {errors.description && (
-                          <p className="text-red-500 mt-1">
-                            {errors.description.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.description} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="products"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Productos
-                        </label>
+                        <Field.Label htmlFor="products">Productos</Field.Label>
                         <ProductInput
                           products={promotionProducts}
                           appendProduct={appendProduct}
@@ -435,97 +368,37 @@ export default function PromotionModal(props: PromotionModalProps) {
                             ))}
                           </div>
                         )}
-                        {errors.products && (
-                          <p className="text-red-500 mt-1">
-                            {errors.products.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.products} />
                       </div>
-                      <div className="flex items-center justify-center w-full">
-                        <label
-                          htmlFor="dropzone-file"
-                          style={{
-                            backgroundImage: `url(${photoPreview})`,
-                            backgroundSize: 'cover',
+                      <div>
+                        <Field.DropZone
+                          photoPreview={photoPreview}
+                          onChange={(e) => {
+                            if (
+                              e.target.files &&
+                              e.target.files?.length !== 0
+                            ) {
+                              setValue('photo', e.target.files[0])
+                              setPhotoPreview(
+                                window.URL.createObjectURL(e.target.files[0]),
+                              )
+                            }
                           }}
-                          className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95 ${errors.photo && 'border-red-500 bg-red-100'}`}
-                        >
-                          <div
-                            className={clsx(
-                              'flex flex-col items-center justify-center pt-5 pb-6',
-                              {
-                                hidden: photoPreview,
-                              },
-                            )}
-                          >
-                            <svg
-                              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 20 16"
-                            >
-                              <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                              />
-                            </svg>
-                            <p className="mb-2 text-sm text-gray-500 text-center">
-                              <span className="font-semibold">
-                                Clique para fazer upload
-                              </span>
-                              <br />
-                              ou arrasta e larga
-                            </p>
-                          </div>
-                          <input
-                            type="file"
-                            id="dropzone-file"
-                            onChange={(e) => {
-                              if (
-                                e.target.files &&
-                                e.target.files?.length !== 0
-                              ) {
-                                setValue('photo', e.target.files[0])
-                                setPhotoPreview(
-                                  window.URL.createObjectURL(e.target.files[0]),
-                                )
-                              }
-                            }}
-                            className="hidden"
-                            accept="image/*"
-                          />
-                        </label>
+                          error={errors.photo}
+                        />
+                        <Field.Error error={errors.photo} />
                       </div>
-                      {errors.photo && (
-                        <p className="text-red-500 mt-1">
-                          {errors.photo.message}
-                        </p>
-                      )}
                     </article>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
-                  >
-                    {isSubmitting ? (
-                      <div
-                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                      />
-                    ) : (
-                      <p className="text-white">{props.actionTitle}</p>
-                    )}
-                  </button>
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
+                  <Button type="submit" loading={isSubmitting}>
+                    {props.actionTitle}
+                  </Button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => props.setOpen(false)}
+                    onClick={closeModal}
                     ref={cancelButtonRef}
                   >
                     Cancelar

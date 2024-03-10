@@ -14,9 +14,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import CATEGORIES from '@/assets/data/categories'
 import { ProductItem } from '@/@types'
-import clsx from 'clsx'
 import { Bounce, toast } from 'react-toastify'
 import { URLtoFile } from '@/functions'
+import Field from '../Field'
+import Button from '../Button'
 
 interface FormData {
   name: string
@@ -46,7 +47,7 @@ const schema = z.object({
     .trim(),
   description: z
     .string()
-    .min(6, 'A descrição me deve ter no minimo 6 carácteres')
+    .min(6, 'A descrição deve ter no minimo 6 carácteres')
     .max(180, 'A descrição deve ter no máximo 180 carácteres')
     .trim(),
   quantity: z
@@ -129,6 +130,12 @@ export default function ProductModal(props: ProductModalProps) {
     unsubscribed()
   }, [reset, props.defaultProduct])
 
+  function closeModal() {
+    props.setOpen(false)
+    reset()
+    setPhotoPreview('')
+  }
+
   async function onSubmit(data: FormData) {
     if (isDirty) {
       if (props.defaultProduct) {
@@ -136,15 +143,7 @@ export default function ProductModal(props: ProductModalProps) {
       } else {
         props.action(data)
       }
-      props.setOpen(false)
-      reset({
-        name: '',
-        category: '',
-        description: '',
-        price: undefined,
-        photo: '',
-        quantity: 0,
-      })
+      closeModal()
     } else {
       toast.warn('Nenhum campo foi alterado', {
         position: 'top-right',
@@ -166,7 +165,7 @@ export default function ProductModal(props: ProductModalProps) {
         as="div"
         className="relative z-50"
         initialFocus={cancelButtonRef}
-        onClose={props.setOpen}
+        onClose={closeModal}
       >
         <Transition.Child
           as={Fragment}
@@ -205,185 +204,84 @@ export default function ProductModal(props: ProductModalProps) {
                         {props.title}
                       </Dialog.Title>
                       <div className="mb-4">
-                        <label
-                          htmlFor="name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Nome
-                        </label>
-                        <input
+                        <Field.Label htmlFor="name">Nome</Field.Label>
+                        <Field.Input
                           type="text"
-                          id="name"
                           {...register('name')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.name && 'border-red-500'}`}
+                          error={errors.name}
                         />
-                        {errors.name && (
-                          <p className="text-red-500 mt-1">
-                            {errors.name.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.name} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="quantity"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Quantidade
-                        </label>
-                        <input
+                        <Field.Label htmlFor="quantity">Quantidade</Field.Label>
+                        <Field.Input
                           type="number"
                           id="quantity"
-                          defaultValue={1}
                           {...register('quantity', { valueAsNumber: true })}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.quantity && 'border-red-500'}`}
+                          error={errors.quantity}
                         />
-                        {errors.quantity && (
-                          <p className="text-red-500 mt-1">
-                            {errors.quantity.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.quantity} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="price"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Preço
-                        </label>
-                        <input
-                          id="price"
+                        <Field.Label htmlFor="price">Preço</Field.Label>
+                        <Field.Input
                           type="number"
                           {...register('price', { valueAsNumber: true })}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.price && 'border-red-500'}`}
+                          error={errors.price}
                         />
-                        {errors.price && (
-                          <p className="text-red-500 mt-1">
-                            {errors.price.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.price} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="category"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Categória
-                        </label>
-
-                        <select
+                        <Field.Label htmlFor="category">Categória</Field.Label>
+                        <Field.Select
                           {...register('category')}
-                          className={`w-full rounded-lg bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.category && 'border-red-500'}`}
-                        >
-                          {CATEGORIES.map((category) => (
-                            <option key={category.label}>
-                              {category.label}
-                            </option>
-                          ))}
-                        </select>
+                          options={CATEGORIES.map((c) => ({
+                            value: c.label,
+                            label: c.label,
+                          }))}
+                          error={errors.category}
+                        />
+                        <Field.Error error={errors.category} />
                       </div>
                       <div className="mb-4">
-                        <label
-                          htmlFor="description"
-                          className="block text-sm font-medium text-gray-700"
-                        >
+                        <Field.Label htmlFor="description">
                           Descrição
-                        </label>
-                        <textarea
-                          id="description"
+                        </Field.Label>
+                        <Field.TextArea
                           {...register('description')}
-                          className={`w-full rounded-lg h-40 resize-none bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.description && 'border-red-500'}`}
+                          error={errors.description}
                         />
-                        {errors.description && (
-                          <p className="text-red-500 mt-1">
-                            {errors.description.message}
-                          </p>
-                        )}
+                        <Field.Error error={errors.description} />
                       </div>
-                      <div className="flex items-center justify-center w-full">
-                        <label
-                          htmlFor="dropzone-file"
-                          style={{
-                            backgroundImage: `url(${photoPreview})`,
-                            backgroundSize: 'cover',
+                      <div>
+                        <Field.DropZone
+                          onChange={(e) => {
+                            if (
+                              e.target.files &&
+                              e.target.files?.length !== 0
+                            ) {
+                              setValue('photo', e.target.files[0])
+                              setPhotoPreview(
+                                window.URL.createObjectURL(e.target.files[0]),
+                              )
+                            }
                           }}
-                          className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95 ${errors.photo && 'border-red-500 bg-red-100'}`}
-                        >
-                          <div
-                            className={clsx(
-                              'flex flex-col items-center justify-center pt-5 pb-6',
-                              {
-                                hidden: photoPreview,
-                              },
-                            )}
-                          >
-                            <svg
-                              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 20 16"
-                            >
-                              <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                              />
-                            </svg>
-                            <p className="mb-2 text-sm text-gray-500 text-center">
-                              <span className="font-semibold">
-                                Clique para fazer upload
-                              </span>
-                              <br />
-                              ou arrasta e larga
-                            </p>
-                          </div>
-                          <input
-                            type="file"
-                            id="dropzone-file"
-                            onChange={(e) => {
-                              if (
-                                e.target.files &&
-                                e.target.files?.length !== 0
-                              ) {
-                                setValue('photo', e.target.files[0])
-                                setPhotoPreview(
-                                  window.URL.createObjectURL(e.target.files[0]),
-                                )
-                              }
-                            }}
-                            className="hidden"
-                            accept="image/*"
-                          />
-                        </label>
+                          photoPreview={photoPreview}
+                          error={errors.photo}
+                        />
+                        <Field.Error error={errors.photo} />
                       </div>
-                      {errors.photo && (
-                        <p className="text-red-500 mt-1">
-                          {errors.photo.message}
-                        </p>
-                      )}
                     </article>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <button
-                    type="submit"
-                    className="inline-flex w-full justify-center rounded-md bg-main px-3 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-75 sm:ml-3 sm:w-auto"
-                  >
-                    {isSubmitting ? (
-                      <div
-                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status"
-                      />
-                    ) : (
-                      <p className="text-white">{props.actionTitle}</p>
-                    )}
-                  </button>
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
+                  <Button type="submit" loading={isSubmitting}>
+                    {props.actionTitle}
+                  </Button>
                   <button
                     type="button"
                     className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                    onClick={() => props.setOpen(false)}
+                    onClick={closeModal}
                     ref={cancelButtonRef}
                   >
                     Cancelar

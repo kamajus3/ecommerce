@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Bounce, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Field from '@/app/components/Field'
 
 const schema = z
   .object({
@@ -16,7 +17,7 @@ const schema = z
       .min(6, 'O nome deve ter no minimo 6 caracteres')
       .max(40, 'O nome deve ter no máximo 40 carácteres')
       .trim(),
-    email: z.string().email('E-mail inválido'),
+    email: z.string().email('Preencha com um e-mail válido'),
     password: z
       .string()
       .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
@@ -88,57 +89,49 @@ export default function SignUp() {
       <Header.Client />
 
       <article className="flex justify-center items-center py-32">
-        <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
+        <div className="space-y-6 text-gray-600 max-w-md lg:min-w-96 max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
             Criar conta
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">Nome</label>
-              <input
+              <Field.Label htmlFor="email">Nome</Field.Label>
+              <Field.Input
                 type="text"
                 {...register('name')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                error={errors.name}
               />
-              {errors.name && (
-                <p className="text-red-500 mt-1">{errors.name.message}</p>
-              )}
+              <Field.Error error={errors.name} />
             </div>
             <div>
-              <label className="font-medium">E-mail</label>
-              <input
-                type="email"
+              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Input
+                type="text"
                 {...register('email')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                error={errors.email}
               />
-              {errors.email && (
-                <p className="text-red-500 mt-1">{errors.email.message}</p>
-              )}
+              <Field.Error error={errors.email} />
             </div>
             <div>
-              <label className="font-medium">Palavra-passe</label>
-              <input
+              <Field.Label htmlFor="password">Palavra-passe</Field.Label>
+              <Field.Input
                 type="password"
                 {...register('password')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                error={errors.password}
               />
-              {errors.password && (
-                <p className="text-red-500 mt-1">{errors.password.message}</p>
-              )}
+              <Field.Error error={errors.password} />
             </div>
 
             <div>
-              <label className="font-medium">Confirmar palavra-passe</label>
-              <input
+              <Field.Label htmlFor="password">
+                Confirmar palavra-passe
+              </Field.Label>
+              <Field.Input
                 type="password"
-                {...register('confirmPassword')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-main"
+                {...register('password')}
+                error={errors.password}
               />
-              {errors.confirmPassword && (
-                <p className="text-red-500 mt-1">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
+              <Field.Error error={errors.password} />
             </div>
 
             <div>
@@ -156,9 +149,7 @@ export default function SignUp() {
                   </Link>
                 </label>
               </div>
-              {errors.consent && (
-                <p className="text-red-500 mt-1">{errors.consent.message}</p>
-              )}
+              <Field.Error error={errors.consent} />
             </div>
 
             <button
