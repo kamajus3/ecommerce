@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { usePromotion } from '@/hooks/usePromotion'
 import Image from 'next/image'
 import CarouselSkeleton from './Skeleton/CarouselSkeleton'
+import Button from './Button'
 
 export default function Carousel() {
   const { promotionData } = usePromotion()
@@ -51,9 +52,15 @@ export default function Carousel() {
                 {promotion.description}
               </p>
               <Link href={`/campanha/${id}`}>
-                <button className="flex items-center gap-2 py-3 px-6 text-base bg-[#00A4C7] font-medium rounded text-white transition-all border-none active:brightness-75 hover:brightness-90">
+                <Button
+                  style={{
+                    width: '100%',
+                    padding: '13px 18px 13px 18px',
+                    backgroundColor: '#00A4C7',
+                  }}
+                >
                   {promotion.reduction > 0 ? 'Ver productos' : 'Ver campanha'}
-                </button>
+                </Button>
               </Link>
             </div>
           </article>

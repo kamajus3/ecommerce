@@ -32,6 +32,8 @@ import DataState from '@/app/components/DataState'
 // import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Button from '@/app/components/Button'
+import Field from '@/app/components/Field'
 
 interface FormData {
   name: string
@@ -371,33 +373,40 @@ export default function ProductPage() {
         <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
 
         <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
-          {/* <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
-            <Search size={15} color="#6B7280" />
-            <input
-              type="text"
-              placeholder="Pesquisar pelo nome"
-              {...register('search')}
-              className="max-sm:w-full text-gray-500 bg-white outline-none"
-            />
-          </div> */}
-
-          <button
+          <Button
+            style={{
+              padding: '14px 18px 14px 18px',
+              backgroundColor: '#00A4C7',
+            }}
+            className="w-auto max-sm:w-full mt-2"
             onClick={() => {
               setNewModal(true)
             }}
-            className="max-sm:w-full border rounded-md border-gray-300 p-3 px-4 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
           >
             Adicionar novo
-          </button>
+          </Button>
 
-          <select
+          <Field.Select
             {...register('orderBy')}
-            className="max-sm:w-full rounded-lg bg-neutral-100 p-3 px-4 text-gray-500 bg-transparent outline-none border"
-          >
-            <option value="updatedAt">Ordernar pela data de atualização</option>
-            <option value="createdAt">Ordernar pela data de criação</option>
-            <option value="name">Ordernar pelo nome</option>
-          </select>
+            style={{
+              padding: '13px 18px 13px 18px',
+            }}
+            className="w-auto max-sm:w-full"
+            options={[
+              {
+                value: 'updatedAt',
+                label: 'Ordernar pela data de atualização',
+              },
+              {
+                value: 'createdAt',
+                label: 'Ordernar pela data de criação',
+              },
+              {
+                value: 'name',
+                label: 'Ordernar pelo nome',
+              },
+            ]}
+          />
         </div>
       </article>
 

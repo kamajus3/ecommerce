@@ -17,6 +17,7 @@ import { ref, set } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { nanoid } from 'nanoid'
 import DataState from '@/app/components/DataState'
+import Button from '@/app/components/Button'
 
 interface CartProduct extends ProductItem {
   quantity: number
@@ -348,14 +349,18 @@ export default function CartPage() {
               </tbody>
             </table>
 
-            <div className="mt-10 mb-10 p-8 gap-y-5">
+            <div className="mt-10 mb-10 gap-y-5">
               <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
                 <span className="text-[#5e5f61] ">Total a pagar</span>
                 <span className="font-bold text-4xl">
                   {money.format(totalPrice)}
                 </span>
               </div>
-              <button
+              <Button
+                style={{
+                  padding: '13px 18px 13px 18px',
+                  backgroundColor: '#00A4C7',
+                }}
                 onClick={() => {
                   if (initialized) {
                     if (user) {
@@ -366,10 +371,9 @@ export default function CartPage() {
                   }
                 }}
                 disabled={selectedProducts.length === 0}
-                className="border rounded disabled:cursor-not-allowed disabled:brightness-75 border-gray-300 p-4 px-10 mb-3 bg-main text-sm text-white font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 select-none"
               >
                 Enviar o pedido
-              </button>
+              </Button>
             </div>
           </DataState>
         </div>

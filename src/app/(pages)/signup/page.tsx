@@ -9,6 +9,7 @@ import { Bounce, toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Field from '@/app/components/Field'
+import Button from '@/app/components/Button'
 
 const schema = z
   .object({
@@ -47,7 +48,7 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const router = useRouter()
@@ -152,12 +153,13 @@ export default function SignUp() {
               <Field.Error error={errors.consent} />
             </div>
 
-            <button
+            <Button
+              style={{ width: '100%', padding: '11px 16px 11px 16px' }}
               type="submit"
-              className="w-full rounded px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
+              loading={isSubmitting}
             >
               Continuar
-            </button>
+            </Button>
           </form>
           <p className="text-center font-medium">
             Você já tem uma conta?{' '}

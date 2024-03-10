@@ -2,7 +2,7 @@ import { ForwardedRef, SelectHTMLAttributes, forwardRef } from 'react'
 import { FieldError } from 'react-hook-form'
 
 interface FieldSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
-  error: FieldError | undefined
+  error?: FieldError | undefined
   options: {
     value: string
     label: string
@@ -15,8 +15,8 @@ function CustomSelect(
 ) {
   return (
     <select
-      className={`w-full mt-2 rounded-lg bg-neutral-100 px-3 py-2 text-gray-500 bg-transparent outline-none border ${props.error && 'border-red-500'}`}
       {...props}
+      className={`w-full mt-2 rounded-lg bg-neutral-100 px-3 py-2 text-gray-500 bg-transparent outline-none border ${props.error && 'border-red-500'} ${props.className}`}
       ref={ref}
     >
       {props.options.map((option) => (

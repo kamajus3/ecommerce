@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { ButtonHTMLAttributes } from 'react'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
@@ -7,8 +8,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
 export default function Button(props: ButtonProps) {
   return (
     <button
-      className="flex items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white transition-all hover:brightness-75 active:scale-90"
       {...props}
+      className={clsx(
+        `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:brightness-50 ${props.className}`,
+        {
+          'transition-all hover:brightness-75 active:scale-90': !props.disabled,
+        },
+      )}
     >
       {props.loading ? (
         <div

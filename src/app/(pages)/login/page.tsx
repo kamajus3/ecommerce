@@ -9,6 +9,7 @@ import { Bounce, toast } from 'react-toastify'
 import Header from '@/app/components/Header'
 import Link from 'next/link'
 import Field from '@/app/components/Field'
+import Button from '@/app/components/Button'
 
 const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),
@@ -87,19 +88,13 @@ export default function SignIn() {
                 Esqueceu a sua senha?
               </Link>
             </div>
-            <button
+            <Button
+              style={{ width: '100%', padding: '11px 16px 11px 16px' }}
               type="submit"
-              className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
+              loading={isSubmitting}
             >
-              {isSubmitting ? (
-                <div
-                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                />
-              ) : (
-                <p className="text-white">Entrar</p>
-              )}
-            </button>
+              Entrar
+            </Button>
           </form>
           <p className="text-center font-medium">
             Não tens uma conta?{' '}

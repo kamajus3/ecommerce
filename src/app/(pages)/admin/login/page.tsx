@@ -6,7 +6,8 @@ import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
-import CustomFieldError from '@/app/components/CustomFieldError'
+import Field from '@/app/components/Field'
+import Button from '@/app/components/Button'
 
 const schema = z.object({
   email: z.string().email('Preencha um e-mail válido'),
@@ -88,36 +89,30 @@ export default function SignIn() {
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">E-mail</label>
-              <input
+              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Input
                 type="email"
                 {...register('email')}
-                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.email && 'border-red-500'}`}
+                error={errors.email}
               />
-              <CustomFieldError>{errors.email}</CustomFieldError>
+              <Field.Error error={errors.email} />
             </div>
             <div>
-              <label className="font-medium">Palavra-passe</label>
-              <input
+              <Field.Label htmlFor="password">Palavra-passe</Field.Label>
+              <Field.Input
                 type="password"
                 {...register('password')}
-                className={`w-full bg-neutral-100 mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border ${errors.password && 'border-red-500'}`}
+                error={errors.password}
               />
-              <CustomFieldError>{errors.password}</CustomFieldError>
+              <Field.Error error={errors.password} />
             </div>
-            <button
+            <Button
+              style={{ width: '100%', padding: '11px 16px 11px 16px' }}
               type="submit"
-              className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
+              loading={isSubmitting}
             >
-              {isSubmitting ? (
-                <div
-                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                />
-              ) : (
-                <p className="text-white">Entrar</p>
-              )}
-            </button>
+              Entrar
+            </Button>
           </form>
         </div>
       </article>
