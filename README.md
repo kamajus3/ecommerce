@@ -1,6 +1,6 @@
 # Racius Care - Health e-Commerce
 
-## Principal tecnlogies
+## Main technologies
 
 - React
 - Typescript
