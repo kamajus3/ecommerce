@@ -8,6 +8,7 @@ import Header from '@/app/components/Header'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase/config'
 import Field from '@/app/components/Field'
+import Button from '@/app/components/Button'
 
 const schema = z.object({
   email: z.string().email('Preencha um e-mail válido'),
@@ -81,19 +82,13 @@ export default function RecoverAccount() {
               <Field.Error error={errors.email} />
             </div>
 
-            <button
+            <Button
+              style={{ width: '100%', padding: '11px 16px 11px 16px' }}
               type="submit"
-              className="w-full px-4 py-2 text-white font-medium bg-main hover:brightness-90 active:brightness-70 duration-150"
+              loading={isSubmitting}
             >
-              {isSubmitting ? (
-                <div
-                  className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                  role="status"
-                />
-              ) : (
-                <p className="text-white">Continuar</p>
-              )}
-            </button>
+              Continuar
+            </Button>
           </form>
         </div>
       </article>

@@ -1,4 +1,5 @@
 import { ProductPromotionObject } from '@/@types'
+import axios from 'axios'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -61,4 +62,10 @@ export function hexToRGBA(hex: string, alpha: number): string {
   const rgba: string = `rgba(${r}, ${g}, ${b}, ${alpha})`
 
   return rgba
+}
+
+export function downloadInvoice(orderId: string) {
+  axios.get(`/invoice/${orderId}`).then((response) => {
+    console.log(response)
+  })
 }

@@ -82,6 +82,7 @@ export default function DialogModal(props: DialogModalProps) {
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
                   <Button
                     type="button"
+                    className="w-auto max-sm:w-full"
                     style={{ backgroundColor: props.mainColor }}
                     onClick={() => {
                       props.setOpen(false)

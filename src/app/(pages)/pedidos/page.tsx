@@ -8,7 +8,7 @@ import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
-import { publishedSince } from '@/functions'
+import { downloadInvoice, publishedSince } from '@/functions'
 import DataState from '@/app/components/DataState'
 
 function OrderTableRow(order: Order) {
@@ -57,7 +57,9 @@ function OrderTableRow(order: Order) {
       <td className="p-3">
         <div className="flex items-center justify-center">
           <button
-            onClick={() => {}}
+            onClick={() => {
+              downloadInvoice(order.id)
+            }}
             className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
           >
             <span className="text-secondary font-medium">Baixar factura</span>
