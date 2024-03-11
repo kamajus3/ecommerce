@@ -11,7 +11,7 @@ import Field from '@/app/components/Field'
 import Button from '@/app/components/Button'
 
 const schema = z.object({
-  email: z.string().email('Preencha um e-mail válido'),
+  email: z.string().email('Preencha com um e-mail válido'),
 })
 
 interface FormData {
