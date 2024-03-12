@@ -145,7 +145,9 @@ export default function CartPage() {
   const [isModalOpened, setModalOpen] = useState(false)
   const [openLoginModal, setOpenLoginModal] = useState(false)
   const [confirmOrderModal, setConfirmOrderModal] = useState(false)
-  const [orderConfirmedModal, setOrderConfirmedModal] = useState(false)
+  const [orderConfirmedModal, setOrderConfirmedModal] = useState<
+    [boolean, string | undefined]
+  >([false, undefined])
 
   const [orderData, setOrderData] = useState({})
   const [loading, setLoading] = useState(true)
@@ -219,7 +221,7 @@ export default function CartPage() {
         .then(() => {
           selectedProducts.map((id) => removeFromCart(id))
           setSelectedProduct([])
-          setOrderConfirmedModal(true)
+          setOrderConfirmedModal([true, orderId])
         })
         .catch(() => {
           toast.error('Houve um erro ao tentar fazer o teu pedido', {
@@ -410,9 +412,8 @@ export default function CartPage() {
       />
 
       <Modal.OrderConfirmed
-        action={() => setOrderConfirmedModal(true)}
-        isOpen={orderConfirmedModal}
-        setOpen={setOrderConfirmedModal}
+        orderData={orderConfirmedModal}
+        setOrderData={setOrderConfirmedModal}
       />
     </section>
   )

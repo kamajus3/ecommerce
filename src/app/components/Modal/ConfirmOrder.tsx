@@ -32,7 +32,7 @@ interface ConfirmOrderProps {
 const schema = z.object({
   firstName: z
     .string()
-    .min(6, 'O nome deve ter no minimo 6 caracteres')
+    .min(3, 'O nome deve ter no minimo 3 caracteres')
     .max(40, 'O nome deve ter no máximo 40 carácteres')
     .trim(),
   lastName: z

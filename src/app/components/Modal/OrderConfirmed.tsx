@@ -1,23 +1,25 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import Button from '../Button'
+import { downloadInvoice } from '@/functions'
 
 interface OrderConfirmedProps {
-  action: () => void
-  isOpen: boolean
-  setOpen: Dispatch<SetStateAction<boolean>>
+  orderData: [boolean, string | undefined]
+  setOrderData: Dispatch<SetStateAction<[boolean, string | undefined]>>
 }
 
 export default function OrderConfirmed(props: OrderConfirmedProps) {
   const cancelButtonRef = useRef(null)
 
   return (
-    <Transition.Root show={props.isOpen} as={Fragment}>
+    <Transition.Root show={props.orderData[0]} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-50"
         initialFocus={cancelButtonRef}
-        onClose={props.setOpen}
+        onClose={() => {
+          props.setOrderData([false, undefined])
+        }}
       >
         <Transition.Child
           as={Fragment}
@@ -64,8 +66,10 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                   <Button
                     type="button"
                     onClick={() => {
-                      props.setOpen(false)
-                      props.action()
+                      if (props.orderData[1]) {
+                        downloadInvoice(props.orderData[1])
+                        props.setOrderData([false, undefined])
+                      }
                     }}
                   >
                     Baixar a factura

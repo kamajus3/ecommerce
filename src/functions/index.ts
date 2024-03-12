@@ -70,7 +70,7 @@ export function downloadInvoice(orderId: string) {
   invoiceApi
     .get(`/invoice/${orderId}`)
     .then((response) => {
-      saveAs(response.data, 'arquivo.pdf')
+      saveAs(response.data, `FACTURA-${orderId}.pdf`)
     })
     .catch((error: AxiosError) => {
       console.log(error.config)

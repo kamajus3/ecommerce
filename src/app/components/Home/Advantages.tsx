@@ -30,7 +30,7 @@ export default function Advantages() {
     <article className="p-6 mt-6 flex flex-wrap justify-center items-center">
       <AdvantageCard
         title="ENTREGA GRATUITA E RÁPIDA"
-        description="Entrega gratuita para todos os pedidos acima de Akz 50.000,00"
+        description="Entrega gratuita para todos os pedidos acima de 50.000,00 kz na cidade de Luanda"
         icon="truck"
       />
       <AdvantageCard
@@ -40,7 +40,7 @@ export default function Advantages() {
       />
       <AdvantageCard
         title=" GARANTIA DE DEVOLUÇÃO DE DINHEIRO"
-        description="Devolvemos o dinheiro em 15 dias"
+        description="Devolvemos o dinheiro em caso de mau estado de conservação do producto"
         icon="shield-check"
       />
     </article>

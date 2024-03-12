@@ -15,7 +15,7 @@ const schema = z
   .object({
     name: z
       .string()
-      .min(6, 'O nome deve ter no minimo 6 caracteres')
+      .min(3, 'O nome deve ter no minimo 3 caracteres')
       .max(40, 'O nome deve ter no máximo 40 carácteres')
       .trim(),
     email: z.string().email('Preencha com um e-mail válido'),
@@ -124,15 +124,15 @@ export default function SignUp() {
             </div>
 
             <div>
-              <Field.Label htmlFor="password">
+              <Field.Label htmlFor="confirmPassword">
                 Confirmar palavra-passe
               </Field.Label>
               <Field.Input
-                type="password"
-                {...register('password')}
-                error={errors.password}
+                type="confirmPassword"
+                {...register('confirmPassword')}
+                error={errors.confirmPassword}
               />
-              <Field.Error error={errors.password} />
+              <Field.Error error={errors.confirmPassword} />
             </div>
 
             <div>
