@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const api = axios.create({
-  baseURL: 'https://raciuscare-invoice.onrender.com/',
-  timeout: 1000,
-  headers: { 'x-api-key': process.env.INVOICE_API_URL },
+export const invoiceApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_INVOICE_API_URL,
+  responseType: 'blob',
+  headers: {
+    'x-api-key': 'c1a3de49-aa61-4f30-bbfb-cb64c6f5f6a0',
+  },
 })
-
-export default api

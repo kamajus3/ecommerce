@@ -1,7 +1,9 @@
 import { ProductPromotionObject } from '@/@types'
-import axios from 'axios'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { invoiceApi } from '@/lib/axios'
+import { AxiosError } from 'axios'
+import { saveAs } from 'file-saver'
 
 export async function URLtoFile(url: string) {
   try {
@@ -65,7 +67,12 @@ export function hexToRGBA(hex: string, alpha: number): string {
 }
 
 export function downloadInvoice(orderId: string) {
-  axios.get(`/invoice/${orderId}`).then((response) => {
-    console.log(response)
-  })
+  invoiceApi
+    .get(`/invoice/${orderId}`)
+    .then((response) => {
+      saveAs(response.data, 'arquivo.pdf')
+    })
+    .catch((error: AxiosError) => {
+      console.log(error.config)
+    })
 }
