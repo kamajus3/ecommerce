@@ -9,21 +9,11 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sobre Nós',
-  description: `Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
-              dedicada a oferecer produtos de alta qualidade para o seu
-              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
-              essencial para uma vida plena e feliz. Por isso, nos esforçamos
-              para fornecer aos nossos clientes os melhores produtos do mercado,
-              com preços acessíveis e um atendimento impecável.`,
+  description: `Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por Edvaldo e Sandra Cassendo. Especializada no comércio a retalho online, destacamo-nos pela oferta de produtos de saúde e higiene corporal.`,
   openGraph: {
     type: 'website',
     title: 'Sobre Nós',
-    description: `Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
-              dedicada a oferecer produtos de alta qualidade para o seu
-              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
-              essencial para uma vida plena e feliz. Por isso, nos esforçamos
-              para fornecer aos nossos clientes os melhores produtos do mercado,
-              com preços acessíveis e um atendimento impecável.`,
+    description: `Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por Edvaldo e Sandra Cassendo. Especializada no comércio a retalho online, destacamo-nos pela oferta de produtos de saúde e higiene corporal.`,
     images: ['https://raciuscare.com/logo.png'],
   },
 }
@@ -37,14 +27,11 @@ export default function AboutPage() {
 
         <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="w-full">
-            <h2 className="text-5xl">Nossa História</h2>
             <p className="text-zinc-800 mt-6 leading-normal">
-              Fundada em 2024 em Luanda, Angola, a Racius Care é uma empresa
-              dedicada a oferecer produtos de alta qualidade para o seu
-              bem-estar. Acreditamos que o cuidado com a saúde e o bem-estar é
-              essencial para uma vida plena e feliz. Por isso, nos esforçamos
-              para fornecer aos nossos clientes os melhores produtos do mercado,
-              com preços acessíveis e um atendimento impecável.
+              Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por
+              Edvaldo e Sandra Cassendo. Especializada no comércio varejista
+              online, destacamo-nos pela oferta de produtos de saúde e higiene
+              corporal.
             </p>
 
             <p className="text-zinc-800 mt-8 leading-normal">

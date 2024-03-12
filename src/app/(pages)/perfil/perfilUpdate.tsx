@@ -286,13 +286,13 @@ export default function PerfilUpdate() {
                 />
                 <Field.Error error={errors.lastName} />
               </div>
-              <div className="sm:col-span-4">
+              <div className="sm:col-span-4 gap-x-1">
                 <Field.Label htmlFor="email">
                   <span>E-mail</span>
 
                   {user && !user?.emailVerified && (
                     <button
-                      className="bg-main px-3 py-1 text-sm text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      className="bg-main ml-2 px-3 py-1 text-sm text-white shadow-sm hover:brightness-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                       type="button"
                       onClick={sendVerificationEmail}
                     >

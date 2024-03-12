@@ -2,7 +2,6 @@ import { ProductPromotionObject } from '@/@types'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { invoiceApi } from '@/lib/axios'
-import { AxiosError } from 'axios'
 import { saveAs } from 'file-saver'
 
 export async function URLtoFile(url: string) {
@@ -70,9 +69,7 @@ export function downloadInvoice(orderId: string) {
   invoiceApi
     .get(`/invoice/${orderId}`)
     .then((response) => {
-      saveAs(response.data, `FACTURA-${orderId}.pdf`)
+      saveAs(response.data, `factura-${orderId}.pdf`)
     })
-    .catch((error: AxiosError) => {
-      console.log(error.config)
-    })
+    .catch(() => {})
 }

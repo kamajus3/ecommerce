@@ -16,7 +16,7 @@ export default function DataState(props: DataStateProps) {
       {!props.loading && props.dataCount === 0 && (
         <div className="w-full min-h-[60vh] flex flex-col items-center gap-6 p-4 justify-center mb-8">
           <AlertCircle size={60} color="#000" />
-          <p className="text-[#212121] font-semibold text-lg">
+          <p className="text-[#212121] text-center font-semibold text-lg">
             {props.noDataMessage}
           </p>
         </div>
