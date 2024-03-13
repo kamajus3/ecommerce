@@ -240,6 +240,7 @@ export default function ProductModal(props: ProductModalProps) {
                             label: c.label,
                           }))}
                           error={errors.category}
+                          className="w-full"
                         />
                         <Field.Error error={errors.category} />
                       </div>

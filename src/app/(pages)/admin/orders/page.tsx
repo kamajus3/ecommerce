@@ -229,6 +229,7 @@ export default function CartPage() {
   async function updateOrderState(orderId: string, state: string) {
     try {
       update(ref(database, `orders/${orderId}`), {
+        updatedAt: new Date().toISOString(),
         state,
       })
       toast.success('O estado do pedido foi alterado com sucesso', {
