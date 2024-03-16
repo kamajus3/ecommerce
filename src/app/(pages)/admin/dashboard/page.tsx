@@ -148,9 +148,7 @@ export default function DashBoard() {
             title="Productos restantes"
             quantity={activeProducts}
           />
-
           <DashBoardCard title="Campanhas activas" quantity={activeCampaign} />
-
           <DashBoardCard title="Clientes activos" quantity={activeUsers} />
         </div>
         <article>
@@ -171,7 +169,9 @@ export default function DashBoard() {
               }}
             />
           </div>
-          <DashBoardGraphic sales={soldProductsMothly} />
+          <div className="pr-7">
+            <DashBoardGraphic sales={soldProductsMothly} />
+          </div>
         </article>
       </article>
     </section>

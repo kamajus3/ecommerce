@@ -17,22 +17,22 @@ interface DashBoardGraphicProps {
 
 export default function DashBoardGraphic(props: DashBoardGraphicProps) {
   const data = [
-    { name: 'Janeiro', qtd: props.sales[0] },
-    { name: 'Fevereiro', qtd: props.sales[1] },
-    { name: 'Março', qtd: props.sales[2] },
-    { name: 'Abril', qtd: props.sales[3] },
-    { name: 'Maio', qtd: props.sales[4] },
-    { name: 'Junho', qtd: props.sales[5] },
-    { name: 'Julho', qtd: props.sales[6] },
-    { name: 'Agosto', qtd: props.sales[7] },
-    { name: 'Setembro', qtd: props.sales[8] },
-    { name: 'Outubro', qtd: props.sales[9] },
-    { name: 'Novembro', qtd: props.sales[10] },
-    { name: 'Dezembro', qtd: props.sales[11] },
+    { name: 'Jan', qtd: props.sales[0] },
+    { name: 'Fev', qtd: props.sales[1] },
+    { name: 'Mar', qtd: props.sales[2] },
+    { name: 'Abr', qtd: props.sales[3] },
+    { name: 'Mai', qtd: props.sales[4] },
+    { name: 'Jun', qtd: props.sales[5] },
+    { name: 'Jul', qtd: props.sales[6] },
+    { name: 'Ago', qtd: props.sales[7] },
+    { name: 'Set', qtd: props.sales[8] },
+    { name: 'Out', qtd: props.sales[9] },
+    { name: 'Nov', qtd: props.sales[10] },
+    { name: 'Dez', qtd: props.sales[11] },
   ]
 
   return (
-    <ResponsiveContainer width="100%" maxHeight={400} aspect={2}>
+    <ResponsiveContainer width="100%" maxHeight={500} aspect={2}>
       <BarChart data={data}>
         <XAxis dataKey="name" />
         <YAxis />

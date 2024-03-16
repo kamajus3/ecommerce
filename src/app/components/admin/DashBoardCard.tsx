@@ -14,7 +14,7 @@ export default function DashBoardCard({
   rateMessage,
 }: DashBoardCardProps) {
   return (
-    <div className="flex flex-col gap-4 border p-4">
+    <div className="rounded-md flex flex-col gap-4 border p-4">
       <h3 className="text-[#979797] font-medium">{title}</h3>
       <span className="text-5xl text-black font-semibold">
         {quantity.toLocaleString('pt-br')}
