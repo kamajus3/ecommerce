@@ -9,11 +9,23 @@ import { onValue, ref } from 'firebase/database'
 import Script from 'next/script'
 import { useEffect, useState } from 'react'
 
+const START_YEAR = 2024
+const currentYear = new Date().getFullYear()
+
+const yearOptions: { value: string; label: string }[] = []
+for (let year = START_YEAR; year <= currentYear; year++) {
+  yearOptions.push({
+    value: String(year),
+    label: `Vendas de ${year}`,
+  })
+}
+
 export default function DashBoard() {
   const [activeUsers, setActiveUsers] = useState(0)
   const [activeCampaign, setActiveCampaign] = useState(0)
   const [activeProducts, setActiveProducts] = useState(0)
   const [activeOrders, setActiveOrders] = useState(0)
+  const [currenteAndPastMonthRate, setCurrentAndPastMonthRate] = useState(0)
   const [soldProductsMothly, setSoldProductsMonthly] = useState([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ])
@@ -59,11 +71,28 @@ export default function DashBoard() {
 
       onValue(ref(database, '/orders'), (snapshot) => {
         let ordersCount = 0
+        let pastMonthOrdersCount = 0
+        let currentMonthOrdersCount = 0
+
         const monthlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         snapshot.forEach((data) => {
           if (data.val().state === 'not-sold') {
             ordersCount++
+
+            if (
+              new Date(data.val().createdAt).getMonth() ===
+              new Date().getMonth() - 1
+            ) {
+              pastMonthOrdersCount++
+            }
+
+            if (
+              new Date(data.val().createdAt).getMonth() ===
+              new Date().getMonth()
+            ) {
+              currentMonthOrdersCount++
+            }
           }
 
           const orderYear = new Date(data.val().createdAt).getFullYear()
@@ -76,6 +105,14 @@ export default function DashBoard() {
 
         setActiveOrders(ordersCount)
         setSoldProductsMonthly(monthlySales)
+
+        if (pastMonthOrdersCount > 0) {
+          const evolution =
+            (pastMonthOrdersCount - currentMonthOrdersCount) /
+            pastMonthOrdersCount
+
+          setCurrentAndPastMonthRate(evolution)
+        }
       })
     }
 
@@ -93,22 +130,26 @@ export default function DashBoard() {
       <article>
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <DashBoardCard
-            title="Pedidos activos"
+            title="Pedidos"
             quantity={activeOrders}
-            warn="20% mais que do mais passado"
+            rate={currenteAndPastMonthRate}
+            rateMessage={
+              activeOrders > 0
+                ? currenteAndPastMonthRate > 0
+                  ? new Date().getDay() > 20
+                    ? `menos que no mês passado`
+                    : ''
+                  : `mais que no mês passado`
+                : ''
+            }
           />
 
           <DashBoardCard
             title="Productos restantes"
             quantity={activeProducts}
-            warn="20% mais que do mês passado"
           />
 
-          <DashBoardCard
-            title="Campanhas activas"
-            quantity={activeCampaign}
-            warn="20% mais que do mês passado"
-          />
+          <DashBoardCard title="Campanhas activas" quantity={activeCampaign} />
 
           <DashBoardCard title="Clientes activos" quantity={activeUsers} />
         </div>
@@ -121,14 +162,10 @@ export default function DashBoard() {
               style={{
                 padding: '13px 18px 13px 18px',
               }}
-              disabled
+              disabled={yearOptions.length === 1}
               className="w-auto max-sm:w-full mt-7"
-              options={[
-                {
-                  value: '2024',
-                  label: 'Vendas de 2024',
-                },
-              ]}
+              options={yearOptions}
+              defaultValue={yearOptions[yearOptions.length - 1].value}
               onChange={({ target }) => {
                 setSalesOfYear(Number(target.value))
               }}

@@ -1,13 +1,17 @@
+import { TrendingDown, TrendingUp } from 'lucide-react'
+
 interface DashBoardCardProps {
   title: string
   quantity: number
-  warn?: string
+  rate?: number
+  rateMessage?: string
 }
 
 export default function DashBoardCard({
   title,
   quantity,
-  warn,
+  rate,
+  rateMessage,
 }: DashBoardCardProps) {
   return (
     <div className="flex flex-col gap-4 border p-4">
@@ -15,7 +19,24 @@ export default function DashBoardCard({
       <span className="text-5xl text-black font-semibold">
         {quantity.toLocaleString('pt-br')}
       </span>
-      <p className="text-[#979797] font-medium">{warn}</p>
+      {rateMessage && rate && (
+        <div className="text-[#979797] font-medium">
+          <mark
+            style={{
+              color: rate > 0 ? 'red' : 'green',
+              background: 'none',
+            }}
+          >
+            {rate > 0 ? (
+              <TrendingDown size={20} className="inline" />
+            ) : (
+              <TrendingUp size={20} className="inline" />
+            )}{' '}
+            {Math.abs(rate)}%
+          </mark>{' '}
+          {rateMessage}
+        </div>
+      )}
     </div>
   )
 }
