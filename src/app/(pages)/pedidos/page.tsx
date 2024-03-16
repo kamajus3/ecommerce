@@ -113,7 +113,7 @@ export default function CartPage() {
     <ProtectedRoute
       pathWhenAuthorizated="/"
       pathWhenNotAuthorizated="/login"
-      privileges={['create-orders']}
+      privileges={['client']}
     >
       <section className="bg-white min-h-screen overflow-hidden">
         <Header.Client />

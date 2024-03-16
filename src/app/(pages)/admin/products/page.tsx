@@ -370,7 +370,9 @@ export default function ProductPage() {
       <Header.Admin />
 
       <article className="mb-2 mt-12">
-        <p className="text-black font-semibold text-3xl p-9">Meus productos</p>
+        <h2 className="text-black font-semibold text-3xl p-9">
+          Meus productos
+        </h2>
 
         <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
           <Button

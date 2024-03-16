@@ -92,7 +92,7 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
       </td>
       <td className="p-3">
         <div className="text-center text-black font-medium">
-          {informationsData.promotionFixed === data.id ? 'sim' : 'não'}
+          {informationsData.promotionFixed === data.id ? 'Sim' : 'Não'}
         </div>
       </td>
       <td className="p-3">
