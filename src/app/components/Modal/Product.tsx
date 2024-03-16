@@ -83,7 +83,9 @@ export default function ProductModal(props: ProductModalProps) {
         'A fotografia deve ter no máximo 3mb',
       )
       .refine(
-        () => imageDimension === ALLOWED_IMAGE_DIMENSION,
+        () =>
+          imageDimension[0] === ALLOWED_IMAGE_DIMENSION[0] &&
+          imageDimension[1] === ALLOWED_IMAGE_DIMENSION[1],
         `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
       )
       .refine(
@@ -113,6 +115,10 @@ export default function ProductModal(props: ProductModalProps) {
       setPhotoPreview(null)
     }
   }, [props.defaultProduct, getValues])
+
+  useEffect(() => {
+    console.log(`imageDimension: ${imageDimension}`)
+  }, [imageDimension])
 
   useEffect(() => {
     async function unsubscribed() {

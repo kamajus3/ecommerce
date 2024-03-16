@@ -92,7 +92,9 @@ export default function PromotionModal(props: PromotionModalProps) {
         'A fotografia deve ter no máximo 5mB',
       )
       .refine(
-        () => imageDimension === ALLOWED_IMAGE_DIMENSION,
+        () =>
+          imageDimension[0] === ALLOWED_IMAGE_DIMENSION[0] &&
+          imageDimension[1] === ALLOWED_IMAGE_DIMENSION[1],
         `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
       )
       .refine(
