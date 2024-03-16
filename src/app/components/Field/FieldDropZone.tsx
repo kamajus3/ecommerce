@@ -3,6 +3,7 @@ import { ForwardedRef, InputHTMLAttributes, forwardRef } from 'react'
 import { FieldError } from 'react-hook-form'
 
 interface FieldDropZoneProps extends InputHTMLAttributes<HTMLInputElement> {
+  supportedImageResolution?: [number, number]
   photoPreview: string | null
   error: FieldError | undefined
 }
@@ -42,6 +43,13 @@ function CustomFileInput(
         </svg>
         <p className="mb-2 text-sm text-gray-500 text-center">
           <span className="font-semibold">Clique para fazer upload</span>
+          {props.supportedImageResolution && (
+            <div className="font-medium">
+              <br />({props.supportedImageResolution[0]}
+              {' x '}
+              {props.supportedImageResolution[1]})
+            </div>
+          )}
           <br />
           ou arrasta e larga
         </p>

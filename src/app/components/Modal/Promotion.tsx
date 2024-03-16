@@ -373,6 +373,7 @@ export default function PromotionModal(props: PromotionModalProps) {
                       <div>
                         <Field.DropZone
                           photoPreview={photoPreview}
+                          supportedImageResolution={[778, 455]}
                           onChange={(e) => {
                             if (
                               e.target.files &&

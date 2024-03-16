@@ -38,7 +38,7 @@ export default function Avatar({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <div className="relative z-[999] bg-white" ref={dropdownRef}>
+    <div className="relative bg-white" ref={dropdownRef}>
       <button
         className={clsx(
           'inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-main text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
@@ -55,7 +55,7 @@ export default function Avatar({ children }: { children: ReactNode }) {
       </button>
 
       {isOpen && (
-        <div className="absolute min-w-32 right-0 mt-2 bg-white border rounded-md shadow-lg z-10">
+        <div className="absolute z-[999] min-w-32 right-0 mt-2 bg-white border rounded-md shadow-lg">
           <div className="pt-1">{children}</div>
         </div>
       )}

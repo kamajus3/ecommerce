@@ -75,8 +75,8 @@ const schema = z.object({
       message: 'A fotografia é obrigatória',
     })
     .refine(
-      (file) => file!.size <= 5 * 1024 * 1024,
-      'A fotografia deve ter no máximo 5mB',
+      (file) => file!.size <= 3 * 1024 * 1024,
+      'A fotografia deve ter no máximo 3mb',
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
@@ -256,6 +256,7 @@ export default function ProductModal(props: ProductModalProps) {
                       </div>
                       <div>
                         <Field.DropZone
+                          supportedImageResolution={[700, 700]}
                           onChange={(e) => {
                             if (
                               e.target.files &&
