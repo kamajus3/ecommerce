@@ -40,14 +40,18 @@ export default function PasswordModal(props: PasswordModalProps) {
 
   const { user } = useAuth()
 
+  function closeModal() {
+    props.setOpen(false)
+    reset()
+  }
+
   async function onSubmit(data: FormData) {
     if (user && user.email) {
       const credential = EmailAuthProvider.credential(user.email, data.password)
 
       reauthenticateWithCredential(user, credential)
         .then(async () => {
-          props.setOpen(false)
-          reset()
+          closeModal()
           props.action()
         })
         .catch(() => {
@@ -66,7 +70,7 @@ export default function PasswordModal(props: PasswordModalProps) {
         as="div"
         className="relative z-50"
         initialFocus={cancelButtonRef}
-        onClose={props.setOpen}
+        onClose={closeModal}
       >
         <Transition.Child
           as={Fragment}
@@ -100,9 +104,9 @@ export default function PasswordModal(props: PasswordModalProps) {
                     <article className="mt-2 m-auto w-full">
                       <Dialog.Title
                         as="h3"
-                        className="text-2xl font-semibold leading-6 text-gray-900 mb-8 my-7"
+                        className="text-2xl font-semibold leading-9 text-gray-900 mb-8 my-7"
                       >
-                        Digita a sua palavra-passe para continuar
+                        Digita a sua palavra-passe antes de continuar
                       </Dialog.Title>
                       <div className="mb-4">
                         <Field.Label htmlFor="password">
@@ -118,7 +122,7 @@ export default function PasswordModal(props: PasswordModalProps) {
                     </article>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-2">
                   <Button type="submit" loading={isSubmitting}>
                     Continuar
                   </Button>

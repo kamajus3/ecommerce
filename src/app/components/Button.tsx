@@ -22,7 +22,9 @@ export default function Button(props: ButtonProps) {
           role="status"
         />
       ) : (
-        <span className="text-white">{props.children}</span>
+        <div className="text-white flex justify-center items-center gap-2">
+          {props.children}
+        </div>
       )}
     </button>
   )
