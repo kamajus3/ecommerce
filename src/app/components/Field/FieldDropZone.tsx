@@ -1,10 +1,17 @@
 import clsx from 'clsx'
-import { ForwardedRef, InputHTMLAttributes, forwardRef } from 'react'
+import {
+  Dispatch,
+  ForwardedRef,
+  InputHTMLAttributes,
+  SetStateAction,
+  forwardRef,
+} from 'react'
 import { FieldError } from 'react-hook-form'
 
 interface FieldDropZoneProps extends InputHTMLAttributes<HTMLInputElement> {
-  supportedImageResolution?: [number, number]
+  supportedImageResolution?: number[]
   photoPreview: string | null
+  setImageDimension?: Dispatch<SetStateAction<number[]>>
   error: FieldError | undefined
 }
 
@@ -12,6 +19,15 @@ function CustomFileInput(
   props: FieldDropZoneProps,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
+  const img = new Image()
+  img.src = props.photoPreview || ''
+
+  img.onload = () => {
+    if (props.setImageDimension) {
+      props.setImageDimension([img.width, img.height])
+    }
+  }
+
   return (
     <label
       htmlFor="dropzone-file"

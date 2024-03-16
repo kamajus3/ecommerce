@@ -18,7 +18,7 @@ export default function ProductCard(product: ProductItem) {
           {cartProducts.find((p) => p.id === product.id) && (
             <button
               onClick={() => removeFromCart(product.id)}
-              className="absolute h-10 w-10 flex items-center justify-center bg-red-500 hover:brightness-90 active:brightness-75 z-50"
+              className="absolute h-10 w-10 flex items-center justify-center bg-red-500 hover:brightness-90 active:brightness-75 z-10"
             >
               <X size={20} color="#000" />
             </button>

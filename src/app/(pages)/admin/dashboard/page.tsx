@@ -156,7 +156,7 @@ export default function DashBoard() {
         <article>
           <div className="p-9">
             <h2 className="text-black font-semibold text-3xl">
-              Resumo das vendas 📈
+              Resumo das vendas
             </h2>
             <Field.Select
               style={{

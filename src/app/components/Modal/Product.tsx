@@ -38,53 +38,60 @@ interface ProductModalProps {
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
-
-const schema = z.object({
-  name: z
-    .string()
-    .min(6, 'O nome deve ter no minimo 6 caracteres')
-    .max(120, 'O nome deve ter no máximo 120 carácteres')
-    .trim(),
-  description: z
-    .string()
-    .min(6, 'A descrição deve ter no minimo 6 carácteres')
-    .max(180, 'A descrição deve ter no máximo 180 carácteres')
-    .trim(),
-  quantity: z
-    .number({
-      required_error: 'Digite a quantidade do producto',
-      invalid_type_error: 'A quantidade do producto está invalida',
-    })
-    .positive('A quantidade deve ser um número positivo')
-    .max(10000, 'A quantidade máxima permitida é 10.000'),
-  price: z
-    .number({
-      required_error: 'Digite o preço do producto',
-      invalid_type_error: 'A preço do producto está invalido',
-    })
-    .max(100000000, 'O preço máximo é 100.000.000')
-    .positive('O preço deve ser um número positivo'),
-  category: z
-    .string({
-      invalid_type_error: 'Digite uma categória válida',
-      required_error: 'A categória é obrigatória',
-    })
-    .trim(),
-  photo: z
-    .instanceof(Blob, {
-      message: 'A fotografia é obrigatória',
-    })
-    .refine(
-      (file) => file!.size <= 3 * 1024 * 1024,
-      'A fotografia deve ter no máximo 3mb',
-    )
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
-    ),
-})
+const ALLOWED_IMAGE_DIMENSION = [700, 700]
 
 export default function ProductModal(props: ProductModalProps) {
+  const [imageDimension, setImageDimension] = useState([0, 0])
+
+  const schema = z.object({
+    name: z
+      .string()
+      .min(6, 'O nome deve ter no minimo 6 caracteres')
+      .max(120, 'O nome deve ter no máximo 120 carácteres')
+      .trim(),
+    description: z
+      .string()
+      .min(6, 'A descrição deve ter no minimo 6 carácteres')
+      .max(180, 'A descrição deve ter no máximo 180 carácteres')
+      .trim(),
+    quantity: z
+      .number({
+        required_error: 'Digite a quantidade do producto',
+        invalid_type_error: 'A quantidade do producto está invalida',
+      })
+      .positive('A quantidade deve ser um número positivo')
+      .max(10000, 'A quantidade máxima permitida é 10.000'),
+    price: z
+      .number({
+        required_error: 'Digite o preço do producto',
+        invalid_type_error: 'A preço do producto está invalido',
+      })
+      .max(100000000, 'O preço máximo é 100.000.000')
+      .positive('O preço deve ser um número positivo'),
+    category: z
+      .string({
+        invalid_type_error: 'Digite uma categória válida',
+        required_error: 'A categória é obrigatória',
+      })
+      .trim(),
+    photo: z
+      .instanceof(Blob, {
+        message: 'A fotografia é obrigatória',
+      })
+      .refine(
+        (file) => file!.size <= 3 * 1024 * 1024,
+        'A fotografia deve ter no máximo 3mb',
+      )
+      .refine(
+        () => imageDimension === ALLOWED_IMAGE_DIMENSION,
+        `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
+      )
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
+      ),
+  })
+
   const cancelButtonRef = useRef(null)
   const {
     register,
@@ -256,7 +263,7 @@ export default function ProductModal(props: ProductModalProps) {
                       </div>
                       <div>
                         <Field.DropZone
-                          supportedImageResolution={[700, 700]}
+                          supportedImageResolution={ALLOWED_IMAGE_DIMENSION}
                           onChange={(e) => {
                             if (
                               e.target.files &&
@@ -269,6 +276,7 @@ export default function ProductModal(props: ProductModalProps) {
                             }
                           }}
                           photoPreview={photoPreview}
+                          setImageDimension={setImageDimension}
                           error={errors.photo}
                         />
                         <Field.Error error={errors.photo} />

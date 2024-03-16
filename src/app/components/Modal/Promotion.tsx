@@ -47,65 +47,72 @@ interface PromotionModalProps {
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 const DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
-
-const schema = z.object({
-  title: z
-    .string()
-    .min(6, 'O título deve ter no minimo 6 caracteres')
-    .max(120, 'O título deve ter no máximo 120 carácteres')
-    .trim(),
-  reduction: z
-    .number({
-      required_error: 'Digite a taxa de redução',
-      invalid_type_error: 'A taxa de redução está invalida',
-    })
-    .min(0, 'A taxa não pode ser inferior à 0')
-    .max(100, 'A taxa não pode ser inferior à 100'),
-  startDate: z
-    .string({
-      required_error: 'A data de início é obrigatória',
-      invalid_type_error: 'A data de início está invalida',
-    })
-    .regex(DATETIME_REGEX, 'A data de início está invalida'),
-  fixed: z.boolean(),
-  finishDate: z
-    .string({
-      required_error: 'A data de termino é obrigatória',
-      invalid_type_error: 'A data de termino está invalida',
-    })
-    .regex(DATETIME_REGEX, 'A data de termino está invalida'),
-  description: z
-    .string()
-    .min(6, 'A descrição me deve ter no minimo 6 carácteres')
-    .max(100, 'A descrição deve ter no máximo 100 carácteres')
-    .trim(),
-  photo: z
-    .instanceof(Blob, {
-      message: 'A fotografia é obrigatória',
-    })
-    .refine(
-      (file) => file!.size <= 5 * 1024 * 1024,
-      'A fotografia deve ter no máximo 5mB',
-    )
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
-    ),
-  products: z
-    .array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-      }),
-      {
-        required_error: 'Escolha os productos desta campanha',
-      },
-    )
-    .min(1, 'O mínimo de productos por campanha é 1')
-    .max(40, 'O máximo de productos por campanha é 40'),
-})
+const ALLOWED_IMAGE_DIMENSION = [778, 455]
 
 export default function PromotionModal(props: PromotionModalProps) {
+  const [imageDimension, setImageDimension] = useState([0, 0])
+
+  const schema = z.object({
+    title: z
+      .string()
+      .min(6, 'O título deve ter no minimo 6 caracteres')
+      .max(120, 'O título deve ter no máximo 120 carácteres')
+      .trim(),
+    reduction: z
+      .number({
+        required_error: 'Digite a taxa de redução',
+        invalid_type_error: 'A taxa de redução está invalida',
+      })
+      .min(0, 'A taxa não pode ser inferior à 0')
+      .max(100, 'A taxa não pode ser inferior à 100'),
+    startDate: z
+      .string({
+        required_error: 'A data de início é obrigatória',
+        invalid_type_error: 'A data de início está invalida',
+      })
+      .regex(DATETIME_REGEX, 'A data de início está invalida'),
+    fixed: z.boolean(),
+    finishDate: z
+      .string({
+        required_error: 'A data de termino é obrigatória',
+        invalid_type_error: 'A data de termino está invalida',
+      })
+      .regex(DATETIME_REGEX, 'A data de termino está invalida'),
+    description: z
+      .string()
+      .min(6, 'A descrição me deve ter no minimo 6 carácteres')
+      .max(100, 'A descrição deve ter no máximo 100 carácteres')
+      .trim(),
+    photo: z
+      .instanceof(Blob, {
+        message: 'A fotografia é obrigatória',
+      })
+      .refine(
+        (file) => file!.size <= 5 * 1024 * 1024,
+        'A fotografia deve ter no máximo 5mB',
+      )
+      .refine(
+        () => imageDimension === ALLOWED_IMAGE_DIMENSION,
+        `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
+      )
+      .refine(
+        (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
+        'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
+      ),
+    products: z
+      .array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+        }),
+        {
+          required_error: 'Escolha os productos desta campanha',
+        },
+      )
+      .min(1, 'O mínimo de productos por campanha é 1')
+      .max(40, 'O máximo de productos por campanha é 40'),
+  })
+
   const cancelButtonRef = useRef(null)
   const {
     register,
@@ -373,7 +380,7 @@ export default function PromotionModal(props: PromotionModalProps) {
                       <div>
                         <Field.DropZone
                           photoPreview={photoPreview}
-                          supportedImageResolution={[778, 455]}
+                          supportedImageResolution={ALLOWED_IMAGE_DIMENSION}
                           onChange={(e) => {
                             if (
                               e.target.files &&
@@ -385,6 +392,7 @@ export default function PromotionModal(props: PromotionModalProps) {
                               )
                             }
                           }}
+                          setImageDimension={setImageDimension}
                           error={errors.photo}
                         />
                         <Field.Error error={errors.photo} />
