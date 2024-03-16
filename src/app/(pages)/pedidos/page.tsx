@@ -100,7 +100,23 @@ export default function CartPage() {
             results[child.key] = child.val()
           })
 
-          setOrderData(reverseData(results))
+          const sortedArray = Object.entries(results).sort(
+            ([, valueA], [, valueB]) => {
+              const dateA = new Date(valueA.createdAt)
+              const dateB = new Date(valueB.createdAt)
+              return dateA.getTime() - dateB.getTime()
+            },
+          )
+
+          const recordFormat: Record<string, Order> = sortedArray.reduce(
+            (acc: Record<string, Order>, [key, value]) => {
+              acc[key] = value
+              return acc
+            },
+            {},
+          )
+
+          setOrderData(reverseData(recordFormat))
           setLoading(false)
         })
       }

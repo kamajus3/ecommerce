@@ -16,7 +16,7 @@ import {
   A11y,
   Autoplay,
 } from 'swiper/modules'
-import useDimensions from '@/hooks/useDimesions'
+import useDimensions from '@/hooks/useDimensions'
 import Link from 'next/link'
 import { usePromotion } from '@/hooks/usePromotion'
 import Image from 'next/image'

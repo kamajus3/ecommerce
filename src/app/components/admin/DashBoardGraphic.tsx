@@ -1,5 +1,5 @@
-import contants from '@/constants'
-import useDimensions from '@/hooks/useDimesions'
+import React from 'react'
+import constants from '@/constants'
 import {
   CartesianGrid,
   XAxis,
@@ -8,6 +8,7 @@ import {
   BarChart,
   Bar,
   Legend,
+  ResponsiveContainer,
 } from 'recharts'
 
 interface DashBoardGraphicProps {
@@ -15,8 +16,6 @@ interface DashBoardGraphicProps {
 }
 
 export default function DashBoardGraphic(props: DashBoardGraphicProps) {
-  const [width] = useDimensions()
-
   const data = [
     { name: 'Janeiro', qtd: props.sales[0] },
     { name: 'Fevereiro', qtd: props.sales[1] },
@@ -33,23 +32,25 @@ export default function DashBoardGraphic(props: DashBoardGraphicProps) {
   ]
 
   return (
-    <BarChart width={width - 30} height={370} data={data}>
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
-      <Legend
-        width={100}
-        wrapperStyle={{
-          top: 40,
-          right: 20,
-          backgroundColor: '#f5f5f5',
-          border: '1px solid #d5d5d5',
-          borderRadius: 3,
-          lineHeight: '40px',
-        }}
-      />
-      <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-      <Bar dataKey="qtd" fill={contants.colors.main} barSize={30} />
-    </BarChart>
+    <ResponsiveContainer width="100%" maxHeight={400} aspect={2}>
+      <BarChart data={data}>
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip wrapperStyle={{ width: 100, backgroundColor: '#ccc' }} />
+        <Legend
+          width={100}
+          wrapperStyle={{
+            top: 40,
+            right: 20,
+            backgroundColor: '#f5f5f5',
+            border: '1px solid #d5d5d5',
+            borderRadius: 3,
+            lineHeight: '40px',
+          }}
+        />
+        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+        <Bar dataKey="qtd" fill={constants.colors.main} barSize={30} />
+      </BarChart>
+    </ResponsiveContainer>
   )
 }
