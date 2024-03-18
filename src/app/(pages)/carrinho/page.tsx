@@ -165,7 +165,7 @@ export default function CartPage() {
 
       if (cartProducts.length > 0) {
         for (const p of cartProducts) {
-          getProduct(p.id).then((product) => {
+          await getProduct(p.id).then((product) => {
             if (product) {
               const productPrice =
                 product.promotion?.reduction &&
@@ -185,13 +185,12 @@ export default function CartPage() {
         }
 
         setProductData(fetchedProducts)
-        setLoading(false)
       } else {
         setProductData([])
-        setLoading(false)
       }
     }
 
+    setLoading(false)
     fetchProducts()
   }, [cartProducts])
 

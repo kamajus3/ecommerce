@@ -22,7 +22,7 @@ export default function AccountDelete() {
         ?.delete()
         .then(async () => {
           await remove(databaseReference).catch(() => {})
-          router.replace('/')
+          router.replace('/logout')
         })
         .catch(() => {
           toast.error('Erro ao tentar apagar a sua conta', {
