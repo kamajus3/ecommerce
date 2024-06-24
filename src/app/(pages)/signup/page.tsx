@@ -128,7 +128,7 @@ export default function SignUp() {
                 Confirmar palavra-passe
               </Field.Label>
               <Field.Input
-                type="confirmPassword"
+                type="password"
                 {...register('confirmPassword')}
                 error={errors.confirmPassword}
               />
