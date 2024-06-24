@@ -34,7 +34,7 @@ export default function Advantages() {
         icon="truck"
       />
       <AdvantageCard
-        title="ATENDIMENTO 24/24"
+        title="ATENDIMENTO 24/7"
         description="Suporte ao cliente amigável 24 horas por dia, 7 dias por semana"
         icon="headset"
       />
