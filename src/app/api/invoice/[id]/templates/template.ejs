@@ -1,0 +1,213 @@
+<html>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Madimi+One&family=Pacifico&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap')
+  </style>
+
+  <style>
+    @page {
+      font-family: Roboto;
+      margin: 3cm;
+      @bottom-left {
+        color: #201D63;
+        content: '♥ Obrigado!';
+      }
+      @bottom-right {
+        color: #a9a;
+        content: 'geral@raciuscare.com | raciuscare.com';
+        font-size: 9pt;
+      }
+    }
+
+    html {
+      color: #14213d;
+      font-family: Roboto;
+      font-size: 11pt;
+      line-height: 1.6;
+    }
+    body {
+      margin: 0;
+    }
+
+    img#logo {
+      width: 200px;
+      height: 125px;
+    }
+
+    h1 {
+      color: #201D63;
+      font-family: Madimi One;
+      font-size: 25pt;
+      margin: 0;
+    }
+
+    ul, li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    aside {
+      margin: 2em 0 4em;
+    }
+
+    aside address {
+      font-style: normal;
+      white-space: pre-line;
+    }
+    aside address#from {
+      color: #a9a;
+      flex: 1;
+    }
+    aside address#to {
+      text-align: right;
+    }
+
+    dl {
+      position: absolute;
+      right: 0;
+      text-align: right;
+      top: 0;
+    }
+    dt, dd {
+      display: inline;
+      margin: 0;
+    }
+    dt {
+      color: #a9a;
+    }
+    dt::before {
+      content: '';
+      display: block;
+    }
+    dt::after {
+      content: ':';
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    th {
+      border-bottom: .2mm solid #a9a;
+      color: #a9a;
+      font-size: 10pt;
+      font-weight: 400;
+      padding-bottom: .25cm;
+      text-transform: uppercase;
+    }
+    td {
+      padding-top: 7mm;
+    }
+    td:last-of-type {
+      color: #201D63;
+      font-weight: bold;
+      text-align: right;
+    }
+    th, td {
+      text-align: center;
+    }
+    th:first-of-type, td:first-of-type {
+      text-align: left;
+    }
+    th:last-of-type, td:last-of-type {
+      text-align: right;
+    }
+    footer {
+      content: '';
+      display: block;
+      height: 6cm;
+    }
+    table#total {
+      background: #f6f6f6;
+      border-color: #f6f6f6;
+      border-style: solid;
+      border-width: 2cm 3cm;
+      bottom: 0;
+      font-size: 20pt;
+      margin: 0 -3cm;
+      position: absolute;
+      width: 18cm;
+    }
+  </style>
+
+  <body>
+    <img id="logo" src="/logo.png">
+
+    <h1>Factura profomora</h1>
+
+    <aside>
+      <h3>RACIUS CARE - COMÉRCIO GERAL E PRESTAÇÃO DE SERVIÇOS</h3>
+      <ul>
+        <li><strong>NIF: </strong>5001866150</li>
+        <li><strong>Endereço: </strong>Rua Amilcar Cabral, Bloco A12, 7°A, P73, Distrito Urbano do Kilamba, Belas, Luanda, Angola</li>
+        <li><strong>Tel.: </strong>+244 935 420 498</li>
+        <li><strong>Email: </strong>geral@raciuscare.com</li>
+      </ul>
+    </aside>
+
+    <aside>
+      <ul>
+        <span class="text-bold">Dados do cliente</span>
+        <li><strong>Nome: </strong> <%= firstName %> <%= lastName %></li>
+        <li><strong>Telefone: </strong> <%= phone %></li>
+        <li><strong>Endereço: </strong> <%= address %></li>
+      </ul>
+    </aside>
+
+    <dl id="informations">
+      <dt>Referência</dt>
+      <dd><%= orderId %></dd>
+      <dt>Data</dt>
+      <dd><%= createdAt %></dd>
+    </dl>
+
+    <table>
+      <thead>
+        <tr>
+        <th>Descrição</th>
+        <th>IVA(%)</th>
+        <th>Desc.</th>
+        <th>Qtd.</th>
+        <th>Valor unit.</th>
+        <th>Total unit.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+        <tr>
+          <td><%= product.name %></td>
+          <td>-</td>  
+          <td>
+            <% if (product.promotion) { %>
+              <%= product.promotion %>%
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+          <td><%= product.quantity %></td>
+          <td><%= formatCurrency(product.price) %></td>
+          <td><%= formatCurrency(calculateDiscount(product.price, product.promotion)) %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <footer>
+      <table id="total">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Total a pagar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><%= createdAt %></td>
+            <td><%= formatCurrency(totalPrice) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </footer>
+  </body>
+</html>

@@ -1,27 +1,22 @@
-import { ProductPromotionObject } from '@/@types'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { invoiceApi } from '@/lib/axios'
-import { saveAs } from 'file-saver'
 
-export async function URLtoFile(url: string) {
+export async function URLtoHTML(url: string): Promise<string> {
   try {
     const response = await fetch(url)
-    const responseType = response.headers.get('content-type')
-    const blob = await response.blob()
-    if (responseType) {
-      return new File([blob], 'product-photo', {
-        type: responseType,
-      })
+    if (!response.ok) {
+      throw new Error('Erro ao buscar URL')
     }
-    throw Error('Erro ao converter URL para arquivo')
+
+    const html = await response.text()
+    return html
   } catch (error) {
-    console.error('Erro ao converter URL para arquivo:', error)
+    console.error('Erro ao converter URL para HTML:', error)
     throw error
   }
 }
 
-export function publishedSince(date: string) {
+export function publishedSince(date: string): string {
   try {
     const publishedSince = formatDistanceToNowStrict(parseISO(date), {
       locale: ptBR,
@@ -36,9 +31,11 @@ export function publishedSince(date: string) {
   }
 }
 
-export function campaignValidator(
-  promotion?: ProductPromotionObject,
-): undefined | 'campaign' | 'promotion' {
+export function campaignValidator(promotion?: {
+  startDate: string
+  finishDate: string
+  reduction: number
+}): undefined | 'campaign' | 'promotion' {
   if (promotion) {
     const startDate = parseISO(promotion.startDate)
     const endDate = parseISO(promotion.finishDate)
@@ -56,20 +53,11 @@ export function campaignValidator(
 export function hexToRGBA(hex: string, alpha: number): string {
   hex = hex.replace('#', '')
 
-  const r: number = parseInt(hex.substring(0, 2), 16)
-  const g: number = parseInt(hex.substring(2, 4), 16)
-  const b: number = parseInt(hex.substring(4, 6), 16)
+  const r = parseInt(hex.substring(0, 2), 16)
+  const g = parseInt(hex.substring(2, 4), 16)
+  const b = parseInt(hex.substring(4, 6), 16)
 
-  const rgba: string = `rgba(${r}, ${g}, ${b}, ${alpha})`
+  const rgba = `rgba(${r}, ${g}, ${b}, ${alpha})`
 
   return rgba
-}
-
-export function downloadInvoice(orderId: string) {
-  invoiceApi
-    .get(`/invoice/${orderId}`)
-    .then((response) => {
-      saveAs(response.data, `factura-${orderId}.pdf`)
-    })
-    .catch(() => {})
 }
