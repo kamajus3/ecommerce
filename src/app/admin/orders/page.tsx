@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import { useEffect, useState } from 'react'
 import { Order } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
+import Link from 'next/link'
 import {
   Query,
   equalTo,
@@ -17,7 +18,7 @@ import {
 } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
-import { downloadInvoice, publishedSince } from '@/functions'
+import { publishedSince } from '@/functions'
 import DataState from '@/components/DataState'
 import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -139,14 +140,11 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
         </td>
         <td className="p-3">
           <div className="flex items-center justify-center">
-            <button
-              onClick={() => {
-                downloadInvoice(order.id)
-              }}
-              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-            >
-              <span className="text-main font-medium">Baixar</span>
-            </button>
+            <Link href={`/invoice/${order.id}`}>
+              <button className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+                <span className="text-main font-medium">Baixar</span>
+              </button>
+            </Link>
           </div>
         </td>
       </tr>

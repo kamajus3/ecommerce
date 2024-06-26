@@ -57,7 +57,7 @@ function OrderTableRow(order: Order) {
       </td>
       <td className="p-3">
         <div className="flex items-center justify-center">
-          <Link href={`/api/invoice/${order.id}`}>
+          <Link href={`/invoice/${order.id}`}>
             <button className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
               <span className="text-secondary font-medium">Baixar factura</span>
             </button>

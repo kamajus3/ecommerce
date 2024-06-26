@@ -1,7 +1,7 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import Button from '../Button'
-import { downloadInvoice } from '@/functions'
+import Link from 'next/link'
 
 interface OrderConfirmedProps {
   orderData: [boolean, string | undefined]
@@ -63,17 +63,18 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      if (props.orderData[1]) {
-                        downloadInvoice(props.orderData[1])
-                        props.setOrderData([false, undefined])
-                      }
-                    }}
-                  >
-                    Baixar a factura
-                  </Button>
+                  <Link href={`/invoice/${props.orderData[1]}`}>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (props.orderData[1]) {
+                          props.setOrderData([false, undefined])
+                        }
+                      }}
+                    >
+                      Baixar a factura
+                    </Button>
+                  </Link>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

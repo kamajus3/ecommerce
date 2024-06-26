@@ -76,9 +76,7 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <AuthProvider>
           <PromotionProvider>
-            <InformationProvider>
-              {children}
-            </InformationProvider>
+            <InformationProvider>{children}</InformationProvider>
           </PromotionProvider>
         </AuthProvider>
         <ToastContainer
