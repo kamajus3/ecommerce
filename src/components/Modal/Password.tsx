@@ -54,7 +54,7 @@ export default function PasswordModal(props: PasswordModalProps) {
       reauthenticateWithCredential(user, credential)
         .then(async () => {
           closeModal()
-          if (props.actionParam && props.actionWithParam) {
+          if (props.actionWithParam && props.actionParam && !props.action) {
             props.actionWithParam(props.actionParam)
           } else {
             props.action()
