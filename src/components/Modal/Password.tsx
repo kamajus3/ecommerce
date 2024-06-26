@@ -17,7 +17,8 @@ interface FormData {
 interface PasswordModalProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (params?: string) => void | Promise<void>
+  action?: () => void | Promise<void>
+  actionWithParam?: (param: string) => void | Promise<void>
   actionParam?: string
 }
 
@@ -54,7 +55,7 @@ export default function PasswordModal(props: PasswordModalProps) {
         .then(async () => {
           closeModal()
           if (props.actionParam) {
-            props.action(props.actionParam)
+            props.actionWithParam(props.actionParam)
           } else {
             props.action()
           }

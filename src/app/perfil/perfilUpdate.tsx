@@ -337,7 +337,7 @@ export default function PerfilUpdate() {
         </div>
       </form>
       <Modal.Password
-        action={sendEmailUpdateLink}
+        actionWithParam={sendEmailUpdateLink}
         actionParam={newEmail}
         isOpen={openPasswordModal}
         setOpen={setPasswordModal}
