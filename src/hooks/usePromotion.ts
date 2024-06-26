@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { PromotionContext } from '@/app/contexts/PromotionContext'
+import { PromotionContext } from '@/contexts/PromotionContext'
 
 export const usePromotion = () => {
   const value = useContext(PromotionContext)

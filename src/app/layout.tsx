@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import AuthProvider from './contexts/AuthContext'
+import AuthProvider from '@/contexts/AuthContext'
 import 'react-toastify/dist/ReactToastify.css'
 import { Bounce, ToastContainer } from 'react-toastify'
-import PromotionProvider from './contexts/PromotionContext'
-import InformationProvider from './contexts/InformationContext'
+import PromotionProvider from '@/contexts/PromotionContext'
+import InformationProvider from '@/contexts/InformationContext'
 
 const inter = Inter({
   subsets: ['latin'],
