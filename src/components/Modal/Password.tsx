@@ -17,7 +17,8 @@ interface FormData {
 interface PasswordModalProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: () => void | Promise<void>
+  action: (params?: unknown) => void | Promise<void>
+  actionParam: unknown
 }
 
 const schema = z.object({
@@ -52,7 +53,11 @@ export default function PasswordModal(props: PasswordModalProps) {
       reauthenticateWithCredential(user, credential)
         .then(async () => {
           closeModal()
-          props.action()
+          if (props.actionParam) {
+            props.action(props.actionParam)
+          } else {
+            props.action()
+          }
         })
         .catch(() => {
           setError(
