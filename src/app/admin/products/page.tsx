@@ -29,7 +29,6 @@ import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import DataState from '@/components/DataState'
-// import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '@/components/Button'
@@ -171,7 +170,7 @@ export default function ProductPage() {
     },
     resolver: zodResolver(schema),
   })
-  // const searchValue = watch('search')
+
   const orderByValue = watch('orderBy')
 
   function postProduct(data: FormData) {

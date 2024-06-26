@@ -1,17 +1,19 @@
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-export async function URLtoHTML(url: string): Promise<string> {
+export async function URLtoFile(url: string) {
   try {
     const response = await fetch(url)
-    if (!response.ok) {
-      throw new Error('Erro ao buscar URL')
+    const responseType = response.headers.get('content-type')
+    const blob = await response.blob()
+    if (responseType) {
+      return new File([blob], 'product-photo', {
+        type: responseType,
+      })
     }
-
-    const html = await response.text()
-    return html
+    throw Error('Erro ao converter URL para arquivo')
   } catch (error) {
-    console.error('Erro ao converter URL para HTML:', error)
+    console.error('Erro ao converter URL para arquivo:', error)
     throw error
   }
 }
