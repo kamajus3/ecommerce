@@ -17,8 +17,8 @@ interface FormData {
 interface PasswordModalProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (params?: unknown) => void | Promise<void>
-  actionParam?: unknown
+  action: (params?: string) => void | Promise<void>
+  actionParam?: string
 }
 
 const schema = z.object({
