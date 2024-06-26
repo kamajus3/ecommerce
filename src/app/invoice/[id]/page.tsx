@@ -158,11 +158,7 @@ export default function Invoice() {
         <Document>
           <Page size="A4" style={styles.page}>
             <View style={styles.header}>
-              <Image
-                style={styles.logo}
-                src="/logo.png"
-                alt="Racius Care logo"
-              />
+              <Image style={styles.logo} src="/logo.png" />
               <Text style={styles.title}>Factura profomora</Text>
             </View>
 
