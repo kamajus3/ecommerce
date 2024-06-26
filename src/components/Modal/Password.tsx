@@ -18,7 +18,7 @@ interface PasswordModalProps {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   action: (params?: unknown) => void | Promise<void>
-  actionParam: unknown
+  actionParam?: unknown
 }
 
 const schema = z.object({
