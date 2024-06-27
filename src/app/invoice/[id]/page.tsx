@@ -127,7 +127,11 @@ const formatISODate = (isoDate: string) => {
   return date.toLocaleString()
 }
 
-const formatCurrency = (amount: number) => `$${amount.toFixed(2)}`
+const moneyFormat = Intl.NumberFormat('en-DE', {
+  style: 'currency',
+  currency: 'AOA',
+})
+const formatCurrency = (amount: number) => moneyFormat.format(amount)
 
 const calculateDiscount = (
   price: number,
@@ -235,7 +239,9 @@ export default function Invoice() {
     return <Loading />
   }
 
-  const invoice = pdf(<InvoiceBody orderData={orderData} />).toBlob()
+  const invoice = pdf(
+    <InvoiceBody orderData={{ ...orderData, id: orderId }} />,
+  ).toBlob()
 
   function downloadInvoice() {
     invoice.then((blob) => {
