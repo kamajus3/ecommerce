@@ -57,14 +57,13 @@ export default function PerfilUpdate() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting, dirtyFields },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
-  const newUserEmail = watch('email')
   const [openPasswordModal, setPasswordModal] = useState(false)
+  const [newEmail, setNewEmail] = useState('')
 
   const onSubmit = (data: FormData) => {
     if (user && userDB) {
@@ -88,6 +87,7 @@ export default function PerfilUpdate() {
             })
 
             if (user.email !== data.email) {
+              setNewEmail(data.email)
               setPasswordModal(true)
             }
 
@@ -134,12 +134,12 @@ export default function PerfilUpdate() {
     }
   }
 
-  async function sendEmailUpdateLink() {
+  async function sendEmailUpdateLink(newUserEmail: string) {
     if (user) {
       await verifyBeforeUpdateEmail(user, newUserEmail)
         .then(() => {
           toast.success(
-            'Foi enviado um código de verificação no seu novo email',
+            `Foi enviado um código de verificação no seu novo email (${newUserEmail})`,
             {
               position: 'top-right',
               autoClose: 7000,
@@ -337,7 +337,8 @@ export default function PerfilUpdate() {
         </div>
       </form>
       <Modal.Password
-        action={sendEmailUpdateLink}
+        actionWithParam={sendEmailUpdateLink}
+        actionParam={newEmail}
         isOpen={openPasswordModal}
         setOpen={setPasswordModal}
       />
