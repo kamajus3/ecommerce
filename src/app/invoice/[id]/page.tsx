@@ -43,7 +43,7 @@ const PDFViewer = dynamic(
   () => import('@react-pdf/renderer').then((mod) => mod.PDFViewer),
   {
     ssr: false,
-    loading: () => <p>Loading...</p>,
+    loading: () => <Loading />,
   },
 )
 
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   totalTable: {
-    backgroundColor: '#f6f6f6',
     borderColor: '#f6f6f6',
     borderWidth: 2,
     width: '100%',
@@ -200,14 +199,16 @@ const InvoiceBody = ({ orderData }: { orderData: Order }) => (
 
       <View style={styles.totalTable}>
         <View style={{ flexDirection: 'row' }}>
+          <Text style={[styles.th, { flex: 1 }]}>Referência</Text>
           <Text style={[styles.th, { flex: 1 }]}>Data</Text>
           <Text style={[styles.th, { flex: 1 }]}>Total a pagar</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={[styles.td, { flex: 1 }]}>
+          <Text style={[styles.td, { flex: 0.5 }]}>{orderData.id}</Text>
+          <Text style={[styles.td, { flex: 0.5 }]}>
             {formatISODate(orderData.createdAt)}
           </Text>
-          <Text style={[styles.td, { flex: 1 }]}>
+          <Text style={[styles.td, { flex: 0.5 }]}>
             {formatCurrency(calculateTotalPrice(orderData.products))}
           </Text>
         </View>
@@ -255,7 +256,7 @@ export default function Invoice() {
         return (
           <div className="h-screen w-screen">
             <PDFViewer className="h-full w-full" showToolbar={true}>
-              <InvoiceBody orderData={orderData} />
+              <InvoiceBody orderData={{ ...orderData, id: orderId }} />
             </PDFViewer>
           </div>
         )
