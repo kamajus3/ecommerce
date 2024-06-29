@@ -72,7 +72,7 @@ export default function PostAction(product: ProductItem) {
               })
             }
           }}
-          className="mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
+          className="h-12 mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
         >
           <Plus size={15} /> Adicionar ao carrinho
         </button>
