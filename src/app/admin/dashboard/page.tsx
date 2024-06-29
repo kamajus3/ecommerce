@@ -2,8 +2,8 @@
 
 import Field from '@/components/Field'
 import Header from '@/components/Header'
-import DashBoardCard from '@/components/admin/DashBoardCard'
-import DashBoardGraphic from '@/components/admin/DashBoardGraphic'
+import DashBoardCard from '@/components/Admin/DashBoardCard'
+import DashBoardGraphic from '@/components/Admin/DashBoardGraphic'
 import { database } from '@/lib/firebase/config'
 import { onValue, ref } from 'firebase/database'
 import Script from 'next/script'
