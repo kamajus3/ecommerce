@@ -3,7 +3,7 @@ import Carousel from '@/components/ui/Carousel'
 import ProductList from '@/components/ProductList'
 import CategoryFilter from '@/components/ui/Home/CategoryFilter'
 import Advantages from '@/components/ui/Home/Advantages'
-import Footer from '@/components/ui/Footer'
+import Footer from '@/components/Footer'
 import dynamic from 'next/dynamic'
 
 const PromoBig = dynamic(() => import('@/components/ui/Promo/PromoBig'), {

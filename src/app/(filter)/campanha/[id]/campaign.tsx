@@ -1,8 +1,8 @@
 'use client'
 
 import Header from '@/components/ui/Header'
-import ProductCard from '@/components/ui/ProductCard'
-import Footer from '@/components/ui/Footer'
+import ProductCard from '@/components/ProductCard'
+import Footer from '@/components/Footer'
 import { notFound, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ProductItem, PromotionItemBase } from '@/@types'

@@ -1,4 +1,4 @@
-import Footer from '@/components/ui/Footer'
+import Footer from '@/components/Footer'
 import Header from '@/components/ui/Header'
 import { Metadata } from 'next'
 import Link from 'next/link'

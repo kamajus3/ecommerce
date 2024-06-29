@@ -2,7 +2,7 @@
 
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
-import Admin from '@/components/Admin'
+import Admin from '@/components/ui/Admin'
 import { database } from '@/lib/firebase/config'
 import { onValue, ref } from 'firebase/database'
 import Script from 'next/script'

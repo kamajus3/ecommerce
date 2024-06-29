@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Footer from '@/components/ui/Footer'
+import Footer from '@/components/Footer'
 import Header from '@/components/ui/Header'
 import Image from 'next/image'
 import AboutHeroe from '@/assets/images/about-us-heroe.png'

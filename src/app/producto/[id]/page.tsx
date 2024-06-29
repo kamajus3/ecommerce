@@ -1,6 +1,6 @@
 import Header from '@/components/ui/Header'
 import Image from 'next/image'
-import Footer from '@/components/ui/Footer'
+import Footer from '@/components/Footer'
 import ProductList from '@/components/ProductList'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import PostAction from './action'
