@@ -1,18 +1,19 @@
 import {
-  QueryConstraint,
+  child,
   endAt,
   equalTo,
+  get,
   limitToLast,
   onValue,
   orderByChild,
   query,
+  QueryConstraint,
   ref,
   startAt,
-  get,
-  child,
 } from 'firebase/database'
-import { database } from './config'
+
 import { ProductItem, ProductQuery } from './../../@types'
+import { database } from './config'
 
 export function getProduct(id: string): Promise<ProductItem | undefined> {
   const documentRef = ref(database, `products/${id}`)

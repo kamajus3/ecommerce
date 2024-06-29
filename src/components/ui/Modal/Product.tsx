@@ -8,16 +8,18 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import CATEGORIES from '@/assets/data/categories'
-import { ProductItem } from '@/@types'
 import { Bounce, toast } from 'react-toastify'
+import * as z from 'zod'
+
+import { ProductItem } from '@/@types'
+import CATEGORIES from '@/assets/data/categories'
 import { URLtoFile } from '@/functions'
-import Field from '../Field'
+import { Dialog, Transition } from '@headlessui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import Button from '../Button'
+import Field from '../Field'
 
 interface FormData {
   name: string

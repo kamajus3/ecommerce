@@ -1,9 +1,9 @@
+import FieldDropZone from './FieldDropZone'
+import FieldError from './FieldError'
 import FieldInput from './FieldInput'
 import FieldLabel from './FieldLabel'
-import FieldError from './FieldError'
 import FieldSelect from './FieldSelect'
 import FieldTextArea from './FieldTextArea'
-import FieldDropZone from './FieldDropZone'
 
 const Field = {
   Input: FieldInput,

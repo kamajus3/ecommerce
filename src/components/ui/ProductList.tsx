@@ -1,20 +1,22 @@
 'use client'
 
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { useEffect, useState } from 'react'
+import clsx from 'clsx'
 import { Scrollbar } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+import { ProductItem, ProductQuery } from '@/@types'
+import { getProducts } from '@/lib/firebase/database'
+
+import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
 import ProductCard from './ProductCard'
+
+import '@/assets/swiper.css'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-
-import '@/assets/swiper.css'
-import { ProductItem, ProductQuery } from '@/@types'
-import { getProducts } from '@/lib/firebase/database'
-import { useEffect, useState } from 'react'
-import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
-import clsx from 'clsx'
 
 interface ProductListProps {
   title: string

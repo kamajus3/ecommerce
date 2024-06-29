@@ -1,10 +1,11 @@
 'use client'
 
-import { useAuth } from '@/hooks/useAuth'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import React, { useState, useRef, useEffect, ReactNode } from 'react'
+
+import { useAuth } from '@/hooks/useAuth'
 
 export default function Avatar({ children }: { children: ReactNode }) {
   const { user } = useAuth()

@@ -1,8 +1,10 @@
 'use client'
 
-import { useAuth } from '@/hooks/useAuth'
 import { ReactNode, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+
+import { useAuth } from '@/hooks/useAuth'
+
 import Loading from './Loading'
 
 interface ProtectedRouteProps {

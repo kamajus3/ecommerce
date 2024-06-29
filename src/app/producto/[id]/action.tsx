@@ -1,9 +1,10 @@
 'use client'
 
-import useCartStore from '@/store/CartStore'
 import { useEffect, useState } from 'react'
 import { Minus, Plus } from 'lucide-react'
+
 import { ProductItem } from '@/@types'
+import useCartStore from '@/store/CartStore'
 import useViewStore from '@/store/ViewStore'
 
 export default function PostAction(product: ProductItem) {

@@ -8,19 +8,21 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { ProductInputProps, PromotionItemEdit } from '@/@types'
-import { Bounce, toast } from 'react-toastify'
-import { URLtoFile } from '@/functions'
-import ProductInput from '../ProductInput'
 import { X } from 'lucide-react'
-import { getProducts } from '@/lib/firebase/database'
+import { useForm } from 'react-hook-form'
+import { Bounce, toast } from 'react-toastify'
+import * as z from 'zod'
+
+import { ProductInputProps, PromotionItemEdit } from '@/@types'
+import { URLtoFile } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
-import Field from '../Field'
+import { getProducts } from '@/lib/firebase/database'
+import { Dialog, Transition } from '@headlessui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import Button from '../Button'
+import Field from '../Field'
+import ProductInput from '../ProductInput'
 
 interface FormData {
   title: string

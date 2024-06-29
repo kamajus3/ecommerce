@@ -1,11 +1,12 @@
 'use client'
 
+import { useEffect } from 'react'
+import { notFound, useRouter } from 'next/navigation'
+import { applyActionCode } from 'firebase/auth'
+import { Bounce, toast } from 'react-toastify'
+
 import Loading from '@/components/ui/Loading'
 import { auth } from '@/lib/firebase/config'
-import { applyActionCode } from 'firebase/auth'
-import { notFound, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { toast, Bounce } from 'react-toastify'
 
 export default function ChangeEmail({ params }: { params: { code: string } }) {
   const router = useRouter()

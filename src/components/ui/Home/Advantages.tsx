@@ -1,5 +1,5 @@
-import dynamicIconImports from 'lucide-react/dynamicIconImports'
 import dynamic from 'next/dynamic'
+import dynamicIconImports from 'lucide-react/dynamicIconImports'
 
 interface AdvantageCardProps {
   title: string

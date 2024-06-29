@@ -1,7 +1,9 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import Button from '../Button'
 import Link from 'next/link'
+
+import { Dialog, Transition } from '@headlessui/react'
+
+import Button from '../Button'
 
 interface OrderConfirmedProps {
   orderData: [boolean, string | undefined]

@@ -1,10 +1,11 @@
 import { HTMLAttributes, useEffect, useRef, useState } from 'react'
-import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { getProducts } from '@/lib/firebase/database'
-import { ProductItem, ProductInputProps as ProductInputObject } from '@/@types'
 import { Check, Search } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
+import { ProductInputProps as ProductInputObject, ProductItem } from '@/@types'
+import { getProducts } from '@/lib/firebase/database'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface ProductInputProps {
   products: ProductInputObject[]

@@ -1,14 +1,15 @@
 'use client'
 
+import Link from 'next/link'
+import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import CATEGORIES from '@/assets/data/categories'
-import { Scrollbar } from 'swiper/modules'
 import { Category } from '@/@types'
+import CATEGORIES from '@/assets/data/categories'
+
+import '@/assets/swiper.css'
 
 import 'swiper/css/scrollbar'
-import '@/assets/swiper.css'
-import Link from 'next/link'
 
 interface CategoryFilterProps {
   title: string

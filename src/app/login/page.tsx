@@ -1,15 +1,16 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
-import { Bounce, toast } from 'react-toastify'
-import Header from '@/components/ui/Header'
 import Link from 'next/link'
-import Field from '@/components/ui/Field'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { Bounce, toast } from 'react-toastify'
+import * as z from 'zod'
+
 import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
+import Header from '@/components/ui/Header'
+import { useAuth } from '@/hooks/useAuth'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),

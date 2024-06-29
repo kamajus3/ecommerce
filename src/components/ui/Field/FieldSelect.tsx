@@ -1,4 +1,4 @@
-import { ForwardedRef, SelectHTMLAttributes, forwardRef } from 'react'
+import { ForwardedRef, forwardRef, SelectHTMLAttributes } from 'react'
 import { FieldError } from 'react-hook-form'
 
 interface FieldSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {

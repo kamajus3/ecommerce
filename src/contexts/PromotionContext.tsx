@@ -1,9 +1,10 @@
 'use client'
 
+import { createContext, ReactNode, useEffect, useState } from 'react'
+import { child, get, ref } from 'firebase/database'
+
 import { PromotionItemBase } from '@/@types'
 import { database } from '@/lib/firebase/config'
-import { child, get, ref } from 'firebase/database'
-import { ReactNode, createContext, useEffect, useState } from 'react'
 
 interface PromotionContextProps {
   promotionData: Record<string, PromotionItemBase>

@@ -1,14 +1,15 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Bounce, toast } from 'react-toastify'
-import Header from '@/components/ui/Header'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { auth } from '@/lib/firebase/config'
-import Field from '@/components/ui/Field'
+import { useForm } from 'react-hook-form'
+import { Bounce, toast } from 'react-toastify'
+import * as z from 'zod'
+
 import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
+import Header from '@/components/ui/Header'
+import { auth } from '@/lib/firebase/config'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),

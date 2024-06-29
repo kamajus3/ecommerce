@@ -1,12 +1,13 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { EmailAuthProvider } from 'firebase/auth/cordova'
 import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
-import { useAuth } from '@/hooks/useAuth'
+import { EmailAuthProvider } from 'firebase/auth/cordova'
+import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
-import Field from '@/components/ui/Field'
+import * as z from 'zod'
+
 import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
+import { useAuth } from '@/hooks/useAuth'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
   oldPassword: string

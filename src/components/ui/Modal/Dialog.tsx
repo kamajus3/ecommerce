@@ -1,7 +1,9 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import { AlertTriangle } from 'lucide-react'
+
 import { hexToRGBA } from '@/functions'
+import { Dialog, Transition } from '@headlessui/react'
+
 import Button from '../Button'
 
 interface DialogModalProps {

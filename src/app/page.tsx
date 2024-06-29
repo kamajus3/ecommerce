@@ -1,10 +1,11 @@
-import Header from '@/components/ui/Header'
-import Carousel from '@/components/ui/Carousel'
-import ProductList from '@/components/ProductList'
-import CategoryFilter from '@/components/ui/Home/CategoryFilter'
-import Advantages from '@/components/ui/Home/Advantages'
-import Footer from '@/components/Footer'
 import dynamic from 'next/dynamic'
+
+import Carousel from '@/components/ui/Carousel'
+import Footer from '@/components/ui/Footer'
+import Header from '@/components/ui/Header'
+import Advantages from '@/components/ui/Home/Advantages'
+import CategoryFilter from '@/components/ui/Home/CategoryFilter'
+import ProductList from '@/components/ui/ProductList'
 
 const PromoBig = dynamic(() => import('@/components/ui/Promo/PromoBig'), {
   ssr: false,

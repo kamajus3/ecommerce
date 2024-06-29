@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePromotion } from '@/hooks/usePromotion'
-import { useInformation } from '@/hooks/useInformation'
+
 import { PromotionItemBase } from '@/@types'
 import { campaignValidator } from '@/functions'
+import { useInformation } from '@/hooks/useInformation'
+import { usePromotion } from '@/hooks/usePromotion'
 
 function calculateTimeRemaining(finishDate: Date) {
   const currentTime = new Date().getTime()

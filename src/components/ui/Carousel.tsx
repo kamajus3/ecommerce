@@ -1,27 +1,28 @@
 'use client'
 import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import {
+  A11y,
+  Autoplay,
+  Navigation,
+  Pagination,
+  Scrollbar,
+} from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+
+import useDimensions from '@/hooks/useDimensions'
+import { usePromotion } from '@/hooks/usePromotion'
+
+import CarouselSkeleton from './Skeleton/CarouselSkeleton'
+import Button from './Button'
+
+import '@/assets/swiper.css'
 
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
-
-import '@/assets/swiper.css'
-
-import {
-  Pagination,
-  Navigation,
-  Scrollbar,
-  A11y,
-  Autoplay,
-} from 'swiper/modules'
-import useDimensions from '@/hooks/useDimensions'
-import Link from 'next/link'
-import { usePromotion } from '@/hooks/usePromotion'
-import Image from 'next/image'
-import CarouselSkeleton from './Skeleton/CarouselSkeleton'
-import Button from './Button'
 
 export default function Carousel() {
   const { promotionData } = usePromotion()

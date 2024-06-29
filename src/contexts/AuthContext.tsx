@@ -1,22 +1,23 @@
 'use client'
 
 import React, {
-  useState,
-  useEffect,
   createContext,
-  ReactNode,
   Dispatch,
+  ReactNode,
   SetStateAction,
+  useEffect,
+  useState,
 } from 'react'
-import { auth, database } from '@/lib/firebase/config'
 import {
   AuthError,
-  User,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  User,
 } from 'firebase/auth'
 import { child, get, ref, set } from 'firebase/database'
+
 import { UserDatabase } from '@/@types'
+import { auth, database } from '@/lib/firebase/config'
 
 interface AuthContextProps {
   user: User | null | undefined

@@ -1,14 +1,15 @@
 'use client'
 
-import Header from '@/components/ui/Header'
-import ProductCard from '@/components/ProductCard'
-import Footer from '@/components/Footer'
-import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { ProductItem } from '@/@types'
-import { getProducts } from '@/lib/firebase/database'
+import { useParams } from 'next/navigation'
 import clsx from 'clsx'
+
+import { ProductItem } from '@/@types'
 import DataState from '@/components/ui/DataState'
+import Footer from '@/components/ui/Footer'
+import Header from '@/components/ui/Header'
+import ProductCard from '@/components/ui/ProductCard'
+import { getProducts } from '@/lib/firebase/database'
 
 export default function CategorySearchPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(

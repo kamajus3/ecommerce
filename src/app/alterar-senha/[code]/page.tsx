@@ -1,15 +1,16 @@
 'use client'
 
-import Header from '@/components/ui/Header'
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Bounce, toast } from 'react-toastify'
-import { notFound, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { notFound, useRouter } from 'next/navigation'
 import { AuthError, checkActionCode, confirmPasswordReset } from 'firebase/auth'
-import { auth } from '@/lib/firebase/config'
+import { useForm } from 'react-hook-form'
+import { Bounce, toast } from 'react-toastify'
+import * as z from 'zod'
+
+import Header from '@/components/ui/Header'
 import Loading from '@/components/ui/Loading'
+import { auth } from '@/lib/firebase/config'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z
   .object({

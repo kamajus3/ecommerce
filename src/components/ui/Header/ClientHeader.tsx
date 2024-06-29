@@ -1,16 +1,18 @@
 'use client'
 
-import Link from 'next/link'
-import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import clsx from 'clsx'
-import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import useCartStore from '@/store/CartStore'
-import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import clsx from 'clsx'
+import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
 import { getProduct } from '@/lib/firebase/database'
+import useCartStore from '@/store/CartStore'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import Avatar from '../Avatar'
 
 interface ClientHeaderProps {

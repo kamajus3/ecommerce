@@ -1,15 +1,16 @@
 import React from 'react'
-import constants from '@/constants'
 import {
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts'
+
+import constants from '@/constants'
 
 interface DashGraphicProps {
   sales: number[]

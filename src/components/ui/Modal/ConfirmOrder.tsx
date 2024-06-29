@@ -1,14 +1,16 @@
 'use client'
 
 import { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+
 import { ProductItem } from '@/@types'
 import { useAuth } from '@/hooks/useAuth'
-import Field from '../Field'
+import { Dialog, Transition } from '@headlessui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import Button from '../Button'
+import Field from '../Field'
 
 interface FormData {
   firstName: string

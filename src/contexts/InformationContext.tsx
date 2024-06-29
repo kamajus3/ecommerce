@@ -1,8 +1,9 @@
 'use client'
 
-import { database } from '@/lib/firebase/config'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import { child, get, ref } from 'firebase/database'
-import { ReactNode, createContext, useEffect, useState } from 'react'
+
+import { database } from '@/lib/firebase/config'
 
 interface InformationsProps {
   promotionFixed: string | null

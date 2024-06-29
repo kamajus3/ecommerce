@@ -1,7 +1,8 @@
-import { database } from '@/lib/firebase/config'
-import { ref, child, get, set as firebaseSet } from 'firebase/database'
+import { child, get, ref, set as firebaseSet } from 'firebase/database'
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
+
+import { database } from '@/lib/firebase/config'
 
 interface ViewStore {
   productVieweds: string[]
