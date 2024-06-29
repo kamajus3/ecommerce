@@ -1,20 +1,21 @@
-# Racius Care - Health e-Commerce
+# Racius Care (Health e-Commerce)
 
 ## Main technologies
 
 - React
 - Typescript
 - Next JS
-- Firebase 
+- Firebase
 
 ## Getting Started
 
 1. Install all dependencies
+
 ```bash
 npm install
 ```
 
-2. Create a .env.local file in the root directory following the 
+2. Create a .env.local file in the root directory following the
 env.example file.
 
 3. Run the development server.
