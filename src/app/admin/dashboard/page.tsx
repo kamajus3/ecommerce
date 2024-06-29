@@ -2,8 +2,7 @@
 
 import Field from '@/components/Field'
 import Header from '@/components/Header'
-import DashBoardCard from '@/components/Admin/DashBoardCard'
-import DashBoardGraphic from '@/components/Admin/DashBoardGraphic'
+import Admin from '@/components/Admin'
 import { database } from '@/lib/firebase/config'
 import { onValue, ref } from 'firebase/database'
 import Script from 'next/script'
@@ -129,7 +128,7 @@ export default function DashBoard() {
       <Header.Admin />
       <article>
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          <DashBoardCard
+          <Admin.Card
             title="Pedidos"
             quantity={activeOrders}
             rate={currenteAndPastMonthRate}
@@ -144,12 +143,9 @@ export default function DashBoard() {
             }
           />
 
-          <DashBoardCard
-            title="Productos restantes"
-            quantity={activeProducts}
-          />
-          <DashBoardCard title="Campanhas activas" quantity={activeCampaign} />
-          <DashBoardCard title="Clientes activos" quantity={activeUsers} />
+          <Admin.Card title="Productos restantes" quantity={activeProducts} />
+          <Admin.Card title="Campanhas activas" quantity={activeCampaign} />
+          <Admin.Card title="Clientes activos" quantity={activeUsers} />
         </div>
         <article>
           <div className="p-9">
@@ -170,7 +166,7 @@ export default function DashBoard() {
             />
           </div>
           <div className="pr-7">
-            <DashBoardGraphic sales={soldProductsMothly} />
+            <Admin.Graphic sales={soldProductsMothly} />
           </div>
         </article>
       </article>
