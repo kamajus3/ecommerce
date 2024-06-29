@@ -3,9 +3,8 @@
 import { ReactNode, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
+import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
-
-import Loading from './Loading'
 
 interface ProtectedRouteProps {
   children: ReactNode

@@ -1,7 +1,7 @@
 'use client'
 
-import ProtectedRoute from '@/components/ProtectedRoute'
 import Header from '@/components/ui/Header'
+import ProtectedRoute from '@/components/ui/ProtectedRoute'
 
 import AccountDelete from './accountDelete'
 import { PasswordUpdate } from './passwordUpdate'

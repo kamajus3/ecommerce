@@ -1,4 +1,4 @@
-import ProtectedRoute from '@/components/ProtectedRoute'
+import ProtectedRoute from '@/components/ui/ProtectedRoute'
 
 export default function AdminLayout({
   children,

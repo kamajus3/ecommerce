@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 
 import { Order } from '@/@types'
-import ProtectedRoute from '@/components/ProtectedRoute'
 import DataState from '@/components/ui/DataState'
+import Header from '@/components/ui/Header'
+import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import { publishedSince } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
-
-import Header from '../../components/ui/Header'
 
 function OrderTableRow(order: Order) {
   const money = useMoneyFormat()
