@@ -1,7 +1,7 @@
 'use client'
 
-import Button from '@/components/Button'
-import Modal from '@/components/Modal'
+import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
 import { auth, database } from '@/lib/firebase/config'
 import { ref, remove } from 'firebase/database'
 import { Trash } from 'lucide-react'

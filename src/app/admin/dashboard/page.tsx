@@ -1,7 +1,7 @@
 'use client'
 
-import Field from '@/components/Field'
-import Header from '@/components/Header'
+import Field from '@/components/ui/Field'
+import Header from '@/components/ui/Header'
 import Admin from '@/components/Admin'
 import { database } from '@/lib/firebase/config'
 import { onValue, ref } from 'firebase/database'

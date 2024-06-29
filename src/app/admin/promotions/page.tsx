@@ -1,8 +1,8 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import { ProductInputProps, PromotionItemEdit } from '@/@types'
-import Modal from '@/components/Modal'
+import Modal from '@/components/ui/Modal'
 import { useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import * as z from 'zod'
@@ -26,12 +26,12 @@ import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
 import { getProduct } from '@/lib/firebase/database'
 import { useInformation } from '@/hooks/useInformation'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 // import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Button from '@/components/Button'
-import Field from '@/components/Field'
+import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
 
 interface FormData {
   title: string

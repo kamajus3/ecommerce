@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from 'next/navigation'
 
-import Loading from '@/components/Loading'
+import Loading from '@/components/ui/Loading'
 import { Suspense, useEffect } from 'react'
 
 function EmailActions() {

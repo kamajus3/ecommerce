@@ -1,9 +1,9 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import { ProductItem } from '@/@types'
 import Image from 'next/image'
-import Modal from '@/components/Modal'
+import Modal from '@/components/ui/Modal'
 import { useEffect, useState } from 'react'
 import * as z from 'zod'
 import { toast, Bounce } from 'react-toastify'
@@ -28,11 +28,11 @@ import {
 import { database, storage } from '@/lib/firebase/config'
 import { randomBytes } from 'crypto'
 import { URLtoFile, publishedSince } from '@/functions'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import Button from '@/components/Button'
-import Field from '@/components/Field'
+import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
 
 interface FormData {
   name: string

@@ -1,6 +1,6 @@
 'use client'
 
-import Header from '../../components/Header'
+import Header from '../../components/ui/Header'
 import { useEffect, useState } from 'react'
 import { Order } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -9,7 +9,7 @@ import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { publishedSince } from '@/functions'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 import Link from 'next/link'
 
 function OrderTableRow(order: Order) {

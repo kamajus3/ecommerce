@@ -1,7 +1,7 @@
 'use client'
 
-import Header from '../../components/Header'
-import Modal from '../../components/Modal'
+import Header from '../../components/ui/Header'
+import Modal from '../../components/ui/Modal'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { toast, Bounce } from 'react-toastify'
 import Image from 'next/image'
@@ -16,8 +16,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { ref, set } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { nanoid } from 'nanoid'
-import DataState from '@/components/DataState'
-import Button from '@/components/Button'
+import DataState from '@/components/ui/DataState'
+import Button from '@/components/ui/Button'
 
 interface CartProduct extends ProductItem {
   quantity: number

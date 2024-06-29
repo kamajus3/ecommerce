@@ -1,6 +1,6 @@
 'use client'
 
-import Avatar from '@/components/Avatar'
+import Avatar from '@/components/ui/Avatar'
 import clsx from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'

@@ -13,9 +13,9 @@ import {
 } from 'firebase/auth'
 import { database } from '@/lib/firebase/config'
 import { Bounce, toast } from 'react-toastify'
-import Modal from '@/components/Modal'
-import Field from '@/components/Field'
-import Button from '@/components/Button'
+import Modal from '@/components/ui/Modal'
+import Field from '@/components/ui/Field'
+import Button from '@/components/ui/Button'
 
 const schema = z.object({
   firstName: z

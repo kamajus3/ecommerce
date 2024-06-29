@@ -1,5 +1,5 @@
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
+import Footer from '@/components/ui/Footer'
+import Header from '@/components/ui/Header'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import React from 'react'

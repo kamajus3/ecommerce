@@ -1,8 +1,8 @@
 'use client'
 
-import Header from '@/components/Header'
-import ProductCard from '@/components/ProductCard'
-import Footer from '@/components/Footer'
+import Header from '@/components/ui/Header'
+import ProductCard from '@/components/ui/ProductCard'
+import Footer from '@/components/ui/Footer'
 import { notFound, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ProductItem, PromotionItemBase } from '@/@types'
@@ -11,7 +11,7 @@ import clsx from 'clsx'
 import { child, get, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 import { campaignValidator, publishedSince } from '@/functions'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 
 export function CampaingPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(

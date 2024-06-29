@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Bounce, toast } from 'react-toastify'
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/lib/firebase/config'
-import Field from '@/components/Field'
-import Button from '@/components/Button'
+import Field from '@/components/ui/Field'
+import Button from '@/components/ui/Button'
 
 const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),

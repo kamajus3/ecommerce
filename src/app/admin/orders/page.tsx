@@ -1,6 +1,6 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import { useEffect, useState } from 'react'
 import { Order } from '@/@types'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -19,12 +19,12 @@ import {
 import { database } from '@/lib/firebase/config'
 import { useAuth } from '@/hooks/useAuth'
 import { publishedSince } from '@/functions'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import Modal from '@/components/Modal'
+import Modal from '@/components/ui/Modal'
 import { Bounce, toast } from 'react-toastify'
 import clsx from 'clsx'
 

@@ -1,14 +1,14 @@
 'use client'
 
-import Header from '@/components/Header'
-import ProductCard from '@/components/ProductCard'
-import Footer from '@/components/Footer'
+import Header from '@/components/ui/Header'
+import ProductCard from '@/components/ui/ProductCard'
+import Footer from '@/components/ui/Footer'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { ProductItem } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import clsx from 'clsx'
-import DataState from '@/components/DataState'
+import DataState from '@/components/ui/DataState'
 
 export default function SearchPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(

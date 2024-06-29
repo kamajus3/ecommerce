@@ -5,8 +5,8 @@ import { EmailAuthProvider } from 'firebase/auth/cordova'
 import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { useAuth } from '@/hooks/useAuth'
 import { Bounce, toast } from 'react-toastify'
-import Field from '@/components/Field'
-import Button from '@/components/Button'
+import Field from '@/components/ui/Field'
+import Button from '@/components/ui/Button'
 
 interface FormData {
   oldPassword: string

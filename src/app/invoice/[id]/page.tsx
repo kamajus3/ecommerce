@@ -12,14 +12,14 @@ import {
   pdf,
 } from '@react-pdf/renderer'
 import { database } from '@/lib/firebase/config'
-import Loading from '@/components/Loading'
+import Loading from '@/components/ui/Loading'
 import { child, get, ref } from 'firebase/database'
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import { Order, ProductOrder } from '@/@types'
-import Device from '@/components/Device'
+import Device from '@/components/ui/Device'
 import FileSaver from 'file-saver'
-import Button from '@/components/Button'
+import Button from '@/components/ui/Button'
 
 // Register fonts
 Font.register({

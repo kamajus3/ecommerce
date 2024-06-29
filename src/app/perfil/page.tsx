@@ -1,6 +1,6 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import { PasswordUpdate } from './passwordUpdate'
 import PerfilUpdate from './perfilUpdate'
 import ProtectedRoute from '@/components/ProtectedRoute'

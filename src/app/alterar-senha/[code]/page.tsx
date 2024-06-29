@@ -1,6 +1,6 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,7 +9,7 @@ import { notFound, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AuthError, checkActionCode, confirmPasswordReset } from 'firebase/auth'
 import { auth } from '@/lib/firebase/config'
-import Loading from '@/components/Loading'
+import Loading from '@/components/ui/Loading'
 
 const schema = z
   .object({

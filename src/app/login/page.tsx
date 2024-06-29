@@ -6,10 +6,10 @@ import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import { Bounce, toast } from 'react-toastify'
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
 import Link from 'next/link'
-import Field from '@/components/Field'
-import Button from '@/components/Button'
+import Field from '@/components/ui/Field'
+import Button from '@/components/ui/Button'
 
 const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),
