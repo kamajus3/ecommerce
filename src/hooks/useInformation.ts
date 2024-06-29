@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+
 import { InformationContext } from '@/contexts/InformationContext'
 
 export const useInformation = () => {

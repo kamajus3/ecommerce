@@ -1,9 +1,10 @@
 'use client'
 
-import Loading from '@/components/Loading'
-import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+
+import Loading from '@/components/ui/Loading'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function Logout() {
   const { logout } = useAuth()

@@ -1,9 +1,9 @@
 'use client'
 
-import { useSearchParams, useRouter } from 'next/navigation'
-
-import Loading from '@/components/Loading'
 import { Suspense, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import Loading from '@/components/ui/Loading'
 
 function EmailActions() {
   const searchParams = useSearchParams()

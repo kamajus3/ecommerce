@@ -1,13 +1,14 @@
 'use client'
 
-import Button from '@/components/Button'
-import Modal from '@/components/Modal'
-import { auth, database } from '@/lib/firebase/config'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { ref, remove } from 'firebase/database'
 import { Trash } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { Bounce, toast } from 'react-toastify'
+
+import Button from '@/components/ui/Button'
+import Modal from '@/components/ui/Modal'
+import { auth, database } from '@/lib/firebase/config'
 
 export default function AccountDelete() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)

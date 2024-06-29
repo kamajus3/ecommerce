@@ -1,10 +1,11 @@
 'use client'
 
-import Header from '@/components/Header'
+import Header from '@/components/ui/Header'
+import ProtectedRoute from '@/components/ui/ProtectedRoute'
+
+import AccountDelete from './accountDelete'
 import { PasswordUpdate } from './passwordUpdate'
 import PerfilUpdate from './perfilUpdate'
-import ProtectedRoute from '@/components/ProtectedRoute'
-import AccountDelete from './accountDelete'
 
 export default function PerfilPage() {
   return (

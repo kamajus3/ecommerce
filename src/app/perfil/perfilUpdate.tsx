@@ -1,21 +1,22 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
 import { useCallback, useEffect, useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
-import { ref, set } from 'firebase/database'
 import {
   sendEmailVerification,
   updateProfile,
   verifyBeforeUpdateEmail,
 } from 'firebase/auth'
-import { database } from '@/lib/firebase/config'
+import { ref, set } from 'firebase/database'
+import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
-import Modal from '@/components/Modal'
-import Field from '@/components/Field'
-import Button from '@/components/Button'
+import * as z from 'zod'
+
+import Button from '@/components/ui/Button'
+import Field from '@/components/ui/Field'
+import Modal from '@/components/ui/Modal'
+import { useAuth } from '@/hooks/useAuth'
+import { database } from '@/lib/firebase/config'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z.object({
   firstName: z

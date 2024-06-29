@@ -1,14 +1,16 @@
-import Header from '@/components/Header'
-import Image from 'next/image'
-import Footer from '@/components/Footer'
-import ProductList from '@/components/ProductList'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
-import PostAction from './action'
-import { getProduct } from '@/lib/firebase/database'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+
+import Footer from '@/components/ui/Footer'
+import Header from '@/components/ui/Header'
+import ProductList from '@/components/ui/ProductList'
 import { campaignValidator } from '@/functions'
+import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { getProduct } from '@/lib/firebase/database'
+
+import PostAction from './action'
 
 export async function generateMetadata({
   params,

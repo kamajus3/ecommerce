@@ -1,6 +1,7 @@
 import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
+
 import { Product, ProductCart } from '@/@types'
-import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface CartProduct extends Product {
   quantity: number

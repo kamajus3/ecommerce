@@ -1,8 +1,10 @@
-import { CampaingPage } from './campaign'
 import { Metadata } from 'next'
 import { child, get, ref } from 'firebase/database'
-import { database } from '@/lib/firebase/config'
+
 import { campaignValidator } from '@/functions'
+import { database } from '@/lib/firebase/config'
+
+import { CampaingPage } from './campaign'
 
 export async function generateMetadata({
   params,

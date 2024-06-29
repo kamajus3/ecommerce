@@ -1,12 +1,13 @@
 'use client'
 
-import Field from '@/components/Field'
-import Header from '@/components/Header'
-import Admin from '@/components/Admin'
-import { database } from '@/lib/firebase/config'
-import { onValue, ref } from 'firebase/database'
-import Script from 'next/script'
 import { useEffect, useState } from 'react'
+import Script from 'next/script'
+import { onValue, ref } from 'firebase/database'
+
+import Admin from '@/components/ui/Admin'
+import Field from '@/components/ui/Field'
+import Header from '@/components/ui/Header'
+import { database } from '@/lib/firebase/config'
 
 const START_YEAR = 2024
 const currentYear = new Date().getFullYear()
