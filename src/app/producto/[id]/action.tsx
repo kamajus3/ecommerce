@@ -29,7 +29,7 @@ export default function PostAction(product: ProductItem) {
   }, [viewProduct, product.id])
 
   return (
-    <>
+    <div>
       <div className="flex mt-4">
         <button
           className="bg-red-500 hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
@@ -72,11 +72,11 @@ export default function PostAction(product: ProductItem) {
               })
             }
           }}
-          className="h-12 mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
+          className="mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
         >
           <Plus size={15} /> Adicionar ao carrinho
         </button>
       )}
-    </>
+    </div>
   )
 }

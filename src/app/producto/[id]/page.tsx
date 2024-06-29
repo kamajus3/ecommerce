@@ -90,7 +90,7 @@ export default async function ProductPage({
               </>
             )}
           </div>
-          <div className="mt-4 sm:w-[30%] w-full flex flex-col items-start justify-center">
+          <div className="mt-4 sm:w-80 w-full flex flex-col items-start justify-center">
             <Link
               href={`/categoria/${product.category}`}
               className="text-gray-600 font-medium"
