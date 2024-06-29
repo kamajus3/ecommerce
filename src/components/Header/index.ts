@@ -1,8 +1,9 @@
 import AdminHeader from './AdminHeader'
 import ClientHeader from './ClientHeader'
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const Header = {
   Admin: AdminHeader,
   Client: ClientHeader,
 }
+
+export default Header
