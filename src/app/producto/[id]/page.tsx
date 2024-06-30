@@ -33,7 +33,7 @@ export async function generateMetadata({
         })
       } else {
         resolve({
-          title: `Produto não encontrado.`,
+          title: 'Produto não encontrado.',
         })
       }
     })
@@ -60,20 +60,20 @@ export default async function ProductPage({
           >
             {product && (
               <>
-                {product.promotion &&
-                  campaignValidator(product.promotion) === 'promotion' && (
+                {product.campaign &&
+                  campaignValidator(product.campaign) === 'promotion' && (
                     <Link
-                      href={`/campanha/${product.promotion?.id}`}
+                      href={`/campanha/${product.campaign?.id}`}
                       className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
                     >
-                      Promoção: {`${product.promotion?.reduction} %`}
+                      Promoção de {`${product.campaign?.reduction} %`}
                     </Link>
                   )}
 
-                {product.promotion &&
-                  campaignValidator(product.promotion) === 'campaign' && (
+                {product.campaign &&
+                  campaignValidator(product.campaign) === 'campaign' && (
                     <Link
-                      href={`/campanha/${product.promotion?.id}`}
+                      href={`/campanha/${product.campaign?.id}`}
                       className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 top-0"
                     >
                       Em campanha
@@ -105,19 +105,22 @@ export default async function ProductPage({
             <p className="text-gray-600">{product.description}</p>
 
             <span className="block mt-2 text-xl font-semibold text-gray-700">
-              {product.promotion &&
-              campaignValidator(product.promotion) === 'promotion'
+              {product.campaign &&
+              product.campaign.reduction &&
+              campaignValidator(product.campaign) === 'promotion'
                 ? money.format(
                     product.price -
-                      product.price * (product.promotion.reduction / 100),
+                      product.price *
+                        (Number(product.campaign.reduction) / 100),
                   )
                 : money.format(product.price)}
             </span>
-            {campaignValidator(product.promotion) === 'promotion' && (
-              <span className="font-medium line-through text-gray-500 text-sm">
-                {money.format(product.price)}
-              </span>
-            )}
+            {product.campaign &&
+              campaignValidator(product.campaign) === 'promotion' && (
+                <span className="font-medium line-through text-gray-500 text-sm">
+                  {money.format(product.price)}
+                </span>
+              )}
             <PostAction {...product} id={params.id} />
           </div>
         </div>

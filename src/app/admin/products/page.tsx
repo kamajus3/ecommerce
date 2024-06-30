@@ -30,6 +30,7 @@ import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import contants from '@/constants'
 import { publishedSince, URLtoFile } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database, storage } from '@/lib/firebase/config'
@@ -51,11 +52,11 @@ interface FilterFormData {
 
 interface TableRowProps {
   product: ProductItem
-  deleteProduct(): void
-  editProduct(data: FormData, oldProduct?: ProductItem): Promise<void>
+  _delete(): void
+  _edit(data: FormData, oldProduct?: ProductItem): Promise<void>
 }
 
-function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
+function TableRow({ product, _delete, _edit }: TableRowProps) {
   const money = useMoneyFormat()
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -116,7 +117,7 @@ function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
           description="Você tem certeza que queres apagar esse producto difinitivamente?"
           actionTitle="Apagar"
           mainColor="#dc2626"
-          action={deleteProduct}
+          action={_delete}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
@@ -135,7 +136,7 @@ function TableRow({ product, deleteProduct, editProduct }: TableRowProps) {
           actionTitle="Editar"
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
-          action={editProduct}
+          action={_edit}
           defaultProduct={{ ...product }}
         />
       </td>
@@ -174,14 +175,14 @@ export default function ProductPage() {
 
   const orderByValue = watch('orderBy')
 
-  function postProduct(data: FormData) {
-    const postId = randomBytes(20).toString('hex')
-    const reference = storageRef(storage, `/products/${postId}`)
+  function _create(data: FormData) {
+    const id = randomBytes(20).toString('hex')
+    const reference = storageRef(storage, `/products/${id}`)
 
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        set(ref(database, 'products/' + postId), {
+        set(ref(database, 'products/' + id), {
           name: data.name,
           nameLowerCase: data.name.toLocaleLowerCase(),
           quantity: data.quantity,
@@ -234,7 +235,7 @@ export default function ProductPage() {
       })
   }
 
-  async function editProduct(data: FormData, oldProduct?: ProductItem) {
+  async function _edit(data: FormData, oldProduct?: ProductItem) {
     if (oldProduct && oldProduct.id) {
       const reference = storageRef(storage, `/products/${oldProduct.id}`)
       const oldPhoto = await URLtoFile(oldProduct.photo)
@@ -254,7 +255,7 @@ export default function ProductPage() {
         updatedAt: new Date().toISOString(),
       })
         .then(() => {
-          toast.success(`Producto editado com sucesso`, {
+          toast.success('Producto editado com sucesso', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -267,7 +268,7 @@ export default function ProductPage() {
           })
         })
         .catch(() => {
-          toast.error(`Erro a fazer a postagem`, {
+          toast.error('Erro a fazer a postagem', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -280,7 +281,7 @@ export default function ProductPage() {
           })
         })
     } else {
-      toast.error(`Erro a editar o produto`, {
+      toast.error('Erro a editar o produto', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -294,12 +295,12 @@ export default function ProductPage() {
     }
   }
 
-  async function deleteProduct(
+  async function _delete(
     id: string,
-    promotion?: {
+    campaign?: {
       id: string
       title: string
-      reduction: number
+      reduction?: string
     },
   ) {
     const databaseReference = ref(database, `products/${id}`)
@@ -309,11 +310,11 @@ export default function ProductPage() {
       await remove(databaseReference)
       await deleteObject(storageReference)
 
-      if (promotion) {
-        get(child(ref(database), `promotions/${promotion.id}`)).then(
+      if (campaign) {
+        get(child(ref(database), `campaigns/${campaign.id}`)).then(
           (snapshot) => {
             if (snapshot.exists()) {
-              set(ref(database, `promotions/${promotion.id}`), {
+              set(ref(database, `campaigns/${campaign.id}`), {
                 ...snapshot.val(),
                 products: snapshot
                   .val()
@@ -356,11 +357,13 @@ export default function ProductPage() {
 
     onValue(productQuery, (snapshot) => {
       const results: Record<string, ProductItem> = {}
-      snapshot.forEach(function (child) {
-        results[child.key] = child.val()
-      })
+      if (snapshot.exists()) {
+        snapshot.forEach(function (child) {
+          results[child.key] = child.val()
+        })
+        setProductData(reverseData(results))
+      }
 
-      setProductData(reverseData(results))
       setLoading(false)
     })
   }, [orderByValue])
@@ -378,7 +381,7 @@ export default function ProductPage() {
           <Button
             style={{
               padding: '14px 18px 14px 18px',
-              backgroundColor: '#00A4C7',
+              backgroundColor: contants.colors.secondary,
             }}
             className="w-auto max-sm:w-full mt-2"
             onClick={() => {
@@ -459,10 +462,10 @@ export default function ProductPage() {
                       ...product,
                       id,
                     }}
-                    deleteProduct={() => {
-                      deleteProduct(id, product?.promotion)
+                    _delete={() => {
+                      _delete(id, product?.campaign)
                     }}
-                    editProduct={editProduct}
+                    _edit={_edit}
                   />
                 ))}
               </tbody>
@@ -475,7 +478,7 @@ export default function ProductPage() {
         actionTitle="Postar"
         isOpen={newModal}
         setOpen={setNewModal}
-        action={postProduct}
+        action={_create}
       />
     </section>
   )

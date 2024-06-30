@@ -44,7 +44,7 @@ export default function ProductList(props: ProductListProps) {
   return (
     <div
       className={clsx('p-6 mt-6', {
-        hidden: !loading && Object.entries(productData).length === 1,
+        hidden: !loading && Object.entries(productData).length === 0,
       })}
     >
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>
@@ -69,13 +69,13 @@ export default function ProductList(props: ProductListProps) {
         }}
       >
         {Object.entries(productData).map(([id, product]) => (
-          <>
+          <div key={id}>
             {id !== props.query?.except && (
-              <SwiperSlide key={id}>
+              <SwiperSlide>
                 <ProductCard {...product} id={id} />
               </SwiperSlide>
             )}
-          </>
+          </div>
         ))}
 
         {loading &&

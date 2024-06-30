@@ -212,11 +212,13 @@ export default function CartPage() {
 
         onValue(orderQuery, (snapshot) => {
           const results: Record<string, Order> = {}
-          snapshot.forEach(function (child) {
-            results[child.key] = child.val()
-          })
+          if (snapshot.exists()) {
+            snapshot.forEach(function (child) {
+              results[child.key] = child.val()
+            })
+            setOrderData(reverseData(results))
+          }
 
-          setOrderData(reverseData(results))
           setLoading(false)
         })
       }

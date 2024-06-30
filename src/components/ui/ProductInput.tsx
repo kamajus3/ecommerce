@@ -8,8 +8,8 @@ import { getProducts } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface ProductInputProps {
-  products: ProductInputObject[]
-  promotionId?: string
+  products: ProductInputObject[] | undefined | null
+  campaignId?: string
   appendProduct: (product: ProductInputObject) => void
   removeProduct: (id: string) => void
   error?: boolean
@@ -35,6 +35,26 @@ export default function ProductInput(props: ProductInputProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  function handleClick(product: ProductItem, id: string) {
+    if (props.products) {
+      reset({
+        searchValue: '',
+      })
+      setIsOpen(false)
+
+      const isInProducts = props.products.find((p) => p.id === id)
+
+      if (!isInProducts) {
+        props.appendProduct({
+          id,
+          name: product.name,
+        })
+      } else {
+        props.removeProduct(id)
+      }
+    }
+  }
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
@@ -75,7 +95,7 @@ export default function ProductInput(props: ProductInputProps) {
     }
 
     fetchData()
-  }, [searchValue, props?.promotionId])
+  }, [searchValue, props?.campaignId])
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -96,40 +116,27 @@ export default function ProductInput(props: ProductInputProps) {
       </div>
 
       {isOpen && (
-        <div className="absolute top-14 w-full bg-white border rounded-md shadow-lg z-10">
-          {Object.entries(productData).map(
-            ([id, product]) =>
-              (product.promotion?.id === props.promotionId ||
-                product.promotion?.id === undefined) && (
-                <div
-                  key={id}
-                  onClick={() => {
-                    reset({
-                      searchValue: '',
-                    })
-                    setIsOpen(false)
-
-                    const isInProducts = props.products.find((p) => p.id === id)
-
-                    if (!isInProducts) {
-                      props.appendProduct({
-                        id,
-                        name: product.name,
-                      })
-                    } else {
-                      props.removeProduct(id)
-                    }
-                  }}
-                  className="flex items-center justify-between relative p-3 bg-white text-sm text-gray-800 hover:bg-gray-200 cursor-pointer select-none"
-                >
-                  {product.name}
-
-                  {props.products.find((p) => p.id === id) && (
-                    <Check className="left-4" color="#000" size={15} />
-                  )}
-                </div>
-              ),
-          )}
+        <div className="absolute top-14 w-full bg-white border rounded-md shadow-lg z-10 flex flex-col">
+          {Object.entries(productData).map(([id, product]) => (
+            <button
+              key={id}
+              disabled={
+                product.campaign?.id !== undefined &&
+                product.campaign?.id !== props.campaignId
+              }
+              className="bg-white text-gray-800 enabled:hover:bg-gray-200 disabled:text-gray-400"
+              onClick={() => {
+                handleClick(product, id)
+              }}
+            >
+              <span className="flex items-center justify-between relative p-3 text-sm select-none">
+                {product.name}
+                {props.products && props.products.find((p) => p.id === id) && (
+                  <Check className="left-4" color="#000" size={15} />
+                )}
+              </span>
+            </button>
+          ))}
         </div>
       )}
     </div>

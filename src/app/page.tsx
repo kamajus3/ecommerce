@@ -7,7 +7,7 @@ import Advantages from '@/components/ui/Home/Advantages'
 import CategoryFilter from '@/components/ui/Home/CategoryFilter'
 import ProductList from '@/components/ui/ProductList'
 
-const PromoBig = dynamic(() => import('@/components/ui/Promo/PromoBig'), {
+const BigCampaign = dynamic(() => import('@/components/ui/Home/BigCampaign'), {
   ssr: false,
 })
 
@@ -33,7 +33,7 @@ export default function Home() {
         }}
       />
       <div className="h-32 border-b" />
-      <PromoBig />
+      <BigCampaign />
       <ProductList
         title="Produtos para a sua saúde"
         query={{

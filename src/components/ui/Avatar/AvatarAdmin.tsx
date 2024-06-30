@@ -50,12 +50,11 @@ export default function Avatar() {
         Pedidos
       </Link>
       <Link
-        href="/admin/promotions"
+        href="/admin/campaigns"
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main':
-              pathname === '/admin/promotions',
+            'bg-main text-white hover:bg-main': pathname === '/admin/campaigns',
           },
         )}
       >

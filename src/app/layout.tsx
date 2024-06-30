@@ -3,8 +3,8 @@ import { Inter } from 'next/font/google'
 import { Bounce, ToastContainer } from 'react-toastify'
 
 import AuthProvider from '@/contexts/AuthContext'
+import CampaignProvider from '@/contexts/CampaignContext'
 import InformationProvider from '@/contexts/InformationContext'
-import PromotionProvider from '@/contexts/PromotionContext'
 
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -77,9 +77,9 @@ export default function RootLayout({
     <html lang="pt">
       <body className={`${inter.className}`}>
         <AuthProvider>
-          <PromotionProvider>
+          <CampaignProvider>
             <InformationProvider>{children}</InformationProvider>
-          </PromotionProvider>
+          </CampaignProvider>
         </AuthProvider>
         <ToastContainer
           position="top-center"

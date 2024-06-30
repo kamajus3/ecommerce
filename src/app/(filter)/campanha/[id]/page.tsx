@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: { id: string }
 }): Promise<Metadata> {
   return new Promise((resolve) => {
-    get(child(ref(database), `promotions/${params.id}`)).then((snapshot) => {
+    get(child(ref(database), `campaigns/${params.id}`)).then((snapshot) => {
       if (snapshot.exists()) {
         if (!campaignValidator(snapshot.val())) {
           resolve({

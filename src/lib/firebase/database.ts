@@ -55,8 +55,8 @@ export async function getProducts(
     }
   }
 
-  if (props?.promotion) {
-    constraints.push(orderByChild('promotion/id'), equalTo(props.promotion))
+  if (props?.campaign) {
+    constraints.push(orderByChild('campaign/id'), equalTo(props.campaign))
   }
 
   if (props?.orderBy === 'mostViews') {

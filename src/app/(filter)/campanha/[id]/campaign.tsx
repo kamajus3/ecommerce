@@ -5,7 +5,7 @@ import { notFound, useParams } from 'next/navigation'
 import clsx from 'clsx'
 import { child, get, ref } from 'firebase/database'
 
-import { ProductItem, PromotionItemBase } from '@/@types'
+import { CampaignBase, ProductItem } from '@/@types'
 import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
@@ -18,15 +18,15 @@ export function CampaingPage() {
   const [productData, setProductData] = useState<Record<string, ProductItem>>(
     {},
   )
-  const [promotionData, setPromotionData] = useState<PromotionItemBase>()
+  const [campaignData, setCampaignData] = useState<CampaignBase>()
   const [loading, setLoading] = useState(true)
   const { id: campaign } = useParams<{ id: string }>()
 
   useEffect(() => {
     async function unsubscribed() {
-      get(child(ref(database), `promotions/${campaign}`)).then((snapshot) => {
+      get(child(ref(database), `campaigns/${campaign}`)).then((snapshot) => {
         if (snapshot.exists()) {
-          setPromotionData(snapshot.val())
+          setCampaignData(snapshot.val())
           if (!campaignValidator(snapshot.val())) {
             notFound()
           }
@@ -36,7 +36,7 @@ export function CampaingPage() {
       })
 
       await getProducts({
-        promotion: campaign,
+        campaign,
       }).then((products) => {
         setProductData(products)
       })
@@ -53,18 +53,20 @@ export function CampaingPage() {
     <section className="bg-white min-h-screen">
       <Header.Client />
 
-      {promotionData && (
+      {campaignData && (
         <article className="p-4 mx-auto mt-9">
-          {campaignValidator(promotionData) === 'promotion' && (
-            <span className="text-black font-medium text-sm uppercase">
-              A promoção termina {publishedSince(promotionData.finishDate)}
-            </span>
-          )}
+          {campaignData.finishDate &&
+            campaignValidator(campaignData) === 'promotion' && (
+              <span className="text-black font-medium text-sm uppercase">
+                A promoção termina {publishedSince(campaignData.finishDate)}
+              </span>
+            )}
+
           <h2 className="text-black font-semibold text-2xl">
-            {promotionData.title}
+            {campaignData.title}
           </h2>
           <p className="text-[#212121] text-sm w-[80vw]">
-            {promotionData.description}
+            {campaignData.description}
           </p>
         </article>
       )}

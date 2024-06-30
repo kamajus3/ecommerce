@@ -8,7 +8,6 @@ import Button from '../Button'
 
 interface DialogModalProps {
   title: string
-  // mainColor should be in hexadecimal format
   mainColor: string
   actionTitle: string
   action: () => void

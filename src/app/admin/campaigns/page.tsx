@@ -17,12 +17,11 @@ import {
   ref as storageRef,
   uploadBytes,
 } from 'firebase/storage'
-// import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { ProductInputProps, PromotionItemEdit } from '@/@types'
+import { CampaignEdit, ProductInputProps } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
@@ -31,24 +30,25 @@ import Modal from '@/components/ui/Modal'
 import { publishedSince, URLtoFile } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
 import { database, storage } from '@/lib/firebase/config'
-import { getProduct } from '@/lib/firebase/database'
+import { getProduct, getProducts } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
   title: string
-  reduction: number
-  startDate: string
-  finishDate: string
-  description: string
+  default: boolean
   fixed: boolean
-  products: ProductInputProps[]
+  description: string
+  reduction?: string
+  startDate?: string
+  finishDate?: string
+  products?: ProductInputProps[]
   photo: Blob
 }
 
 interface TableRowProps {
-  data: PromotionItemEdit
-  deletePromotion(): void
-  editPromotion(data: FormData, oldData?: PromotionItemEdit): Promise<void>
+  data: CampaignEdit
+  _delete(): void
+  _edit(data: FormData, oldData?: CampaignEdit): Promise<void>
 }
 
 interface FilterFormData {
@@ -56,7 +56,7 @@ interface FilterFormData {
   orderBy: string
 }
 
-function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
+function TableRow({ data, _delete, _edit }: TableRowProps) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { informationsData } = useInformation()
@@ -68,12 +68,12 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {publishedSince(data.startDate)}
+          {data.startDate ? publishedSince(data.startDate) : '-'}
         </div>
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {publishedSince(data.finishDate)}
+          {data.finishDate ? publishedSince(data.finishDate) : '-'}
         </div>
       </td>
       <td className="p-3">
@@ -88,12 +88,17 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
       </td>
       <td className="p-3">
         <div className="text-center text-black font-medium">
-          {data.products.length}
+          {data.products ? data.products.length : '-'}
         </div>
       </td>
       <td className="p-3">
         <div className="text-center text-black font-medium">
-          {informationsData.promotionFixed === data.id ? 'Sim' : 'Não'}
+          {informationsData.defaultCampaign === data.id ? 'Sim' : 'Não'}
+        </div>
+      </td>
+      <td className="p-3">
+        <div className="text-center text-black font-medium">
+          {informationsData.fixedCampaign === data.id ? 'Sim' : 'Não'}
         </div>
       </td>
       <td className="p-3">
@@ -110,7 +115,7 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
           description="Você tem certeza que queres apagar essa campanha?"
           actionTitle="Apagar"
           mainColor="#dc2626"
-          action={deletePromotion}
+          action={_delete}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
@@ -124,13 +129,13 @@ function TableRow({ data, deletePromotion, editPromotion }: TableRowProps) {
             <span className="text-violet-600 font-medium">Editar</span>
           </button>
         </div>
-        <Modal.Promotion
+        <Modal.Campaign
           title="Editar campanha"
           actionTitle="Editar"
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
-          action={editPromotion}
-          defaultData={{ ...data }}
+          action={_edit}
+          defaultData={data}
         />
       </td>
     </tr>
@@ -142,8 +147,8 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, PromotionItemEdit>) {
-  const newObj: Record<string, PromotionItemEdit> = {}
+function reverseData(obj: Record<string, CampaignEdit>) {
+  const newObj: Record<string, CampaignEdit> = {}
   const revObj = Object.keys(obj).reverse()
   revObj.forEach(function (i) {
     newObj[i] = obj[i]
@@ -152,8 +157,8 @@ function reverseData(obj: Record<string, PromotionItemEdit>) {
 }
 
 export default function PromotionPage() {
-  const [promotionData, setPromotionData] = useState<
-    Record<string, PromotionItemEdit>
+  const [campaignData, setCampaignData] = useState<
+    Record<string, CampaignEdit>
   >({})
   const [loading, setLoading] = useState(true)
 
@@ -165,52 +170,64 @@ export default function PromotionPage() {
     },
     resolver: zodResolver(schema),
   })
-  // const searchValue = watch('search')
+
   const orderByValue = watch('orderBy')
 
   const { informationsData } = useInformation()
 
-  function postPromotion(data: FormData) {
-    const postId = randomBytes(20).toString('hex')
-    const reference = storageRef(storage, `/promotions/${postId}`)
+  function _post(data: FormData) {
+    const id = randomBytes(20).toString('hex')
+    const reference = storageRef(storage, `/campaigns/${id}`)
 
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        update(ref(database, 'promotions/' + postId), {
+        update(ref(database, 'campaigns/' + id), {
           title: data.title,
           description: data.description,
-          startDate: data.startDate,
-          finishDate: data.finishDate,
-          reduction: data.reduction,
+          default: data.default,
+          fixed: data.fixed,
+          reduction: data.reduction || null,
+          startDate: data.startDate || null,
+          finishDate: data.finishDate || null,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          products: data.products.map((p) => p.id),
+          products: data.products ? data.products.map((p) => p.id) : null,
           photo,
         })
           .then(() => {
-            data.products.map(async (p) => {
-              const product = await getProduct(p.id)
+            if (data.products) {
+              data.products.map(async (p) => {
+                const product = await getProduct(p.id)
 
-              update(ref(database, 'products/' + p.id), {
-                ...product,
-                promotion: {
-                  id: postId,
-                  title: data.title,
-                  reduction: data.reduction,
-                  startDate: data.startDate,
-                  finishDate: data.finishDate,
-                },
-              })
-            })
-
-            if (data.fixed) {
-              update(ref(database, 'informations/'), {
-                promotionFixed: postId,
+                update(ref(database, `products/${p.id}`), {
+                  ...product,
+                  campaign: {
+                    id,
+                    title: data.title,
+                    reduction: data.reduction || null,
+                    startDate: data.startDate || null,
+                    finishDate: data.finishDate || null,
+                  },
+                })
               })
             }
 
-            toast.success(`Campanha postada com sucesso`, {
+            if (data.default) {
+              update(ref(database, 'informations/'), {
+                defaultCampaign: id,
+              })
+            }
+
+            if (data.fixed) {
+              if (data.default) {
+                update(ref(database, 'informations/'), {
+                  fixedCampaign: id,
+                })
+              }
+            }
+
+            toast.success('Campanha postada com sucesso', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -251,70 +268,111 @@ export default function PromotionPage() {
       })
   }
 
-  async function editPromotion(data: FormData, oldData?: PromotionItemEdit) {
+  async function _edit(data: FormData, oldData?: CampaignEdit) {
     if (oldData && oldData.id) {
-      const reference = storageRef(storage, `/promotions/${oldData.id}`)
+      const reference = storageRef(storage, `/campaigns/${oldData.id}`)
       const oldPhoto = await URLtoFile(oldData.photo)
+
+      const campaignProducts = await getProducts({
+        campaign: oldData.id,
+      })
 
       if (oldPhoto !== data.photo) {
         await uploadBytes(reference, data.photo)
       }
 
       const oldDataProductsId = oldData.products
-      const newDataProductsId = data.products.map((p) => p.id)
+      const newDataProductsId = campaignProducts
+        ? campaignProducts.map((p) => p.id)
+        : null
 
-      update(ref(database, `/promotions/${oldData.id}`), {
+      update(ref(database, `/campaigns/${oldData.id}`), {
         title: data.title,
-        reduction: data.reduction,
         description: data.description,
-        startDate: data.startDate,
-        finishDate: data.finishDate,
+        default: data.default,
+        fixed: data.fixed,
+        reduction: data.reduction || null,
+        startDate: data.startDate || null,
+        finishDate: data.finishDate || null,
         products: newDataProductsId,
         photo: oldData.photo,
         updatedAt: new Date().toISOString(),
       })
-        .then(() => {
+        .then(async () => {
+          
+
+          if (campaignProducts) {
+          if (campaignProducts && data.default) {
+            Object.entries(campaignProducts).map(async ([id]) => {
+              const product = await getProduct(id)
+
+              await set(ref(database, `products/${id}`), {
+                ...product,
+                campaign: null,
+              })
+            })
+          }
+
           if (newDataProductsId !== oldDataProductsId) {
-            const deletedProducts = oldDataProductsId.filter(
-              (id) => !newDataProductsId.includes(id),
-            )
+              const deletedProducts =
+                newDataProductsId && oldDataProductsId
+                  ? oldDataProductsId.filter(
+                      (id) => !newDataProductsId.includes(id),
+                    )
+                  : []
 
-            data.products.map(async (p) => {
-              const product = await getProduct(p.id)
+              campaignProducts.map(async (p) => {
+                const product = await getProduct(p.id)
 
-              if (deletedProducts.includes(p.id)) {
-                await set(ref(database, 'products/' + p.id), {
-                  ...product,
-                  promotion: null,
-                })
-              } else {
-                await set(ref(database, 'products/' + p.id), {
-                  ...product,
-                  promotion: {
-                    id: oldData.id,
-                    title: data.title,
-                    reduction: data.reduction,
-                    startDate: data.startDate,
-                    finishDate: data.finishDate,
-                  },
-                })
-              }
+                if (deletedProducts.includes(p.id)) {
+                  await set(ref(database, `products/${p.id}`), {
+                    ...product,
+                    campaign: null,
+                  })
+                } else {
+                  await set(ref(database, `products/${p.id}`), {
+                    ...product,
+                    campaign: {
+                      id: oldData.id,
+                      title: data.title,
+                      reduction: data.reduction || null,
+                      startDate: data.startDate || null,
+                      finishDate: data.finishDate || null,
+                    },
+                  })
+                }
+              })
+            }
+          }
+
+          if (data.default) {
+            set(ref(database, 'informations/'), {
+              defaultCampaign: oldData.id,
             })
           }
 
           if (data.fixed) {
             set(ref(database, 'informations/'), {
-              promotionFixed: oldData.id,
+              fixedCampaign: oldData.id,
             })
           }
 
-          if (informationsData.promotionFixed === oldData.id && !data.fixed) {
+          if (
+            informationsData.defaultCampaign === oldData.id &&
+            !data.default
+          ) {
             set(ref(database, 'informations/'), {
-              promotionFixed: null,
+              defaultCampaign: null,
             })
           }
 
-          toast.success(`Campanha editada com sucesso`, {
+          if (informationsData.fixedCampaign === oldData.id && !data.fixed) {
+            set(ref(database, 'informations/'), {
+              fixedCampaign: null,
+            })
+          }
+
+          toast.success('Campanha editada com sucesso', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -327,7 +385,7 @@ export default function PromotionPage() {
           })
         })
         .catch(() => {
-          toast.error(`Erro ao criar a campanha`, {
+          toast.error('Erro a editar a campanha', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -340,7 +398,7 @@ export default function PromotionPage() {
           })
         })
     } else {
-      toast.error(`Erro a editar a campanha`, {
+      toast.error('Erro a editar a campanha', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -354,24 +412,26 @@ export default function PromotionPage() {
     }
   }
 
-  async function deletePromotion(id: string, products: string[]) {
-    const databaseReference = ref(database, `promotions/${id}`)
-    const storageReference = storageRef(storage, `promotions/${id}`)
+  async function _delete(id: string, products: string[] | undefined) {
+    const databaseReference = ref(database, `campaigns/${id}`)
+    const storageReference = storageRef(storage, `campaigns/${id}`)
 
     try {
       await remove(databaseReference)
       await deleteObject(storageReference)
 
-      products.map(async (id) => {
-        const product = await getProduct(id)
+      if (products) {
+        products.map(async (id) => {
+          const product = await getProduct(id)
 
-        await set(ref(database, 'products/' + id), {
-          ...product,
-          promotion: null,
+          await set(ref(database, `products/${id}`), {
+            ...product,
+            campaign: null,
+          })
         })
-      })
+      }
 
-      toast.success(`Campanha eliminada com sucesso`, {
+      toast.success('Campanha eliminada com sucesso', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -382,8 +442,8 @@ export default function PromotionPage() {
         theme: 'light',
         transition: Bounce,
       })
-    } catch (error) {
-      toast.error(`Erro a apagar a campanha`, {
+    } catch {
+      toast.error('Erro a apagar a campanha', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -398,16 +458,19 @@ export default function PromotionPage() {
   }
 
   useEffect(() => {
-    const reference = ref(database, 'promotions/')
-    const promotionQuery = query(reference, orderByChild(orderByValue))
+    const reference = ref(database, 'campaigns/')
+    const campaignQuery = query(reference, orderByChild(orderByValue))
 
-    onValue(promotionQuery, (snapshot) => {
-      const results: Record<string, PromotionItemEdit> = {}
-      snapshot.forEach(function (child) {
-        results[child.key] = child.val()
-      })
+    onValue(campaignQuery, (snapshot) => {
+      const results: Record<string, CampaignEdit> = {}
+      if (snapshot.exists()) {
+        snapshot.forEach(function (child) {
+          results[child.key] = child.val()
+        })
 
-      setPromotionData(reverseData(results))
+        setCampaignData(reverseData(results))
+      }
+
       setLoading(false)
     })
   }, [orderByValue])
@@ -461,9 +524,9 @@ export default function PromotionPage() {
 
       <article className="container mx-auto mt-8 max-sm:p-9">
         <DataState
-          dataCount={Object.entries(promotionData).length}
+          dataCount={Object.entries(campaignData).length}
           loading={loading}
-          noDataMessage="As suas promoções aparecerão aqui"
+          noDataMessage="As suas campanhas aparecerão aqui"
         >
           <div className="overflow-x-auto">
             <table className="table-auto w-full border border-[#dddddd]">
@@ -485,12 +548,14 @@ export default function PromotionPage() {
                     Data de atualização
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    <span className="max-sm:hidden">Nº de productos</span>
-                    <span className="hidden max-sm:inline">Productos</span>
+                    Productos
                   </th>
 
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Fixada
+                    Padrão
+                  </th>
+                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                    Fixado
                   </th>
                   <th className="p-3 normal-case font-semibold text-base text-[#111827]">
                     -
@@ -501,17 +566,17 @@ export default function PromotionPage() {
                 </tr>
               </thead>
               <tbody className="text-gray-600 text-sm font-light">
-                {Object.entries(promotionData).map(([id, promotion]) => (
+                {Object.entries(campaignData).map(([id, campaign]) => (
                   <TableRow
                     key={id}
                     data={{
-                      ...promotion,
+                      ...campaign,
                       id,
                     }}
-                    deletePromotion={() => {
-                      deletePromotion(id, promotion.products)
+                    _delete={() => {
+                      _delete(id, campaign.products)
                     }}
-                    editPromotion={editPromotion}
+                    _edit={_edit}
                   />
                 ))}
               </tbody>
@@ -519,12 +584,12 @@ export default function PromotionPage() {
           </div>
         </DataState>
       </article>
-      <Modal.Promotion
+      <Modal.Campaign
         title="Nova campanha"
         actionTitle="Postar"
         isOpen={newModal}
         setOpen={setNewModal}
-        action={postPromotion}
+        action={_post}
       />
     </section>
   )

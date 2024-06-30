@@ -6,7 +6,8 @@ import { child, get, ref } from 'firebase/database'
 import { database } from '@/lib/firebase/config'
 
 interface InformationsProps {
-  promotionFixed: string | null
+  defaultCampaign: string | null
+  fixedCampaign: string | null
 }
 
 interface InformationContextProps {
@@ -15,7 +16,8 @@ interface InformationContextProps {
 
 export const InformationContext = createContext<InformationContextProps>({
   informationsData: {
-    promotionFixed: null,
+    defaultCampaign: null,
+    fixedCampaign: null,
   },
 })
 
@@ -25,12 +27,13 @@ export default function InformationProvider({
   children: ReactNode
 }) {
   const [informationsData, setInformationsData] = useState<InformationsProps>({
-    promotionFixed: null,
+    defaultCampaign: null,
+    fixedCampaign: null,
   })
 
   useEffect(() => {
     async function unsubscribed() {
-      get(child(ref(database), 'informations')).then((snapshot) => {
+      get(child(ref(database), 'informations/')).then((snapshot) => {
         if (snapshot.exists()) {
           setInformationsData(snapshot.val())
         }

@@ -1,16 +1,16 @@
+import CampaignModal from './Campaign'
 import ConfirmOrderModal from './ConfirmOrder'
 import DialogModal from './Dialog'
 import OrderConfirmedModal from './OrderConfirmed'
 import PasswordModal from './Password'
 import ProductModal from './Product'
-import PromotionModal from './Promotion'
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const Modal = {
   Dialog: DialogModal,
   Product: ProductModal,
-  Promotion: PromotionModal,
+  Campaign: CampaignModal,
   ConfirmOrder: ConfirmOrderModal,
   OrderConfirmed: OrderConfirmedModal,
   Password: PasswordModal,
 }
+export default Modal

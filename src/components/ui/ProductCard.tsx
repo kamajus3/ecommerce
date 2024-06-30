@@ -25,20 +25,20 @@ export default function ProductCard(product: ProductItem) {
             </button>
           )}
 
-          {product.promotion &&
-            campaignValidator(product.promotion) === 'promotion' && (
+          {product.campaign &&
+            campaignValidator(product.campaign) === 'promotion' && (
               <Link
-                href={`/campanha/${product.promotion?.id}`}
+                href={`/campanha/${product.campaign?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
               >
-                Promoção: {`${product.promotion.reduction} %`}
+                Promoção: {`${product.campaign.reduction} %`}
               </Link>
             )}
 
-          {product.promotion &&
-            campaignValidator(product.promotion) === 'campaign' && (
+          {product.campaign &&
+            campaignValidator(product.campaign) === 'campaign' && (
               <Link
-                href={`/campanha/${product.promotion?.id}`}
+                href={`/campanha/${product.campaign?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
               >
                 Em campanha
@@ -61,17 +61,18 @@ export default function ProductCard(product: ProductItem) {
       <div className="w-full mt-4 flex flex-wrap flex-col">
         <div className="w-full flex items-center gap-x-2">
           <p className="text-lg font-semibold text-gray-900">
-            {product.promotion &&
-            campaignValidator(product.promotion) === 'promotion'
+            {product.campaign &&
+            product.campaign.reduction &&
+            campaignValidator(product.campaign) === 'promotion'
               ? money.format(
                   product.price -
-                    product.price * (product.promotion.reduction / 100),
+                    product.price * (Number(product.campaign.reduction) / 100),
                 )
               : money.format(product.price)}
           </p>
 
-          {product.promotion &&
-            campaignValidator(product.promotion) === 'promotion' && (
+          {product.campaign &&
+            campaignValidator(product.campaign) === 'promotion' && (
               <p className="font-medium line-through text-gray-500 text-sm">
                 {money.format(product.price)}
               </p>

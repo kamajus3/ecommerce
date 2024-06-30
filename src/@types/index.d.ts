@@ -12,12 +12,12 @@ export interface ProductCart {
   quantity: number
 }
 
-export interface ProductPromotionObject {
+export interface CampaignProduct {
   id: string
   title: string
-  reduction: number
-  startDate: string
-  finishDate: string
+  reduction?: string
+  startDate?: string
+  finishDate?: string
 }
 
 export type ProductItem = {
@@ -30,7 +30,7 @@ export type ProductItem = {
   description: string
   createdAt: string
   updatedAt: string
-  promotion?: ProductPromotionObject
+  campaign?: CampaignProduct
 }
 
 export interface ProductInputProps {
@@ -38,23 +38,25 @@ export interface ProductInputProps {
   name: string
 }
 
-export interface PromotionItemBase {
+export interface CampaignBase {
   id: string
   title: string
-  reduction: number
-  startDate: string
-  finishDate: string
   description: string
+  default: boolean
+  fixed: boolean
+  reduction?: string
+  startDate?: string
+  finishDate?: string
   photo: string
   createdAt: string
   updatedAt: string
 }
 
-export interface PromotionItemEdit extends PromotionItemBase {
-  products: string[]
+export interface CampaignEdit extends CampaignBase {
+  products?: string[]
 }
 
-export interface PromotionItemNew extends PromotionItemBase {
+export interface NewCampaign extends CampaignBase {
   products: ProductInputProps[]
 }
 
@@ -62,7 +64,7 @@ export interface ProductQuery {
   search?: string
   limit?: number
   category?: string
-  promotion?: string
+  campaign?: string
   except?: string
   exceptOthersProduct?: boolean
   orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
@@ -78,7 +80,7 @@ export interface ProductOrder {
   name: string
   quantity: number
   price: number
-  promotion?: number | null
+  campaign?: number | null
 }
 
 export interface Order {

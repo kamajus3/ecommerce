@@ -50,10 +50,10 @@ export default function AdminHeader() {
             Pedidos
           </Link>
           <Link
-            href="/admin/promotions"
+            href="/admin/campaigns"
             className={clsx('font-medium text-black max-sm:hidden', {
               'text-main border-b border-b-main':
-                pathname === '/admin/promotions',
+                pathname === '/admin/campaigns',
             })}
           >
             Campanhas

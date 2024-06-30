@@ -1,6 +1,8 @@
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
+import { CampaignProduct } from '@/@types'
+
 export async function URLtoFile(url: string) {
   try {
     const response = await fetch(url)
@@ -33,20 +35,24 @@ export function publishedSince(date: string): string {
   }
 }
 
-export function campaignValidator(promotion?: {
-  startDate: string
-  finishDate: string
-  reduction: number
-}): undefined | 'campaign' | 'promotion' {
-  if (promotion) {
-    const startDate = parseISO(promotion.startDate)
-    const endDate = parseISO(promotion.finishDate)
+export function campaignValidator(
+  campaign?: CampaignProduct,
+): undefined | 'campaign' | 'promotion' {
+  if (
+    campaign &&
+    campaign.startDate &&
+    campaign.finishDate &&
+    campaign.reduction
+  ) {
+    const startDate = parseISO(campaign.startDate)
+    const finishDate = parseISO(campaign.finishDate)
     const currentDate = new Date()
 
-    if (currentDate >= startDate && currentDate <= endDate) {
-      if (promotion.reduction === 0) {
+    if (currentDate >= startDate && currentDate <= finishDate) {
+      if (Number(campaign.reduction) === 0) {
         return 'campaign'
       }
+
       return 'promotion'
     }
   }

@@ -112,15 +112,11 @@ export default function ProductModal(props: ProductModalProps) {
 
   useEffect(() => {
     if (props.defaultProduct?.photo) {
-      setPhotoPreview(props.defaultProduct?.photo)
+      setPhotoPreview(props.defaultProduct.photo)
     } else {
       setPhotoPreview(null)
     }
   }, [props.defaultProduct, getValues])
-
-  useEffect(() => {
-    console.log(`imageDimension: ${imageDimension}`)
-  }, [imageDimension])
 
   useEffect(() => {
     async function unsubscribed() {
