@@ -299,21 +299,19 @@ export default function PromotionPage() {
         updatedAt: new Date().toISOString(),
       })
         .then(async () => {
-          
-
           if (campaignProducts) {
-          if (campaignProducts && data.default) {
-            Object.entries(campaignProducts).map(async ([id]) => {
-              const product = await getProduct(id)
+            if (campaignProducts && data.default) {
+              Object.entries(campaignProducts).map(async ([id]) => {
+                const product = await getProduct(id)
 
-              await set(ref(database, `products/${id}`), {
-                ...product,
-                campaign: null,
+                await set(ref(database, `products/${id}`), {
+                  ...product,
+                  campaign: null,
+                })
               })
-            })
-          }
+            }
 
-          if (newDataProductsId !== oldDataProductsId) {
+            if (newDataProductsId !== oldDataProductsId) {
               const deletedProducts =
                 newDataProductsId && oldDataProductsId
                   ? oldDataProductsId.filter(
