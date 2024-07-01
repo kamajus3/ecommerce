@@ -95,11 +95,13 @@ export interface Order {
   products: ProductOrder[]
 }
 
+export type UserRole = 'client' | 'admin'
+
 export interface UserDatabase {
   id: string
   firstName: string
   lastName?: string
   address?: string
   phone?: string
-  privileges: string[]
+  role: UserRole
 }

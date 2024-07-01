@@ -10,6 +10,8 @@ import Field from '@/components/ui/Field'
 import { useAuth } from '@/hooks/useAuth'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import '@/assets/admin.css'
+
 const schema = z.object({
   email: z.string().email('Preencha um e-mail válido'),
   password: z
@@ -82,26 +84,32 @@ export default function SignIn() {
   }
 
   return (
-    <section className="bg-white overflow-hidden">
+    <section className="admin-login overflow-hidden">
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
-          <h3 className="text-black text-center text-2xl font-bold sm:text-3xl">
-            Entrando no Back-office
+          <h3 className="text-white text-center text-2xl font-bold sm:text-3xl">
+            Bem vindo ao back-office
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Label htmlFor="email" className="text-white">
+                E-mail
+              </Field.Label>
               <Field.Input
                 type="email"
+                className="bg-[rgba(245,245,245,.3)] text-white"
                 {...register('email')}
                 error={errors.email}
               />
               <Field.Error error={errors.email} />
             </div>
             <div>
-              <Field.Label htmlFor="password">Palavra-passe</Field.Label>
+              <Field.Label htmlFor="password" className="text-white">
+                Palavra-passe
+              </Field.Label>
               <Field.Input
                 type="password"
+                className="bg-[rgba(245,245,245,.3)] text-white"
                 {...register('password')}
                 error={errors.password}
               />

@@ -30,7 +30,7 @@ import Modal from '@/components/ui/Modal'
 import { publishedSince, URLtoFile } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
 import { database, storage } from '@/lib/firebase/config'
-import { getProduct, getProducts } from '@/lib/firebase/database'
+import { getProducts } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
@@ -182,7 +182,7 @@ export default function PromotionPage() {
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        update(ref(database, 'campaigns/' + id), {
+        set(ref(database, `campaigns/${id}`), {
           title: data.title,
           description: data.description,
           default: data.default,
@@ -198,10 +198,7 @@ export default function PromotionPage() {
           .then(() => {
             if (data.products) {
               data.products.map(async (p) => {
-                const product = await getProduct(p.id)
-
                 update(ref(database, `products/${p.id}`), {
-                  ...product,
                   campaign: {
                     id,
                     title: data.title,
@@ -273,8 +270,6 @@ export default function PromotionPage() {
       const reference = storageRef(storage, `/campaigns/${oldData.id}`)
       const oldPhoto = await URLtoFile(oldData.photo)
 
-      console.log(data.products)
-
       const campaignProducts = await getProducts({
         campaign: oldData.id,
       })
@@ -299,17 +294,14 @@ export default function PromotionPage() {
         startDate: data.startDate || null,
         finishDate: data.finishDate || null,
         products: newDataProductsId,
-        photo: oldData.photo,
+        photo: oldPhoto,
         updatedAt: new Date().toISOString(),
       })
         .then(async () => {
           if (campaignProducts) {
             if (campaignProducts && data.default) {
               Object.entries(campaignProducts).map(async ([id]) => {
-                const product = await getProduct(id)
-
-                await set(ref(database, `products/${id}`), {
-                  ...product,
+                await update(ref(database, `products/${id}`), {
                   campaign: null,
                 })
               })
@@ -324,16 +316,12 @@ export default function PromotionPage() {
                   : []
 
               Object.entries(campaignProducts).map(async ([id]) => {
-                const product = await getProduct(id)
-
                 if (deletedProducts.includes(id) || data.default) {
-                  await set(ref(database, `products/${id}`), {
-                    ...product,
+                  await update(ref(database, `products/${id}`), {
                     campaign: null,
                   })
                 } else {
-                  await set(ref(database, `products/${id}`), {
-                    ...product,
+                  await update(ref(database, `products/${id}`), {
                     campaign: {
                       id: oldData.id,
                       title: data.title,
@@ -348,13 +336,13 @@ export default function PromotionPage() {
           }
 
           if (data.default) {
-            set(ref(database, 'informations/'), {
+            update(ref(database, 'informations/'), {
               defaultCampaign: oldData.id,
             })
           }
 
           if (data.fixed) {
-            set(ref(database, 'informations/'), {
+            update(ref(database, 'informations/'), {
               fixedCampaign: oldData.id,
             })
           }
@@ -363,13 +351,13 @@ export default function PromotionPage() {
             informationsData.defaultCampaign === oldData.id &&
             !data.default
           ) {
-            set(ref(database, 'informations/'), {
+            update(ref(database, 'informations/'), {
               defaultCampaign: null,
             })
           }
 
           if (informationsData.fixedCampaign === oldData.id && !data.fixed) {
-            set(ref(database, 'informations/'), {
+            update(ref(database, 'informations/'), {
               fixedCampaign: null,
             })
           }
@@ -424,10 +412,7 @@ export default function PromotionPage() {
 
       if (products) {
         products.map(async (id) => {
-          const product = await getProduct(id)
-
-          await set(ref(database, `products/${id}`), {
-            ...product,
+          await update(ref(database, `products/${id}`), {
             campaign: null,
           })
         })
@@ -469,7 +454,6 @@ export default function PromotionPage() {
         snapshot.forEach(function (child) {
           results[child.key] = child.val()
         })
-
         setCampaignData(reverseData(results))
       }
 

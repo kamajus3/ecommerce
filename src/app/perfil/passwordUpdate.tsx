@@ -142,7 +142,7 @@ export function PasswordUpdate() {
       </div>
       <div className="mt-6 flex items-center justify-end gap-x-6">
         <Button type="submit" loading={isSubmitting}>
-          Alterar a passe
+          Salvar
         </Button>
       </div>
     </form>

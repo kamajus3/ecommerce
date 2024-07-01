@@ -20,11 +20,10 @@ export function getProduct(id: string): Promise<ProductItem | undefined> {
   return new Promise((resolve) => {
     onValue(documentRef, (snapshot) => {
       const data = snapshot.val()
-      if (data !== null) {
+      if (!data) {
         resolve(data as ProductItem)
-      } else {
-        resolve(undefined)
       }
+      resolve(undefined)
     })
   })
 }
@@ -41,7 +40,7 @@ export async function getProducts(
     constraints.push(
       orderByChild('nameLowerCase'),
       startAt(props.search.toLowerCase()),
-      endAt(props.search.toLowerCase() + '\uf8ff'),
+      endAt(`${props.search.toLowerCase()}\uf8ff`),
     )
   }
 
@@ -84,11 +83,7 @@ export async function getProducts(
   if (props?.limit && props.orderBy !== 'mostViews')
     constraints.push(limitToLast(props.limit))
 
-  if (!props) {
-    productQuery = reference
-  } else {
-    productQuery = query(reference, ...constraints)
-  }
+  productQuery = props ? query(reference, ...constraints) : reference
 
   return new Promise((resolve) => {
     onValue(productQuery, (snapshot) => {
@@ -103,11 +98,9 @@ export async function getProducts(
           })
           resolve(filteredData)
         }
-
         resolve(data)
-      } else {
-        resolve({})
       }
+      resolve({})
     })
   })
 }

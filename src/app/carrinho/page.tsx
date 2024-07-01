@@ -11,6 +11,7 @@ import { Bounce, toast } from 'react-toastify'
 import { ProductItem, ProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
+import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import { campaignValidator } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -289,135 +290,143 @@ export default function CartPage() {
   }
 
   return (
-    <section className="bg-white min-h-screen overflow-hidden">
-      <Header.Client />
-      <article className="mb-2 mt-5">
-        <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
-          Carrinho de productos
-        </p>
-      </article>
-      <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
-        <div className="overflow-x-auto">
-          <DataState
-            dataCount={cartProducts.length}
-            loading={loading}
-            noDataMessage="Os productos que adicionar no carrinho aparecerão aqui"
-          >
-            <table className="table-auto w-full border border-[#dddddd]">
-              <thead>
-                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
-                    <input
-                      type="checkbox"
-                      id="select-all-products"
-                      name="select-all-products"
-                      checked={selectedProducts.length === cartProducts.length}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedProduct(cartProducts.map((p) => p.id))
-                        } else {
-                          setSelectedProduct([])
+    <ProtectedRoute
+      pathWhenAuthorizated="/"
+      pathWhenNotAuthorizated="/login"
+      role="client"
+    >
+      <section className="bg-white min-h-screen overflow-hidden">
+        <Header.Client />
+        <article className="mb-2 mt-5">
+          <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
+            Carrinho de productos
+          </p>
+        </article>
+        <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
+          <div className="overflow-x-auto">
+            <DataState
+              dataCount={cartProducts.length}
+              loading={loading}
+              noDataMessage="Os productos que adicionar no carrinho aparecerão aqui"
+            >
+              <table className="table-auto w-full border border-[#dddddd]">
+                <thead>
+                  <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
+                      <input
+                        type="checkbox"
+                        id="select-all-products"
+                        name="select-all-products"
+                        checked={
+                          selectedProducts.length === cartProducts.length
                         }
-                      }}
-                      className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedProduct(cartProducts.map((p) => p.id))
+                          } else {
+                            setSelectedProduct([])
+                          }
+                        }}
+                        className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
+                      />
+                    </th>
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                      Foto
+                    </th>
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                      Nome
+                    </th>
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                      Preço
+                    </th>
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                      Quantidade
+                    </th>
+                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
+                      Promoção
+                    </th>
+                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
+                      -
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-600 text-sm font-light">
+                  {productData.map((product) => (
+                    <CartTableRow
+                      key={product.id}
+                      product={product}
+                      setSelectedProduct={setSelectedProduct}
+                      selectedProducts={selectedProducts}
                     />
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Foto
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Nome
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Preço
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Quantidade
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Promoção
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-sm font-light">
-                {productData.map((product) => (
-                  <CartTableRow
-                    key={product.id}
-                    product={product}
-                    setSelectedProduct={setSelectedProduct}
-                    selectedProducts={selectedProducts}
-                  />
-                ))}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
 
-            <div className="mt-10 mb-10 gap-y-5">
-              <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
-                <span className="text-[#5e5f61] ">Total a pagar</span>
-                <span className="font-bold text-4xl">
-                  {money.format(totalPrice)}
-                </span>
-              </div>
-              <Button
-                style={{
-                  padding: '13px 18px 13px 18px',
-                  backgroundColor: '#00A4C7',
-                }}
-                onClick={() => {
-                  if (initialized) {
-                    if (user) {
-                      setModalOpen(true)
-                    } else {
-                      setOpenLoginModal(true)
+              <div className="mt-10 mb-10 gap-y-5">
+                <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
+                  <span className="text-[#5e5f61] ">Total a pagar</span>
+                  <span className="font-bold text-4xl">
+                    {money.format(totalPrice)}
+                  </span>
+                </div>
+                <Button
+                  style={{
+                    padding: '13px 18px 13px 18px',
+                    backgroundColor: '#00A4C7',
+                  }}
+                  onClick={() => {
+                    if (initialized) {
+                      if (user) {
+                        setModalOpen(true)
+                      } else {
+                        setOpenLoginModal(true)
+                      }
                     }
-                  }
-                }}
-                disabled={selectedProducts.length === 0}
-              >
-                Enviar o pedido
-              </Button>
-            </div>
-          </DataState>
-        </div>
-      </article>
+                  }}
+                  disabled={selectedProducts.length === 0}
+                >
+                  Enviar o pedido
+                </Button>
+              </div>
+            </DataState>
+          </div>
+        </article>
 
-      <Modal.Dialog
-        title="Iniciar sessão"
-        description="Você precisa estar com sessão iniciada para fazer um pedido?"
-        actionTitle="Entrar"
-        mainColor="#201D63"
-        action={() => {
-          router.push('/login')
-        }}
-        isOpen={openLoginModal}
-        setOpen={setOpenLoginModal}
-      />
+        <Modal.Dialog
+          title="Iniciar sessão"
+          description="Você precisa estar com sessão iniciada para fazer um pedido?"
+          actionTitle="Entrar"
+          mainColor="#201D63"
+          action={() => {
+            router.push('/login')
+          }}
+          isOpen={openLoginModal}
+          setOpen={setOpenLoginModal}
+        />
 
-      <Modal.Dialog
-        title="Confirmar pedido"
-        description="Você tem certeza que deseja realizar esse pedido? (accção irreversível)"
-        actionTitle="Confirmar"
-        mainColor="#201D63"
-        action={createOrder}
-        isOpen={confirmOrderModal}
-        setOpen={setConfirmOrderModal}
-      />
+        <Modal.Dialog
+          title="Confirmar pedido"
+          description="Você tem certeza que deseja realizar esse pedido? (accção irreversível)"
+          actionTitle="Confirmar"
+          mainColor="#201D63"
+          action={createOrder}
+          isOpen={confirmOrderModal}
+          setOpen={setConfirmOrderModal}
+        />
 
-      <Modal.ConfirmOrder
-        action={confirmOrder}
-        isOpen={isModalOpened}
-        setOpen={setModalOpen}
-        productData={productData}
-        selectedProducts={selectedProducts}
-      />
+        <Modal.ConfirmOrder
+          action={confirmOrder}
+          isOpen={isModalOpened}
+          setOpen={setModalOpen}
+          productData={productData}
+          selectedProducts={selectedProducts}
+        />
 
-      <Modal.OrderConfirmed
-        orderData={orderConfirmedModal}
-        setOrderData={setOrderConfirmedModal}
-      />
-    </section>
+        <Modal.OrderConfirmed
+          orderData={orderConfirmedModal}
+          setOrderData={setOrderConfirmedModal}
+        />
+      </section>
+    </ProtectedRoute>
   )
 }

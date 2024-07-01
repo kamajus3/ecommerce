@@ -6,15 +6,16 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
 }
 
 export default function Button(props: ButtonProps) {
+  const { className, ...rest } = props
   return (
     <button
-      {...props}
       className={clsx(
-        `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:brightness-50 ${props.className}`,
+        `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:brightness-50 ${className}`,
         {
           'transition-all hover:brightness-75 active:scale-90': !props.disabled,
         },
       )}
+      {...rest}
     >
       {props.loading ? (
         <div

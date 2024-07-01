@@ -143,6 +143,7 @@ const InvoiceBody = ({ orderData }: { orderData: Order }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <Image style={styles.logo} src="/logo.png" />
         <Text style={styles.title}>Factura profomora</Text>
       </View>

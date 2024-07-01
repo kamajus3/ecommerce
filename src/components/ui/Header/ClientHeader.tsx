@@ -9,11 +9,13 @@ import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import { useAuth } from '@/hooks/useAuth'
 import { getProduct } from '@/lib/firebase/database'
 import useCartStore from '@/store/CartStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import Avatar from '../Avatar'
+import Button from '../Button'
 
 interface ClientHeaderProps {
   searchDefault?: string | null
@@ -31,6 +33,9 @@ export default function ClientHeader(props: ClientHeaderProps) {
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+  const { userDB } = useAuth()
+  const isAdmin =
+    userDB && userDB.privileges && userDB.privileges.includes('admin')
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [isSearchOn, setSearchOn] = useState(false)
@@ -81,7 +86,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={clsx(
-              'max-sm:flex max-sm:w-[70vw] h-11 w-72 flex justify-between items-center bg-neutral-100',
+              'max-sm:flex max-sm:w-[70vw] h-11 w-72 flex justify-between items-center bg-neutral-300 rounded-l-md',
               {
                 'max-sm:hidden': !isSearchOn,
               },
@@ -92,15 +97,16 @@ export default function ClientHeader(props: ClientHeaderProps) {
               placeholder="Oque é que você precisa?"
               defaultValue={props.searchDefault || ''}
               {...register('searchValue')}
-              className="pl-4 h-full w-[85%] rounded-l bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
+              className="pl-4 h-full w-[85%] rounded-l-md bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
             ></input>
             <button
-              className="bg-main h-full w-[15%] flex items-center justify-center border-main rounded-r"
+              className="bg-main h-full w-[15%] flex items-center justify-center border-main rounded-r-md"
               type="submit"
             >
               <Search color="#fff" size={18} />
             </button>
           </form>
+
           <div
             className={clsx('h-11 flex gap-4 items-center justify-between', {
               hidden: isSearchOn,
@@ -112,11 +118,19 @@ export default function ClientHeader(props: ClientHeaderProps) {
             >
               <Search color="#000" size={27} />
             </button>
+
             <Link
               href="/carrinho"
-              className="inline-flex relative justify-center w-full border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+              className={clsx(
+                'inline-flex relative justify-center w-11 h-11 border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
+                {
+                  hidden: isAdmin,
+                },
+              )}
             >
               <ShoppingCart color="#000" size={27} />
+
+              {/* Products count in the cart indicator */}
               <div
                 className={clsx(
                   'absolute bottom-7 left-7 bg-main rounded-full flex justify-center items-center w-6 h-6',
@@ -139,9 +153,15 @@ export default function ClientHeader(props: ClientHeaderProps) {
             </Link>
 
             <div>
-              <Avatar.Root>
-                <Avatar.Client />
-              </Avatar.Root>
+              {isAdmin ? (
+                <Link href="/admin">
+                  <Button className="h-11">Voltar ao back-office</Button>
+                </Link>
+              ) : (
+                <Avatar.Root>
+                  <Avatar.Client />
+                </Avatar.Root>
+              )}
             </div>
           </div>
         </div>

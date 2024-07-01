@@ -16,7 +16,7 @@ import {
 } from 'firebase/auth'
 import { child, get, ref, set } from 'firebase/database'
 
-import { UserDatabase } from '@/@types'
+import { UserDatabase, UserRole } from '@/@types'
 import { auth, database } from '@/lib/firebase/config'
 
 interface AuthContextProps {
@@ -72,18 +72,14 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })
       .catch((error: AuthError) => {
-        let errorMessage = ''
-
         if (
           error.code === 'auth/user-not-found' ||
           error.code === 'auth/wrong-password' ||
           error.code === 'auth/invalid-credential'
         ) {
-          errorMessage = 'Essa conta não existe'
-        } else {
-          errorMessage = 'Acounteceu algum erro ao tentar inciar sessão'
+          throw new Error('Essa conta não existe')
         }
-        throw new Error(errorMessage)
+        throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })
 
     return userData
@@ -99,7 +95,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         const userData = {
           firstName: name,
           phone: user.phoneNumber || '',
-          privileges: ['client', 'create-orders'],
+          role: 'client' as UserRole,
         }
 
         await set(ref(database, `users/${user.uid}`), userData).catch(() => {
@@ -117,14 +113,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           id: user.uid,
         }
       })
-      .catch((error: AuthError) => {
-        let errorMessage = ''
-        if (error.code === 'auth/email-already-in-use') {
-          errorMessage = 'Já existe uma conta usando esse endereço de e-mail'
-        } else {
-          errorMessage = 'Acounteceu algum erro ao tentar criar a conta'
-        }
-        throw new Error(errorMessage)
+      .catch(() => {
+        throw new Error('Aconteceu algum erro ao tentar criar a conta')
       })
 
     return userData
@@ -148,6 +138,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
         setUser(user)
       }
+
       setInitialized(true)
     })
     return () => {

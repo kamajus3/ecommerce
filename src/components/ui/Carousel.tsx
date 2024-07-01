@@ -12,6 +12,7 @@ import {
 } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
+import contants from '@/constants'
 import { useCampaign } from '@/hooks/useCampaign'
 import useDimensions from '@/hooks/useDimensions'
 
@@ -59,7 +60,7 @@ export default function Carousel() {
                     style={{
                       width: '100%',
                       padding: '13px 18px 13px 18px',
-                      backgroundColor: '#00A4C7',
+                      backgroundColor: contants.colors.secondary,
                     }}
                   >
                     Ver productos

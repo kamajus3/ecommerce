@@ -13,7 +13,6 @@
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.3.4",
     "@react-pdf/renderer": "^3.4.4",
-    "axios": "^1.6.7",
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "file-saver": "^2.0.5",
@@ -33,10 +32,7 @@
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",
-    "@types/ejs": "^3.1.5",
     "@types/file-saver": "^2.0.7",
-    "@types/html-pdf": "^3.0.3",
-    "@types/jsdom": "^21.1.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

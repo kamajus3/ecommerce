@@ -182,19 +182,19 @@ export default function ProductPage() {
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        set(ref(database, 'products/' + id), {
+        set(ref(database, `products/${id}`), {
           name: data.name,
           nameLowerCase: data.name.toLocaleLowerCase(),
           quantity: data.quantity,
           price: data.price,
           category: data.category,
           description: data.description,
-          photo,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          photo,
         })
           .then(() => {
-            toast.success(`Producto postada com sucesso`, {
+            toast.success('Producto postada com sucesso', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -207,7 +207,7 @@ export default function ProductPage() {
             })
           })
           .catch(() => {
-            toast.error(`Erro a fazer a postagem`, {
+            toast.error('Erro a fazer a postagem', {
               position: 'top-right',
               autoClose: 5000,
               hideProgressBar: false,
@@ -221,7 +221,7 @@ export default function ProductPage() {
           })
       })
       .catch(() => {
-        toast.error(`Erro a fazer a postagem`, {
+        toast.error('Erro a fazer a postagem', {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -314,8 +314,7 @@ export default function ProductPage() {
         get(child(ref(database), `campaigns/${campaign.id}`)).then(
           (snapshot) => {
             if (snapshot.exists()) {
-              set(ref(database, `campaigns/${campaign.id}`), {
-                ...snapshot.val(),
+              update(ref(database, `campaigns/${campaign.id}`), {
                 products: snapshot
                   .val()
                   .products.filter((p: string) => p !== id),

@@ -128,7 +128,7 @@ export default function CartPage() {
     <ProtectedRoute
       pathWhenAuthorizated="/"
       pathWhenNotAuthorizated="/login"
-      privileges={['client']}
+      role="client"
     >
       <section className="bg-white min-h-screen overflow-hidden">
         <Header.Client />

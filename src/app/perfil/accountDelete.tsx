@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ref, remove } from 'firebase/database'
-import { Trash } from 'lucide-react'
 import { Bounce, toast } from 'react-toastify'
 
 import Button from '@/components/ui/Button'
@@ -42,33 +41,44 @@ export default function AccountDelete() {
   }
 
   return (
-    <article className="flex items-center justify-center p-12 border-t border-gray-900/10">
-      <Button
-        className="bg-red-500 px-5 py-3"
-        onClick={() => {
-          setPasswordModal(true)
-        }}
-      >
-        <Trash />
-        Apagar a conta
-      </Button>
-      <Modal.Dialog
-        title="Apagar a conta (acção irreversível)"
-        description="Você tem certeza que queres apagar a sua conta definitivamente? Obs: Os seus pedidos não serão cancelados apagando a sua conta"
-        actionTitle="Apagar"
-        mainColor="#dc2626"
-        action={deleteAccount}
-        isOpen={openDeleteModal}
-        setOpen={setOpenDeleteModal}
-      />
+    <article className="p-10">
+      <div className="border-b border-gray-900/10 pb-12">
+        <h2 className="text-base font-semibold leading-7 text-gray-900">
+          Apagar conta
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-gray-600">
+          Delete permanentemente a sua conta pessoal e todo o seu conteúdo do
+          Racius Care. Esta ação não é reversível, por isso proceda com
+          precaução. (os seus pedidos não serão cancelados)
+        </p>
+        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          <Button
+            className="bg-red-500 px-5 py-3"
+            onClick={() => {
+              setPasswordModal(true)
+            }}
+          >
+            Apagar a conta
+          </Button>
+        </div>
+        <Modal.Dialog
+          title="Apagar a conta (acção irreversível)"
+          description="Você tem certeza que queres apagar a sua conta definitivamente? Obs: Os seus pedidos não serão cancelados apagando a sua conta"
+          actionTitle="Apagar"
+          mainColor="#dc2626"
+          action={deleteAccount}
+          isOpen={openDeleteModal}
+          setOpen={setOpenDeleteModal}
+        />
 
-      <Modal.Password
-        action={() => {
-          setOpenDeleteModal(true)
-        }}
-        isOpen={openPasswordModal}
-        setOpen={setPasswordModal}
-      />
+        <Modal.Password
+          action={() => {
+            setOpenDeleteModal(true)
+          }}
+          isOpen={openPasswordModal}
+          setOpen={setPasswordModal}
+        />
+      </div>
     </article>
   )
 }

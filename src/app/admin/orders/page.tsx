@@ -46,7 +46,7 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
   const [openSoldModal, setOpenSoldModal] = useState(false)
 
   return (
-    <>
+    <div>
       <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
         <td className="p-3">
           <div className="text-center text-black font-medium">{order.id}</div>
@@ -168,7 +168,7 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
         isOpen={openSoldModal}
         setOpen={setOpenSoldModal}
       />
-    </>
+    </div>
   )
 }
 

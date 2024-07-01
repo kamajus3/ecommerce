@@ -3,19 +3,20 @@
 import { ReactNode, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
+import { UserRole } from '@/@types'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
 
 interface ProtectedRouteProps {
   children: ReactNode
-  privileges?: string[]
+  role?: UserRole
   pathWhenAuthorizated?: string
   pathWhenNotAuthorizated?: string
 }
 
 export default function ProtectedRoute({
   children,
-  privileges = ['admin'],
+  role = 'admin',
   pathWhenAuthorizated = '/admin/dashboard',
   pathWhenNotAuthorizated = '/admin/login',
 }: ProtectedRouteProps) {
@@ -23,22 +24,9 @@ export default function ProtectedRoute({
   const router = useRouter()
   const pathname = usePathname()
 
-  function checkPrivileges(
-    userPrivileges: string[],
-    requiredPrivileges: string[],
-  ) {
-    for (let i = 0; i < requiredPrivileges.length; i++) {
-      if (!userPrivileges.includes(requiredPrivileges[i])) {
-        return false
-      }
-    }
-
-    return true
-  }
-
   useEffect(() => {
-    if (userDB && user && privileges && initialized) {
-      const userIsValid = checkPrivileges(userDB.privileges, privileges)
+    if (userDB && user && role && initialized) {
+      const userIsValid = role === userDB.role
 
       if (userIsValid && pathname === pathWhenNotAuthorizated) {
         router.replace(pathWhenAuthorizated)
@@ -60,15 +48,12 @@ export default function ProtectedRoute({
     router,
     pathname,
     initialized,
-    privileges,
+    role,
   ])
 
   return (
     <>
-      {(userDB &&
-        user &&
-        checkPrivileges(userDB.privileges, privileges) &&
-        initialized) ||
+      {(userDB && user && role === userDB.role && initialized) ||
       pathname === pathWhenNotAuthorizated ? (
         children
       ) : (
