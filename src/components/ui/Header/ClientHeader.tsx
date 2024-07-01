@@ -34,8 +34,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
     resolver: zodResolver(schema),
   })
   const { userDB } = useAuth()
-  const isAdmin =
-    userDB && userDB.privileges && userDB.privileges.includes('admin')
+  const isAdmin = userDB && userDB.role && userDB.role === 'admin'
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [isSearchOn, setSearchOn] = useState(false)
