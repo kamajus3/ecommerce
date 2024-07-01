@@ -61,13 +61,11 @@ export default function PerfilUpdate() {
           firstName: data.firstName,
           lastName: data.lastName,
           address: data.address,
-          privileges: userDB.privileges,
         })
           .then(async () => {
             await updateProfile(user, {
               displayName: `${data.firstName} ${data.lastName}`,
             })
-
             updateFieldAsDefault(data)
 
             toast.success('A tua conta foi atualizada com sucesso', {
