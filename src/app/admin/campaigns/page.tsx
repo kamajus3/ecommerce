@@ -294,7 +294,6 @@ export default function PromotionPage() {
         startDate: data.startDate || null,
         finishDate: data.finishDate || null,
         products: newDataProductsId,
-        photo: oldPhoto,
         updatedAt: new Date().toISOString(),
       })
         .then(async () => {

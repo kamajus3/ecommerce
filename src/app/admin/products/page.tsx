@@ -251,7 +251,6 @@ export default function ProductPage() {
         price: data.price,
         category: data.category,
         description: data.description,
-        photo: oldProduct.photo,
         updatedAt: new Date().toISOString(),
       })
         .then(() => {
