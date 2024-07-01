@@ -27,7 +27,7 @@ import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
-import { publishedSince, URLtoFile } from '@/functions'
+import { publishedSince } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
 import { database, storage } from '@/lib/firebase/config'
 import { getProducts } from '@/lib/firebase/database'
@@ -268,15 +268,11 @@ export default function PromotionPage() {
   async function _edit(data: FormData, oldData?: CampaignEdit) {
     if (oldData && oldData.id) {
       const reference = storageRef(storage, `/campaigns/${oldData.id}`)
-      const oldPhoto = await URLtoFile(oldData.photo)
-
       const campaignProducts = await getProducts({
         campaign: oldData.id,
       })
 
-      if (oldPhoto !== data.photo) {
-        await uploadBytes(reference, data.photo)
-      }
+      await uploadBytes(reference, data.photo)
 
       const oldDataProductsId = Object.entries(campaignProducts).map(
         ([id]) => id,
@@ -294,6 +290,7 @@ export default function PromotionPage() {
         startDate: data.startDate || null,
         finishDate: data.finishDate || null,
         products: newDataProductsId,
+        photo: oldData.photo,
         updatedAt: new Date().toISOString(),
       })
         .then(async () => {

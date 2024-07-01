@@ -31,7 +31,7 @@ import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import contants from '@/constants'
-import { publishedSince, URLtoFile } from '@/functions'
+import { publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database, storage } from '@/lib/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -238,12 +238,8 @@ export default function ProductPage() {
   async function _edit(data: FormData, oldProduct?: ProductItem) {
     if (oldProduct && oldProduct.id) {
       const reference = storageRef(storage, `/products/${oldProduct.id}`)
-      const oldPhoto = await URLtoFile(oldProduct.photo)
 
-      if (oldPhoto !== data.photo) {
-        await uploadBytes(reference, data.photo)
-      }
-
+      await uploadBytes(reference, data.photo)
       update(ref(database, `/products/${oldProduct.id}`), {
         name: data.name,
         nameLowerCase: data.name.toLocaleLowerCase(),
@@ -251,6 +247,7 @@ export default function ProductPage() {
         price: data.price,
         category: data.category,
         description: data.description,
+        photo: oldProduct.photo,
         updatedAt: new Date().toISOString(),
       })
         .then(() => {
