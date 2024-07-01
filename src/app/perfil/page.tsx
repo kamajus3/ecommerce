@@ -13,7 +13,7 @@ export default function PerfilPage() {
     <ProtectedRoute
       pathWhenAuthorizated="/"
       pathWhenNotAuthorizated="/login"
-      privileges={['client']}
+      role="client"
     >
       <section className="bg-white overflow-hidden">
         <Header.Client />
