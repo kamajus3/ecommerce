@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { notFound, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import clsx from 'clsx'
 import { child, get, ref } from 'firebase/database'
 
@@ -25,13 +25,9 @@ export function CampaingPage() {
   useEffect(() => {
     async function unsubscribed() {
       get(child(ref(database), `campaigns/${campaign}`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          setCampaignData(snapshot.val())
-          if (!campaignValidator(snapshot.val())) {
-            notFound()
-          }
-        } else {
-          notFound()
+        const data = snapshot.val()
+        if (snapshot.exists() && campaignValidator(data)) {
+          setCampaignData(data)
         }
       })
 
@@ -40,7 +36,6 @@ export function CampaingPage() {
       }).then((products) => {
         setProductData(products)
       })
-
       setLoading(false)
     }
 

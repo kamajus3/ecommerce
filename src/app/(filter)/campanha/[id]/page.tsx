@@ -18,6 +18,8 @@ export async function generateMetadata({
           resolve({
             title: 'Campanha não encontrada.',
           })
+
+          return { notFound: true }
         }
         resolve({
           title: snapshot.val().title,
@@ -34,6 +36,8 @@ export async function generateMetadata({
         resolve({
           title: 'Campanha não encontrada.',
         })
+
+        return { notFound: true }
       }
     })
   })

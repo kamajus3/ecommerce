@@ -273,6 +273,8 @@ export default function PromotionPage() {
       const reference = storageRef(storage, `/campaigns/${oldData.id}`)
       const oldPhoto = await URLtoFile(oldData.photo)
 
+      console.log(data.products)
+
       const campaignProducts = await getProducts({
         campaign: oldData.id,
       })
@@ -281,9 +283,11 @@ export default function PromotionPage() {
         await uploadBytes(reference, data.photo)
       }
 
-      const oldDataProductsId = oldData.products
-      const newDataProductsId = campaignProducts
-        ? campaignProducts.map((p) => p.id)
+      const oldDataProductsId = Object.entries(campaignProducts).map(
+        ([id]) => id,
+      )
+      const newDataProductsId = data.products
+        ? data.products.map((p) => p.id)
         : null
 
       update(ref(database, `/campaigns/${oldData.id}`), {
@@ -319,16 +323,16 @@ export default function PromotionPage() {
                     )
                   : []
 
-              campaignProducts.map(async (p) => {
-                const product = await getProduct(p.id)
+              Object.entries(campaignProducts).map(async ([id]) => {
+                const product = await getProduct(id)
 
-                if (deletedProducts.includes(p.id)) {
-                  await set(ref(database, `products/${p.id}`), {
+                if (deletedProducts.includes(id) || data.default) {
+                  await set(ref(database, `products/${id}`), {
                     ...product,
                     campaign: null,
                   })
                 } else {
-                  await set(ref(database, `products/${p.id}`), {
+                  await set(ref(database, `products/${id}`), {
                     ...product,
                     campaign: {
                       id: oldData.id,

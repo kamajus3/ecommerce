@@ -4,6 +4,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react'
 import { child, get, ref } from 'firebase/database'
 
 import { CampaignBase } from '@/@types'
+import { campaignValidator } from '@/functions'
 import { database } from '@/lib/firebase/config'
 
 interface CampaignContextProps {
@@ -14,7 +15,7 @@ export const CampaignContext = createContext<CampaignContextProps>({
   campaignData: {},
 })
 
-export default function PromotionProvider({
+export default function CampaignProvider({
   children,
 }: {
   children: ReactNode
@@ -27,7 +28,17 @@ export default function PromotionProvider({
     async function unsubscribed() {
       get(child(ref(database), 'campaigns/')).then((snapshot) => {
         if (snapshot.exists()) {
-          setCampaignData(snapshot.val())
+          const newObj: Record<string, CampaignBase> = {}
+          const obj = snapshot.val()
+
+          const revObj = Object.keys(obj).reverse()
+          revObj.forEach(function (i) {
+            if (campaignValidator(obj[i]) || obj[i].default === true) {
+              newObj[i] = obj[i]
+            }
+          })
+
+          setCampaignData(newObj)
         }
       })
     }
