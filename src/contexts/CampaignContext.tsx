@@ -30,13 +30,22 @@ export default function CampaignProvider({
         if (snapshot.exists()) {
           const newObj: Record<string, CampaignBase> = {}
           const obj = snapshot.val()
+          let campaignDefaultId
 
           const revObj = Object.keys(obj).reverse()
           revObj.forEach(function (i) {
             if (campaignValidator(obj[i]) || obj[i].default === true) {
+              if (obj[i].default) {
+                campaignDefaultId = i
+              }
+
               newObj[i] = obj[i]
             }
           })
+
+          if (Object.entries(revObj).length >= 3 && campaignDefaultId) {
+            delete newObj[campaignDefaultId]
+          }
 
           setCampaignData(newObj)
         }

@@ -17,13 +17,13 @@ interface CategoryFilterProps {
 
 function CategoryCard(props: Category) {
   return (
-    <Link href={`/categoria/${props.label}`}>
+    <Link className="inline-block w-48" href={`/categoria/${props.label}`}>
       <div
         style={{
           backgroundImage: `url(${props.img})`,
           backgroundSize: 'cover',
         }}
-        className="h-48 w-48 bg-[#d3d3d3] rounded-full border flex gap-y-2 flex-col justify-center items-center"
+        className="h-48 bg-[#d3d3d3] rounded-full border flex gap-y-2 flex-col justify-center items-center"
       ></div>
 
       <p className="text-black font-medium mt-5 text-center">{props.label}</p>

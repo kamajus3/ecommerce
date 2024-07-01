@@ -85,7 +85,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
           <form
             onSubmit={handleSubmit(onSubmit)}
             className={clsx(
-              'max-sm:flex max-sm:w-[70vw] h-11 w-72 flex justify-between items-center bg-neutral-300 rounded-l-md',
+              'max-sm:flex max-sm:w-[70vw] h-11 w-72 flex justify-between items-center bg-[#eaeaea] rounded-l-md',
               {
                 'max-sm:hidden': !isSearchOn,
               },
