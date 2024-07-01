@@ -38,7 +38,7 @@ export default function SignIn() {
     signInWithEmail(data.email, data.password)
       .then(async (user) => {
         if (user) {
-          if (user.privileges.includes('admin')) {
+          if (user.role === 'admin') {
             router.push('/admin/dashboard')
           } else {
             await logout()

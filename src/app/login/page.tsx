@@ -38,24 +38,21 @@ export default function SignIn() {
     signInWithEmail(data.email, data.password)
       .then(async (user) => {
         if (user) {
-          if (!user.privileges.includes('admin')) {
+          if (user.role !== 'admin') {
             router.push('/')
           } else {
             await logout()
-            toast.error(
-              'Essa conta não tem autorização para fazer login na área de cliente',
-              {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                transition: Bounce,
-              },
-            )
+            toast.error('Acounteceu algum erro ao tentar inciar sessão', {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: 'light',
+              transition: Bounce,
+            })
           }
         }
       })
