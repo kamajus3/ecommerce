@@ -106,9 +106,9 @@ function CartTableRow({
       </td>
       <td className="p-3">
         <div className="text-center text-[#919298] font-medium">
-          {product.promotion &&
-          campaignValidator(product.promotion) === 'promotion'
-            ? `${product.promotion?.reduction} %`
+          {product.campaign &&
+          campaignValidator(product.campaign) === 'campaign-with-promotion'
+            ? `${product.campaign?.reduction} %`
             : '-'}
         </div>
       </td>
@@ -170,10 +170,10 @@ export default function CartPage() {
           await getProduct(p.id).then((product) => {
             if (product) {
               const productPrice =
-                product.promotion?.reduction &&
-                product.promotion?.reduction !== 0
+                product.campaign?.reduction &&
+                Number(product.campaign?.reduction) !== 0
                   ? product.price -
-                    product.price * (product.promotion.reduction / 100)
+                    product.price * (Number(product.campaign.reduction) / 100)
                   : product.price
 
               fetchedProducts.push({
@@ -253,7 +253,9 @@ export default function CartPage() {
           name: product.name,
           quantity: cartProduct.quantity,
           price: product.price,
-          promotion: product.promotion?.reduction || null,
+          promotion: product.campaign?.reduction
+            ? Number(product.campaign?.reduction)
+            : null,
         })
       }
     }

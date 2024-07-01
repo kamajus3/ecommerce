@@ -37,7 +37,7 @@ export function publishedSince(date: string): string {
 
 export function campaignValidator(
   campaign?: CampaignProduct,
-): undefined | 'campaign' | 'promotion' {
+): undefined | 'campaign' | 'campaign-with-promotion' {
   if (
     campaign &&
     campaign.startDate &&
@@ -53,7 +53,7 @@ export function campaignValidator(
         return 'campaign'
       }
 
-      return 'promotion'
+      return 'campaign-with-promotion'
     }
   }
 }

@@ -80,7 +80,7 @@ export interface ProductOrder {
   name: string
   quantity: number
   price: number
-  campaign?: number | null
+  promotion?: number | null
 }
 
 export interface Order {

@@ -61,7 +61,8 @@ export default async function ProductPage({
             {product && (
               <>
                 {product.campaign &&
-                  campaignValidator(product.campaign) === 'promotion' && (
+                  campaignValidator(product.campaign) ===
+                    'campaign-with-promotion' && (
                     <Link
                       href={`/campanha/${product.campaign?.id}`}
                       className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
@@ -107,7 +108,7 @@ export default async function ProductPage({
             <span className="block mt-2 text-xl font-semibold text-gray-700">
               {product.campaign &&
               product.campaign.reduction &&
-              campaignValidator(product.campaign) === 'promotion'
+              campaignValidator(product.campaign) === 'campaign-with-promotion'
                 ? money.format(
                     product.price -
                       product.price *
@@ -116,7 +117,8 @@ export default async function ProductPage({
                 : money.format(product.price)}
             </span>
             {product.campaign &&
-              campaignValidator(product.campaign) === 'promotion' && (
+              campaignValidator(product.campaign) ===
+                'campaign-with-promotion' && (
                 <span className="font-medium line-through text-gray-500 text-sm">
                   {money.format(product.price)}
                 </span>

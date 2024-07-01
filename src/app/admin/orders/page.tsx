@@ -263,6 +263,7 @@ export default function CartPage() {
     try {
       const databaseReference = ref(database, `orders/${orderId}`)
       await remove(databaseReference)
+
       toast.success('Pedido cancelado com sucesso', {
         position: 'top-right',
         autoClose: 5000,
