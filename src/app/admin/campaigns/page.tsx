@@ -135,7 +135,7 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
           action={_edit}
-          defaultData={data}
+          defaultData={{ ...data }}
         />
       </td>
     </tr>

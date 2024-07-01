@@ -37,7 +37,7 @@ export default function DashBoard() {
         let usersCount = 0
 
         snapshot.forEach((data) => {
-          if (data.val().privileges.includes('client')) {
+          if (data.val().role === 'client') {
             usersCount++
           }
         })
@@ -45,7 +45,7 @@ export default function DashBoard() {
         setActiveUsers(usersCount)
       })
 
-      onValue(ref(database, '/promotions'), (snapshot) => {
+      onValue(ref(database, '/campaigns'), (snapshot) => {
         let campaignCount = 0
 
         snapshot.forEach((data) => {
@@ -130,7 +130,7 @@ export default function DashBoard() {
       <article>
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <Admin.Card
-            title="Pedidos"
+            title="Pedidos activos"
             quantity={activeOrders}
             rate={currenteAndPastMonthRate}
             rateMessage={

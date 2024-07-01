@@ -241,7 +241,7 @@ export default function CampaignModal(props: CampaignModalProps) {
     }
 
     setPhotoPreview(handlePhoto())
-  }, [props.defaultData, getValues])
+  }, [props.defaultData])
 
   useEffect(() => {
     async function unsubscribed() {
@@ -276,7 +276,7 @@ export default function CampaignModal(props: CampaignModalProps) {
     }
 
     unsubscribed()
-  }, [reset, props.defaultData, getValues])
+  }, [reset, props.defaultData])
 
   function closeModal() {
     props.setOpen(false)

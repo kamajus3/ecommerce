@@ -97,7 +97,7 @@ export default function SignIn() {
               </Field.Label>
               <Field.Input
                 type="email"
-                className="bg-[rgba(245,245,245,.3)] text-white"
+                className="bg-[#f5f5f54d] text-white"
                 {...register('email')}
                 error={errors.email}
               />
@@ -109,7 +109,7 @@ export default function SignIn() {
               </Field.Label>
               <Field.Input
                 type="password"
-                className="bg-[rgba(245,245,245,.3)] text-white"
+                className="bg-[#f5f5f54d] text-white"
                 {...register('password')}
                 error={errors.password}
               />
