@@ -23,6 +23,7 @@ import { Order } from '@/@types'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -52,37 +53,37 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
           <div className="text-center text-black font-medium">{order.id}</div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {order.products.length}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {`${order.firstName} ${order.lastName}`}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {order.phone}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {order.address}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {order.state === 'not-sold' ? 'Não vendido' : 'Vendido'}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {publishedSince(order.createdAt)}
           </div>
         </td>
         <td className="p-3">
-          <div className="text-center text-[#919298] font-medium">
+          <div className="text-center text-gray-400 font-medium">
             {money.format(
               order.products.reduce((total, product) => {
                 if (product.promotion) {
@@ -109,7 +110,7 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
               className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 disabled:cursor-not-allowed"
             >
               <span
-                className={clsx('text-[#adadad]  font-medium', {
+                className={clsx('text-disabledText font-medium', {
                   'text-red-500': order.state !== 'sold',
                 })}
               >
@@ -131,7 +132,7 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
             >
               <span
                 className={clsx('text-[#00A4C7] font-medium', {
-                  'text-[#adadad]': order.state === 'sold',
+                  'text-disabledText': order.state === 'sold',
                 })}
               >
                 Vendido
@@ -150,10 +151,10 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
         </td>
       </tr>
       <Modal.Dialog
-        title={`Cancelar pedido`}
+        title="Cancelar pedido"
         description="Você tem certeza que queres cancelar esse pedido?"
         actionTitle="Confirmar"
-        mainColor="#dc2626"
+        themeColor={contants.colors.error}
         action={deleteOrder}
         isOpen={openDeleteModal}
         setOpen={setOpenDeleteModal}
@@ -163,7 +164,6 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
         title="Colocar como vendido"
         description="Você tem queres colocar o estado desse pedido para vendido?"
         actionTitle="Confirmar"
-        mainColor="#201D63"
         action={putAsSold}
         isOpen={openSoldModal}
         setOpen={setOpenSoldModal}

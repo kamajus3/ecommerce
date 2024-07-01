@@ -1,10 +1,7 @@
-const colors = {
-  main: '#201D63',
-  secondary: '#00A4C7',
-}
+import { tailwindTheme } from '../../tailwind.config'
 
 const contants = {
-  colors,
+  colors: tailwindTheme.colors,
 }
 
 export default contants

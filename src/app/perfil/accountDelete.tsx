@@ -7,6 +7,7 @@ import { Bounce, toast } from 'react-toastify'
 
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
+import contants from '@/constants'
 import { auth, database } from '@/lib/firebase/config'
 
 export default function AccountDelete() {
@@ -65,7 +66,7 @@ export default function AccountDelete() {
           title="Apagar a conta (acção irreversível)"
           description="Você tem certeza que queres apagar a sua conta definitivamente? Obs: Os seus pedidos não serão cancelados apagando a sua conta"
           actionTitle="Apagar"
-          mainColor="#dc2626"
+          themeColor={contants.colors.error}
           action={deleteAccount}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}

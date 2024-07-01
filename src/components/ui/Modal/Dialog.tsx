@@ -1,6 +1,7 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
 import { AlertTriangle } from 'lucide-react'
 
+import contants from '@/constants'
 import { hexToRGBA } from '@/functions'
 import { Dialog, Transition } from '@headlessui/react'
 
@@ -8,7 +9,7 @@ import Button from '../Button'
 
 interface DialogModalProps {
   title: string
-  mainColor: string
+  themeColor?: string
   actionTitle: string
   action: () => void
   description: string
@@ -16,7 +17,10 @@ interface DialogModalProps {
   setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function DialogModal(props: DialogModalProps) {
+export default function DialogModal({
+  themeColor = contants.colors.main,
+  ...props
+}: DialogModalProps) {
   const cancelButtonRef = useRef(null)
 
   return (
@@ -55,7 +59,7 @@ export default function DialogModal(props: DialogModalProps) {
                   <div className="sm:flex sm:items-start">
                     <div
                       style={{
-                        backgroundColor: hexToRGBA(props.mainColor, 0.4),
+                        backgroundColor: hexToRGBA(themeColor, 0.4),
                       }}
                       className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10"
                     >
@@ -84,7 +88,7 @@ export default function DialogModal(props: DialogModalProps) {
                   <Button
                     type="button"
                     className="w-auto max-sm:w-full"
-                    style={{ backgroundColor: props.mainColor }}
+                    style={{ backgroundColor: themeColor }}
                     onClick={() => {
                       props.setOpen(false)
                       props.action()

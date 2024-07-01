@@ -12,6 +12,7 @@ import { ProductItem, ProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
+import contants from '@/constants'
 import { campaignValidator } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -96,17 +97,17 @@ function CartTableRow({
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {money.format(product.price)}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           x{product.quantity}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {product.campaign &&
           campaignValidator(product.campaign) === 'campaign-with-promotion'
             ? `${product.campaign?.reduction} %`
@@ -126,7 +127,7 @@ function CartTableRow({
           title="Remover producto"
           description="Você tem certeza que queres remover esse producto do carinho?"
           actionTitle="Remover"
-          mainColor="#dc2626"
+          themeColor={contants.colors.error}
           action={() => {
             removeFromCart(product.id)
             notifyDelete()
@@ -144,7 +145,6 @@ export default function CartPage() {
   const [totalPrice, setTotalPrice] = useState(0)
   const [productData, setProductData] = useState<CartProduct[]>([])
 
-  // Modals
   const [isModalOpened, setModalOpen] = useState(false)
   const [openLoginModal, setOpenLoginModal] = useState(false)
   const [confirmOrderModal, setConfirmOrderModal] = useState(false)
@@ -226,7 +226,7 @@ export default function CartPage() {
           setOrderConfirmedModal([true, orderId])
         })
         .catch(() => {
-          toast.error('Houve um erro ao tentar fazer o teu pedido', {
+          toast.error('Erro ao tentar fazer o teu pedido', {
             position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
@@ -272,10 +272,9 @@ export default function CartPage() {
         createdAt: new Date().toISOString(),
         products: productsList,
       })
-
       setConfirmOrderModal(true)
     } else {
-      toast.error('Houve um erro ao tentar fazer o teu pedido', {
+      toast.error('Erro ao tentar fazer o teu pedido', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -364,7 +363,7 @@ export default function CartPage() {
 
               <div className="mt-10 mb-10 gap-y-5">
                 <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
-                  <span className="text-[#5e5f61] ">Total a pagar</span>
+                  <span className="text-gray-500">Total a pagar</span>
                   <span className="font-bold text-4xl">
                     {money.format(totalPrice)}
                   </span>
@@ -372,7 +371,7 @@ export default function CartPage() {
                 <Button
                   style={{
                     padding: '13px 18px 13px 18px',
-                    backgroundColor: '#00A4C7',
+                    backgroundColor: contants.colors.secondary,
                   }}
                   onClick={() => {
                     if (initialized) {
@@ -396,7 +395,6 @@ export default function CartPage() {
           title="Iniciar sessão"
           description="Você precisa estar com sessão iniciada para fazer um pedido?"
           actionTitle="Entrar"
-          mainColor="#201D63"
           action={() => {
             router.push('/login')
           }}
@@ -408,7 +406,6 @@ export default function CartPage() {
           title="Confirmar pedido"
           description="Você tem certeza que deseja realizar esse pedido? (accção irreversível)"
           actionTitle="Confirmar"
-          mainColor="#201D63"
           action={createOrder}
           isOpen={confirmOrderModal}
           setOpen={setConfirmOrderModal}

@@ -1,5 +1,14 @@
 import type { Config } from 'tailwindcss'
 
+export const tailwindTheme = {
+  colors: {
+    main: '#201D63',
+    secondary: '#00A4C7',
+    error: '#DC2626',
+    disabledText: '#ADADAD',
+  },
+}
+
 const config: Config = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -7,18 +16,9 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-      colors: {
-        main: '#201D63',
-        secondary: '#00A4C7',
-      },
-    },
+    extend: tailwindTheme,
   },
   plugins: [],
 }
+
 export default config

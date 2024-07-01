@@ -84,22 +84,22 @@ function TableRow({ product, _delete, _edit }: TableRowProps) {
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {money.format(product.price)}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {product.quantity}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {publishedSince(product.createdAt)}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {publishedSince(product.updatedAt)}
         </div>
       </td>
@@ -116,7 +116,7 @@ function TableRow({ product, _delete, _edit }: TableRowProps) {
           title="Apagar producto"
           description="Você tem certeza que queres apagar esse producto difinitivamente?"
           actionTitle="Apagar"
-          mainColor="#dc2626"
+          themeColor={contants.colors.error}
           action={_delete}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}

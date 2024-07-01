@@ -27,6 +27,7 @@ import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
 import { database, storage } from '@/lib/firebase/config'
@@ -67,22 +68,22 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
         <div className="text-center text-black font-medium">{data.title}</div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {data.startDate ? publishedSince(data.startDate) : '-'}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {data.finishDate ? publishedSince(data.finishDate) : '-'}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {publishedSince(data.createdAt)}
         </div>
       </td>
       <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
+        <div className="text-center text-gray-400 font-medium">
           {publishedSince(data.updatedAt)}
         </div>
       </td>
@@ -114,7 +115,7 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
           title="Apagar a campanha"
           description="Você tem certeza que queres apagar essa campanha?"
           actionTitle="Apagar"
-          mainColor="#dc2626"
+          themeColor={contants.colors.error}
           action={_delete}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
