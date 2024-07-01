@@ -51,7 +51,7 @@ export function CampaingPage() {
       {campaignData && (
         <article className="p-4 mx-auto mt-9">
           {campaignData.finishDate &&
-            campaignValidator(campaignData) === 'promotion' && (
+            campaignValidator(campaignData) === 'campaign-with-promotion' && (
               <span className="text-black font-medium text-sm uppercase">
                 A promoção termina {publishedSince(campaignData.finishDate)}
               </span>
