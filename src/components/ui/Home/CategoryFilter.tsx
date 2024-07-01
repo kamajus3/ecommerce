@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -17,15 +18,18 @@ interface CategoryFilterProps {
 
 function CategoryCard(props: Category) {
   return (
-    <Link className="inline-block w-48" href={`/categoria/${props.label}`}>
-      <div
-        style={{
-          backgroundImage: `url(${props.img})`,
-          backgroundSize: 'cover',
-        }}
-        className="h-48 bg-[#d3d3d3] rounded-full border flex gap-y-2 flex-col justify-center items-center"
-      ></div>
-
+    <Link className="block w-48" href={`/categoria/${props.label}`}>
+      <div className="w-48 h-48 relative">
+        <Image
+          src={props.img}
+          alt={props.label}
+          objectFit="cover"
+          objectPosition="center"
+          draggable={false}
+          className="select-none rounded-full border"
+          fill
+        />
+      </div>
       <p className="text-black font-medium mt-5 text-center">{props.label}</p>
     </Link>
   )

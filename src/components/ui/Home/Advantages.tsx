@@ -39,7 +39,7 @@ export default function Advantages() {
         icon="headset"
       />
       <AdvantageCard
-        title=" GARANTIA DE DEVOLUÇÃO DE DINHEIRO"
+        title="GARANTIA DE DEVOLUÇÃO DE DINHEIRO"
         description="Devolvemos o dinheiro em caso de mau estado de conservação do producto"
         icon="shield-check"
       />
