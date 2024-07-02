@@ -36,7 +36,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
     resolver: zodResolver(schema),
   })
   const { userDB } = useAuth()
-  const isAdmin = userDB && userDB.role && userDB.role === 'admin'
+  const userIsAdmin = userDB ? userDB.role === 'admin' : false
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [isSearchOn, setSearchOn] = useState(false)
@@ -127,7 +127,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
               className={clsx(
                 'inline-flex relative justify-center w-11 h-11 border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
                 {
-                  hidden: isAdmin,
+                  hidden: userIsAdmin,
                 },
               )}
             >
@@ -154,18 +154,20 @@ export default function ClientHeader(props: ClientHeaderProps) {
                 </span>
               </div>
             </Link>
-
-            <div>
-              {isAdmin ? (
+            {userIsAdmin && (
+              <div>
                 <Link href="/admin">
                   <Button className="h-11">Voltar ao back-office</Button>
                 </Link>
-              ) : (
+              </div>
+            )}
+            {!userIsAdmin && (
+              <div>
                 <Avatar.Root>
                   <Avatar.Client />
                 </Avatar.Root>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </article>

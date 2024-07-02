@@ -4,6 +4,7 @@ import { X } from 'lucide-react'
 
 import { ProductItem } from '@/@types'
 import { campaignValidator } from '@/functions'
+import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 
@@ -12,11 +13,14 @@ export default function ProductCard(product: ProductItem) {
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
+  const { userDB } = useAuth()
+  const userIsAdmin = userDB ? userDB.role === 'admin' : false
+
   return (
     <div className="flex-shrink-0 grow-0 overflow-hidden">
       <div className="w-72 h-72 rounded-md group-hover:opacity-75">
         <div className="w-full h-full relative select-none" draggable={false}>
-          {cartProducts.find((p) => p.id === product.id) && (
+          {cartProducts.find((p) => p.id === product.id) && !userIsAdmin && (
             <button
               onClick={() => removeFromCart(product.id)}
               className="absolute h-10 w-10 flex items-center justify-center bg-secondary hover:brightness-90 active:brightness-75 z-10"
