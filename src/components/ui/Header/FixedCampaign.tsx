@@ -9,13 +9,13 @@ export default function FixedCampaign() {
 
   return (
     <div>
-      {informationsData.defaultCampaign && (
+      {informationsData.fixedCampaign && (
         <Link
-          href={`/campanha/${informationsData.defaultCampaign}`}
+          href={`/campanha/${informationsData.fixedCampaign}`}
           className="inline-block w-full bg-secondary p-[6px]"
         >
           <p className="text-center text-sm font-bold">
-            {campaignData[informationsData.defaultCampaign].title}
+            {campaignData[informationsData.fixedCampaign].title}
           </p>
         </Link>
       )}

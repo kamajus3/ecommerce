@@ -55,28 +55,26 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState<boolean>(false)
   const [user, setUser] = useState<User | null>()
   const [userDB, setUserDB] = useState<UserDatabase | null>()
+  const [userDBRole, setUserDBRole] = useState<UserRole | undefined>()
 
   async function signInWithEmail(
     email: string,
     password: string,
     userRole: UserRole,
   ) {
+    setUserDBRole(userRole)
     const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
-        const snapshot = await get(
-          child(ref(database), `users/${user.uid}`),
-        ).catch(() => {
-          throw new Error('Acounteceu algum erro ao tentar inciar sessão')
-        })
-        const userFromDB = snapshot.val()
+        const snapshot = await get(child(ref(database), `users/${user.uid}`))
 
-        if (snapshot.exists() && userFromDB) {
+        if (snapshot.exists()) {
+          const userDBData = snapshot.val()
           if (snapshot.val().role === userRole) {
             setUser(user)
-            setUserDB(userFromDB)
-
-            return userFromDB
+            setUserDB(userDBData)
+            return userDBData
           }
+          await auth.signOut()
         }
         throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })
@@ -86,7 +84,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           error.code === 'auth/wrong-password' ||
           error.code === 'auth/invalid-credential'
         ) {
-          throw new Error('Essa conta não existe')
+          throw new Error('Acounteceu algum erro ao tentar inciar sessão')
         }
         throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })
@@ -107,20 +105,19 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           role: 'client' as UserRole,
         }
 
+        const userDBData = {
+          id: user.uid,
+          ...userData,
+        }
+
         await set(ref(database, `users/${user.uid}`), userData).catch(() => {
           throw new Error('Aconteceu algum erro ao tentar criar a conta')
         })
 
         setUser(user)
-        setUserDB({
-          id: user.uid,
-          ...userData,
-        })
+        setUserDB(userDBData)
 
-        return {
-          ...userData,
-          id: user.uid,
-        }
+        return userDBData
       })
       .catch(() => {
         throw new Error('Aconteceu algum erro ao tentar criar a conta')
@@ -130,30 +127,36 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logout() {
-    await auth.signOut().then(() => {
-      setUser(null)
-      setUserDB(null)
-    })
+    await auth.signOut()
+    setUser(null)
+    setUserDB(null)
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        get(child(ref(database), `users/${user.uid}`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            setUserDB(snapshot.val())
-          }
-        })
+        const snapshot = await get(child(ref(database), `users/${user.uid}`))
 
-        setUser(user)
+        console.log(`é ${userDBRole === snapshot.val().role}`)
+        console.log(`é ${userDBRole}`)
+        console.log(`é ${!userDBRole}`)
+
+        if (
+          snapshot.exists() &&
+          (userDBRole === snapshot.val().role || !userDBRole)
+        ) {
+          setUserDB(snapshot.val())
+          setUser(user)
+        }
+        setUserDBRole(undefined)
       }
-
       setInitialized(true)
     })
+
     return () => {
       unsubscribe()
     }
-  }, [user])
+  }, [user, userDBRole])
 
   return (
     <AuthContext.Provider

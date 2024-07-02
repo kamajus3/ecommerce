@@ -4,6 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronUp, MoveUpRight } from 'lucide-react'
 
+import { env } from '@/env'
+
 interface FooterProps {
   disableBackButton?: boolean
 }
@@ -41,8 +43,8 @@ export default function Footer({ disableBackButton = false }: FooterProps) {
               <h2 className="mb-6 text-lg font-semibold text-white">Suporte</h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
-                  <Link href="mailto:geral@raciuscare.com">
-                    geral@raciuscare.com
+                  <Link href={`mailto:${env.NEXT_PUBLIC_EMAIL_ADDRESS}`}>
+                    {env.NEXT_PUBLIC_EMAIL_ADDRESS}
                   </Link>
                 </li>
                 <li className="mb-4">

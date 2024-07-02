@@ -6,7 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
 }
 
 export default function Button(props: ButtonProps) {
-  const { className, ...rest } = props
+  const { className, loading, ...rest } = props
   return (
     <button
       className={clsx(
@@ -17,7 +17,7 @@ export default function Button(props: ButtonProps) {
       )}
       {...rest}
     >
-      {props.loading ? (
+      {loading ? (
         <div
           className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
           role="status"

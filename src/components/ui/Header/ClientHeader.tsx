@@ -69,6 +69,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
             alt="Logotipo da Racius Care"
             width={90}
             height={90}
+            priority
           />
         </Link>
 
