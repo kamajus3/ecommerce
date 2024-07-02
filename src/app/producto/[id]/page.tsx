@@ -22,7 +22,10 @@ export async function generateMetadata({
       if (data) {
         resolve({
           title: data.name,
-          description: data.description.slice(0, 100) + '...',
+          description:
+            data.description.length <= 100
+              ? data.description
+              : `${data.description.slice(0, 100)}...`,
           openGraph: {
             type: 'article',
             title: data.name,
@@ -59,7 +62,7 @@ export default async function ProductPage({
             draggable={false}
           >
             {product && (
-              <>
+              <div>
                 {product.campaign &&
                   campaignValidator(product.campaign) ===
                     'campaign-with-promotion' && (
@@ -84,13 +87,11 @@ export default async function ProductPage({
                 <Image
                   src={product.photo}
                   alt={product.name}
-                  objectFit="cover"
-                  objectPosition="center"
                   draggable={false}
-                  className="select-none"
+                  className="select-none object-cover object-center"
                   fill
                 />
-              </>
+              </div>
             )}
           </div>
           <div className="mt-4 sm:w-80 w-full flex flex-col items-start justify-center">

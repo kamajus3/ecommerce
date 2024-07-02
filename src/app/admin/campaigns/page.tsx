@@ -269,15 +269,9 @@ export default function PromotionPage() {
   async function _edit(data: FormData, oldData?: CampaignEdit) {
     if (oldData && oldData.id) {
       const reference = storageRef(storage, `/campaigns/${oldData.id}`)
-      const campaignProducts = await getProducts({
-        campaign: oldData.id,
-      })
-
       await uploadBytes(reference, data.photo)
 
-      const oldDataProductsId = Object.entries(campaignProducts).map(
-        ([id]) => id,
-      )
+      const oldDataProductsId = oldData.products
       const newDataProductsId = data.products
         ? data.products.map((p) => p.id)
         : null
@@ -295,16 +289,19 @@ export default function PromotionPage() {
         updatedAt: new Date().toISOString(),
       })
         .then(async () => {
-          if (campaignProducts) {
-            if (campaignProducts && data.default) {
-              Object.entries(campaignProducts).map(async ([id]) => {
-                await update(ref(database, `products/${id}`), {
-                  campaign: null,
-                })
+          if (oldData.default === false && data.default) {
+            const campaignProducts = await getProducts({
+              campaign: oldData.id,
+            })
+            Object.entries(campaignProducts).map(async ([id]) => {
+              await update(ref(database, `products/${id}`), {
+                campaign: null,
               })
-            }
+            })
+          }
 
-            if (newDataProductsId !== oldDataProductsId) {
+          if (data.products) {
+            if (newDataProductsId && newDataProductsId !== oldDataProductsId) {
               const deletedProducts =
                 newDataProductsId && oldDataProductsId
                   ? oldDataProductsId.filter(
@@ -312,7 +309,7 @@ export default function PromotionPage() {
                     )
                   : []
 
-              Object.entries(campaignProducts).map(async ([id]) => {
+              newDataProductsId.map(async (id) => {
                 if (deletedProducts.includes(id) || data.default) {
                   await update(ref(database, `products/${id}`), {
                     campaign: null,
@@ -399,7 +396,7 @@ export default function PromotionPage() {
     }
   }
 
-  async function _delete(id: string, products: string[] | undefined) {
+  async function _delete(id: string) {
     const databaseReference = ref(database, `campaigns/${id}`)
     const storageReference = storageRef(storage, `campaigns/${id}`)
 
@@ -407,8 +404,12 @@ export default function PromotionPage() {
       await remove(databaseReference)
       await deleteObject(storageReference)
 
-      if (products) {
-        products.map(async (id) => {
+      const campaignProducts = await getProducts({
+        campaign: id,
+      })
+
+      if (campaignProducts) {
+        Object.entries(campaignProducts).map(async ([id]) => {
           await update(ref(database, `products/${id}`), {
             campaign: null,
           })
@@ -557,7 +558,7 @@ export default function PromotionPage() {
                       id,
                     }}
                     _delete={() => {
-                      _delete(id, campaign.products)
+                      _delete(id)
                     }}
                     _edit={_edit}
                   />

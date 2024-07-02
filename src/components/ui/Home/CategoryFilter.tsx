@@ -18,19 +18,19 @@ interface CategoryFilterProps {
 
 function CategoryCard(props: Category) {
   return (
-    <Link className="block w-48" href={`/categoria/${props.label}`}>
+    <Link className="inline-block w-48" href={`/categoria/${props.label}`}>
       <div className="w-48 h-48 relative">
         <Image
           src={props.img}
           alt={props.label}
-          objectFit="cover"
-          objectPosition="center"
           draggable={false}
-          className="select-none rounded-full border"
+          className="select-none rounded-full border object-cover object-center"
           fill
         />
       </div>
-      <p className="text-black font-medium mt-5 text-center">{props.label}</p>
+      <span className="text-black font-medium mt-5 text-center">
+        {props.label}
+      </span>
     </Link>
   )
 }

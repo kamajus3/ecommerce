@@ -61,6 +61,12 @@ export default function Avatar() {
         Minhas campanhas
       </Link>
       <Link
+        href="/"
+        className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+      >
+        Ver a plataforma
+      </Link>
+      <Link
         href="/logout"
         className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
       >

@@ -17,8 +17,6 @@ const nextConfig = {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
-    FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
-    FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
   },
   images: {
     dangerouslyAllowSVG: true,
@@ -26,10 +24,6 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'tailwindui.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
       },
       {
         protocol: 'https',

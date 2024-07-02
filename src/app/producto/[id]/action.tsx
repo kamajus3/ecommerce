@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Minus, Plus } from 'lucide-react'
 
 import { ProductItem } from '@/@types'
+import Button from '@/components/ui/Button'
 import useCartStore from '@/store/CartStore'
 import useViewStore from '@/store/ViewStore'
 
@@ -33,7 +33,7 @@ export default function PostAction(product: ProductItem) {
     <div>
       <div className="flex mt-4">
         <button
-          className="bg-red-500 hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+          className="bg-black rounded-l-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={decreaseQuantity}
         >
           -
@@ -45,26 +45,26 @@ export default function PostAction(product: ProductItem) {
           onChange={(e) => setQuantity(parseInt(e.target.value))}
         />
         <button
-          className="bg-red-500 hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+          className="bg-black rounded-r-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={increaseQuantity}
         >
           +
         </button>
       </div>
       {cartProducts.find((p) => p.id === product?.id) ? (
-        <button
+        <Button
           onClick={() => {
             if (product?.id) {
               removeFromCart(product?.id)
               setQuantity(1)
             }
           }}
-          className="mt-4 bg-red-500 text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
+          className="h-12 mt-4 bg-red-500"
         >
-          <Minus size={15} /> Remover do carrinho
-        </button>
+          Remover do carrinho
+        </Button>
       ) : (
-        <button
+        <Button
           onClick={() => {
             if (product?.id) {
               AddToCart({
@@ -73,10 +73,10 @@ export default function PostAction(product: ProductItem) {
               })
             }
           }}
-          className="mt-4 bg-main text-white p-4 hover:brightness-90 focus:outline-none font-medium active:scale-95 flex items-center justify-center gap-2"
+          className="h-12 mt-4 bg-secondary"
         >
-          <Plus size={15} /> Adicionar ao carrinho
-        </button>
+          Adicionar ao carrinho
+        </Button>
       )}
     </div>
   )

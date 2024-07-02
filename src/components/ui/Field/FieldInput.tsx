@@ -10,7 +10,7 @@ function CustomInput(props: FieldInput, ref: ForwardedRef<HTMLInputElement>) {
 
   return (
     <input
-      className={`w-full rounded-lg bg-neutral-100 px-3 py-2 mt-2 text-gray-500 outline-none border ${props.error && 'border-red-500'} ${className}`}
+      className={`w-full rounded-lg bg-neutral-100 px-3 py-2 mt-2 text-gray-500 outline-none border disabled:text-disabledText ${className} ${props.error && 'border-red-500'}`}
       {...rest}
       ref={ref}
     />

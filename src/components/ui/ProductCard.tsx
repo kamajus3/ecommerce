@@ -19,9 +19,9 @@ export default function ProductCard(product: ProductItem) {
           {cartProducts.find((p) => p.id === product.id) && (
             <button
               onClick={() => removeFromCart(product.id)}
-              className="absolute h-10 w-10 flex items-center justify-center bg-red-500 hover:brightness-90 active:brightness-75 z-10"
+              className="absolute h-10 w-10 flex items-center justify-center bg-secondary hover:brightness-90 active:brightness-75 z-10"
             >
-              <X size={20} color="#000" />
+              <X size={20} color="#fff" />
             </button>
           )}
 
@@ -50,10 +50,8 @@ export default function ProductCard(product: ProductItem) {
             <Image
               src={product.photo}
               alt={product.name}
-              objectFit="cover"
-              objectPosition="center"
               draggable={false}
-              className="select-none"
+              className="select-none object-cover object-center"
               fill
             />
           </Link>

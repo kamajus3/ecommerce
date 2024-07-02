@@ -99,7 +99,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         await set(ref(database, `users/${user.uid}`), userData).catch(() => {
-          throw new Error('Acounteceu algum erro ao criar uma conta')
+          throw new Error('Aconteceu algum erro ao tentar criar a conta')
         })
 
         setUser(user)

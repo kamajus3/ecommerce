@@ -132,7 +132,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
               {/* Products count in the cart indicator */}
               <div
                 className={clsx(
-                  'absolute bottom-7 left-7 bg-main rounded-full flex justify-center items-center w-6 h-6',
+                  'absolute bottom-7 left-7 bg-secondary rounded-full flex justify-center items-center w-6 h-6',
                   {
                     hidden: cartProducts.length === 0,
                   },

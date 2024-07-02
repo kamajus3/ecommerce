@@ -12,7 +12,8 @@ import {
   startAt,
 } from 'firebase/database'
 
-import { ProductItem, ProductQuery } from './../../@types'
+import { ProductItem, ProductQuery } from '@/@types'
+
 import { database } from './config'
 
 export function getProduct(id: string): Promise<ProductItem | undefined> {
@@ -20,8 +21,8 @@ export function getProduct(id: string): Promise<ProductItem | undefined> {
   return new Promise((resolve) => {
     onValue(documentRef, (snapshot) => {
       const data = snapshot.val()
-      if (!data) {
-        resolve(data as ProductItem)
+      if (data) {
+        resolve(data)
       }
       resolve(undefined)
     })

@@ -21,6 +21,9 @@ function EmailActions() {
         case 'verifyAndChangeEmail':
           router.replace(`/alterar-email/${actionCode}`)
           break
+        case 'verifyEmail':
+          router.replace(`/confirmar-email/${actionCode}`)
+          break
         case 'recoverEmail':
           break
         default:

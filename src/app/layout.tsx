@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Bounce, ToastContainer } from 'react-toastify'
 
+import contants from '@/constants'
 import AuthProvider from '@/contexts/AuthContext'
 import CampaignProvider from '@/contexts/CampaignContext'
 import InformationProvider from '@/contexts/InformationContext'
@@ -15,7 +16,10 @@ const inter = Inter({
 })
 
 export const viewport: Viewport = {
-  themeColor: '#000000',
+  themeColor: contants.colors.main,
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export const metadata: Metadata = {
@@ -29,13 +33,7 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   applicationName: 'Racius Care',
   referrer: 'origin-when-cross-origin',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   authors: [{ name: 'Racius Care', url: 'https://raciuscare.com' }],
-  colorScheme: 'light',
   creator: 'Racius Care Developers',
   formatDetection: {
     email: true,

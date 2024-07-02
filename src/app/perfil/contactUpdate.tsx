@@ -103,7 +103,7 @@ export default function ContactUpdate() {
       await verifyBeforeUpdateEmail(user, newUserEmail)
         .then(() => {
           toast.success(
-            `Foi enviado um código de verificação no emaik ${newUserEmail}`,
+            `Foi enviado um código de verificação no email ${newUserEmail}`,
             {
               position: 'top-right',
               autoClose: 7000,
