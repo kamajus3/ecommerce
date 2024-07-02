@@ -26,7 +26,7 @@ interface FormData {
 
 export default function SignIn() {
   const router = useRouter()
-  const { signInWithEmail, logout } = useAuth()
+  const { signInWithEmail } = useAuth()
 
   const {
     register,
@@ -35,38 +35,9 @@ export default function SignIn() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: FormData) {
-    signInWithEmail(data.email, data.password)
-      .then(async (user) => {
-        if (user) {
-          if (user.role === 'admin') {
-            router.push('/admin/dashboard')
-          } else {
-            await logout()
-            toast.error('Essa conta não existe', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
-          }
-        } else {
-          toast.error('Essa conta não existe', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
-        }
+    signInWithEmail(data.email, data.password, 'admin')
+      .then(async () => {
+        router.push('/admin/dashboard')
       })
       .catch((e: Error) => {
         toast.error(e.message, {

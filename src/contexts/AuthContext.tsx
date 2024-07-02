@@ -29,6 +29,7 @@ interface AuthContextProps {
   signInWithEmail: (
     email: string,
     password: string,
+    userRole: UserRole,
   ) => Promise<UserDatabase | null>
   signUpWithEmail: (
     name: string,
@@ -55,7 +56,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>()
   const [userDB, setUserDB] = useState<UserDatabase | null>()
 
-  async function signInWithEmail(email: string, password: string) {
+  async function signInWithEmail(
+    email: string,
+    password: string,
+    userRole: UserRole,
+  ) {
     const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
         const snapshot = await get(
@@ -63,11 +68,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         ).catch(() => {
           throw new Error('Acounteceu algum erro ao tentar inciar sessão')
         })
+        const userFromDB = snapshot.val()
 
-        if (snapshot.exists()) {
-          setUser(user)
-          setUserDB(snapshot.val())
-          return snapshot.val() as UserDatabase
+        if (snapshot.exists() && userFromDB) {
+          if (snapshot.val().role === userRole) {
+            setUser(user)
+            setUserDB(userFromDB)
+
+            return userFromDB
+          }
         }
         throw new Error('Acounteceu algum erro ao tentar inciar sessão')
       })

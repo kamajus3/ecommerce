@@ -11,7 +11,7 @@ function AdvantageCard(props: AdvantageCardProps) {
   const LucideIcon = dynamic(dynamicIconImports[props.icon])
 
   return (
-    <div className="mt-8 mb-16 w-[400px] max-sm:w-[80%] flex flex-col items-center justify-center gap-y-2 p-6">
+    <div className="mt-8 mb-16 w-[490px] max-sm:w-[80%] flex flex-col items-center justify-center gap-y-2 p-6">
       <div className="bg-main h-20 w-20 rounded-full flex items-center justify-center border-8 border-[#00A4C7]">
         <LucideIcon color="#fff" size={40} />
       </div>

@@ -17,6 +17,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Avatar from '../Avatar'
 import Button from '../Button'
 
+import FixedCampaign from './FixedCampaign'
+
 interface ClientHeaderProps {
   searchDefault?: string | null
 }
@@ -59,6 +61,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
 
   return (
     <header className="bg-white border-b w-full shadow-sm sticky top-0 left-0 z-20">
+      <FixedCampaign />
       <article className="w-[98%] flex justify-between items-center py-4 px-6 mx-auto">
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image

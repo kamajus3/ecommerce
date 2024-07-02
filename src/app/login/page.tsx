@@ -26,7 +26,7 @@ interface FormData {
 
 export default function SignIn() {
   const router = useRouter()
-  const { signInWithEmail, logout } = useAuth()
+  const { signInWithEmail } = useAuth()
 
   const {
     register,
@@ -35,26 +35,9 @@ export default function SignIn() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: FormData) {
-    signInWithEmail(data.email, data.password)
-      .then(async (user) => {
-        if (user) {
-          if (user.role !== 'admin') {
-            router.push('/')
-          } else {
-            await logout()
-            toast.error('Acounteceu algum erro ao tentar inciar sessão', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
-          }
-        }
+    signInWithEmail(data.email, data.password, 'client')
+      .then(async () => {
+        router.push('/')
       })
       .catch((e: Error) => {
         toast.error(e.message, {
