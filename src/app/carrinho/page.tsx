@@ -12,6 +12,7 @@ import { ProductItem, ProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
+import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { campaignValidator } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
@@ -57,27 +58,25 @@ function CartTableRow({
     })
 
   return (
-    <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <input
-            type="checkbox"
-            checked={!!selectedProducts.find((id) => id === product.id)}
-            name="bordered-checkbox"
-            onChange={(e) => {
-              if (e.target.checked) {
-                setSelectedProduct([...selectedProducts, product.id])
-              } else {
-                setSelectedProduct(
-                  selectedProducts.filter((id) => id !== product.id),
-                )
-              }
-            }}
-            className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
-          ></input>
-        </div>
-      </td>
-      <td className="p-3">
+    <Table.R inside="body">
+      <Table.D>
+        <input
+          type="checkbox"
+          checked={!!selectedProducts.find((id) => id === product.id)}
+          name="bordered-checkbox"
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedProduct([...selectedProducts, product.id])
+            } else {
+              setSelectedProduct(
+                selectedProducts.filter((id) => id !== product.id),
+              )
+            }
+          }}
+          className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
+        />
+      </Table.D>
+      <Table.D>
         <Link
           href={`/producto/${product.id}`}
           className="flex items-center justify-center"
@@ -91,39 +90,26 @@ function CartTableRow({
             className="select-none"
           />
         </Link>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">
-          <Link href={`/producto/${product.id}`}>{product.name}</Link>
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {money.format(product.price)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          x{product.quantity}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {product.campaign &&
-          campaignValidator(product.campaign) === 'campaign-with-promotion'
-            ? `${product.campaign?.reduction} %`
-            : '-'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setOpenDeleteModal(true)}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-red-500 font-medium">Remover</span>
-          </button>
-        </div>
+      </Table.D>
+      <Table.D>
+        <Link href={`/producto/${product.id}`}>{product.name}</Link>
+      </Table.D>
+      <Table.D>{money.format(product.price)}</Table.D>
+      <Table.D>x{product.quantity}</Table.D>
+      <Table.D>
+        {product.campaign &&
+        campaignValidator(product.campaign) === 'campaign-with-promotion'
+          ? `${product.campaign?.reduction} %`
+          : '-'}
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-red-500"
+          onClick={() => setOpenDeleteModal(true)}
+        >
+          Remover
+        </Button>
         <Modal.Dialog
           title="Remover producto"
           description="Você tem certeza que queres remover esse producto do carinho?"
@@ -136,8 +122,8 @@ function CartTableRow({
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
-      </td>
-    </tr>
+      </Table.D>
+    </Table.R>
   )
 }
 
@@ -299,21 +285,21 @@ export default function CartPage() {
       <section className="bg-white min-h-screen overflow-hidden">
         <Header.Client />
         <article className="mb-2 mt-5">
-          <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
+          <h1 className="text-black font-semibold text-3xl p-9">
             Carrinho de productos
-          </p>
+          </h1>
         </article>
-        <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
+        <article className="px-8 mx-auto mb-8 max-sm:p-9">
           <div className="overflow-x-auto">
             <DataState
               dataCount={cartProducts.length}
               loading={loading}
               noDataMessage="Os productos que adicionar no carrinho aparecerão aqui"
             >
-              <table className="table-auto w-full border border-[#dddddd]">
+              <Table.Root>
                 <thead>
-                  <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827] flex items-center gap-x-3 justify-center">
+                  <Table.R inside="head">
+                    <Table.H>
                       <input
                         type="checkbox"
                         id="select-all-products"
@@ -330,28 +316,16 @@ export default function CartPage() {
                         }}
                         className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                       />
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Foto
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Nome
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Preço
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Quantidade
-                    </th>
-                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Promoção
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      -
-                    </th>
-                  </tr>
+                    </Table.H>
+                    <Table.H>Foto</Table.H>
+                    <Table.H>Nome</Table.H>
+                    <Table.H>Preço</Table.H>
+                    <Table.H>Quantidade</Table.H>
+                    <Table.H>Promoção</Table.H>
+                    <Table.H>-</Table.H>
+                  </Table.R>
                 </thead>
-                <tbody className="text-gray-600 text-sm font-light">
+                <Table.Body>
                   {productData.map((product) => (
                     <CartTableRow
                       key={product.id}
@@ -360,8 +334,8 @@ export default function CartPage() {
                       selectedProducts={selectedProducts}
                     />
                   ))}
-                </tbody>
-              </table>
+                </Table.Body>
+              </Table.Root>
 
               <div className="mt-10 mb-10 gap-y-5">
                 <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
@@ -373,8 +347,8 @@ export default function CartPage() {
                 <Button
                   style={{
                     padding: '13px 18px 13px 18px',
-                    backgroundColor: contants.colors.secondary,
                   }}
+                  className="bg-secondary"
                   onClick={() => {
                     if (initialized) {
                       if (user) {

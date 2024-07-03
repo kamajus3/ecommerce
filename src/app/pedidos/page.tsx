@@ -5,9 +5,11 @@ import Link from 'next/link'
 import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 
 import { Order } from '@/@types'
+import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
+import Table from '@/components/ui/Table'
 import { publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
@@ -17,55 +19,35 @@ function OrderTableRow(order: Order) {
   const money = useMoneyFormat()
 
   return (
-    <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="text-center text-black font-medium">{order.id}</div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.products.length}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.address}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {order.state === 'not-sold' ? 'Em processamento' : 'Já pago'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {publishedSince(order.createdAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-[#919298] font-medium">
-          {money.format(
-            order.products.reduce((total, product) => {
-              if (product.promotion) {
-                return (
-                  total + (product.price * product.quantity - product.promotion)
-                )
-              } else {
-                return total + product.price * product.quantity
-              }
-            }, 0),
-          )}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <Link href={`/invoice/${order.id}`}>
-            <button className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-              <span className="text-secondary font-medium">Baixar factura</span>
-            </button>
-          </Link>
-        </div>
-      </td>
-    </tr>
+    <Table.R inside="body">
+      <Table.D>{order.id}</Table.D>
+      <Table.D>{order.products.length}</Table.D>
+      <Table.D>{order.address}</Table.D>
+      <Table.D>
+        {order.state === 'not-sold' ? 'Em processamento' : 'Já pago'}
+      </Table.D>
+      <Table.D>{publishedSince(order.createdAt)}</Table.D>
+      <Table.D>
+        {money.format(
+          order.products.reduce((total, product) => {
+            if (product.promotion) {
+              return (
+                total + (product.price * product.quantity - product.promotion)
+              )
+            } else {
+              return total + product.price * product.quantity
+            }
+          }, 0),
+        )}
+      </Table.D>
+      <Table.D>
+        <Link href={`/invoice/${order.id}`}>
+          <Button variant="no-background" className="mx-auto text-secondary">
+            Baixar factura
+          </Button>
+        </Link>
+      </Table.D>
+    </Table.R>
   )
 }
 
@@ -133,51 +115,34 @@ export default function CartPage() {
       <section className="bg-white min-h-screen overflow-hidden">
         <Header.Client />
         <article className="mb-2 mt-5">
-          <p className="text-black font-semibold text-3xl p-9 max-sm:text-center">
+          <h1 className="text-black font-semibold text-3xl p-9">
             Os meus pedidos
-          </p>
+          </h1>
         </article>
-        <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
+        <article className="px-8 mx-auto mb-8 max-sm:p-9">
           <DataState
             dataCount={Object.entries(orderData).length}
             loading={loading}
             noDataMessage="Os pedidos que fizer aparecerão aqui"
           >
-            <div className="overflow-x-auto">
-              <table className="table-auto w-full border border-[#dddddd]">
-                <thead>
-                  <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Referência
-                    </th>
-
-                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Nº de entidades
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      Destinação
-                    </th>
-                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Estado
-                    </th>
-                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Data da realização
-                    </th>
-                    <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                      Valor a pagar
-                    </th>
-                    <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                      -
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-600 text-sm font-light">
-                  {Object.entries(orderData).map(([id, order]) => (
-                    <OrderTableRow key={id} {...order} id={id} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table.Root>
+              <thead>
+                <Table.R inside="head">
+                  <Table.H>Referência</Table.H>
+                  <Table.H>Entidades</Table.H>
+                  <Table.H>Destinação</Table.H>
+                  <Table.H>Estado</Table.H>
+                  <Table.H>Data da realização</Table.H>
+                  <Table.H>Valor a pagar</Table.H>
+                  <Table.H>-</Table.H>
+                </Table.R>
+              </thead>
+              <Table.Body>
+                {Object.entries(orderData).map(([id, order]) => (
+                  <OrderTableRow key={id} {...order} id={id} />
+                ))}
+              </Table.Body>
+            </Table.Root>
           </DataState>
         </article>
       </section>

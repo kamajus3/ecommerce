@@ -27,6 +27,7 @@ import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
@@ -63,54 +64,29 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
   const { informationsData } = useInformation()
 
   return (
-    <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="text-center text-black font-medium">{data.title}</div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {data.startDate ? publishedSince(data.startDate) : '-'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {data.finishDate ? publishedSince(data.finishDate) : '-'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {publishedSince(data.createdAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {publishedSince(data.updatedAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">
-          {data.products ? data.products.length : '-'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">
-          {informationsData.defaultCampaign === data.id ? 'Sim' : 'Não'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">
-          {informationsData.fixedCampaign === data.id ? 'Sim' : 'Não'}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setOpenDeleteModal(true)}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-red-500 font-medium">Apagar</span>
-          </button>
-        </div>
+    <Table.R inside="body">
+      <Table.D>{data.title}</Table.D>
+      <Table.D>{data.startDate ? publishedSince(data.startDate) : '-'}</Table.D>
+      <Table.D>
+        {data.finishDate ? publishedSince(data.finishDate) : '-'}
+      </Table.D>
+      <Table.D>{publishedSince(data.createdAt)}</Table.D>
+      <Table.D>{publishedSince(data.updatedAt)}</Table.D>
+      <Table.D>{data.products ? data.products.length : '-'}</Table.D>
+      <Table.D>
+        {informationsData.defaultCampaign === data.id ? 'Sim' : 'Não'}
+      </Table.D>
+      <Table.D>
+        {informationsData.fixedCampaign === data.id ? 'Sim' : 'Não'}
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-red-500"
+          onClick={() => setOpenDeleteModal(true)}
+        >
+          Apagar
+        </Button>
         <Modal.Dialog
           title="Apagar a campanha"
           description="Você tem certeza que queres apagar essa campanha?"
@@ -120,16 +96,15 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setOpenEditModal(true)}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-violet-600 font-medium">Editar</span>
-          </button>
-        </div>
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-violet-600"
+          onClick={() => setOpenEditModal(true)}
+        >
+          Editar
+        </Button>
         <Modal.Campaign
           title="Editar campanha"
           actionTitle="Editar"
@@ -138,8 +113,8 @@ function TableRow({ data, _delete, _edit }: TableRowProps) {
           action={_edit}
           defaultData={{ ...data }}
         />
-      </td>
-    </tr>
+      </Table.D>
+    </Table.R>
   )
 }
 
@@ -416,7 +391,7 @@ export default function PromotionPage() {
         })
       }
 
-      toast.success('Campanha eliminada com sucesso', {
+      toast.success('Campanha apagada com sucesso', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -428,7 +403,7 @@ export default function PromotionPage() {
         transition: Bounce,
       })
     } catch {
-      toast.error('Erro a apagar a campanha', {
+      toast.error('Erro ao apagar a campanha', {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -506,66 +481,43 @@ export default function PromotionPage() {
         </div>
       </article>
 
-      <article className="container mx-auto mt-8 max-sm:p-9">
+      <article className="px-8 mx-auto mb-8 max-sm:p-9">
         <DataState
           dataCount={Object.entries(campaignData).length}
           loading={loading}
           noDataMessage="As suas campanhas aparecerão aqui"
         >
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-[#dddddd]">
-              <thead>
-                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Título
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Início
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Fim
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Data de criação
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Data de atualização
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Productos
-                  </th>
-
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Padrão
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Fixado
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-sm font-light">
-                {Object.entries(campaignData).map(([id, campaign]) => (
-                  <TableRow
-                    key={id}
-                    data={{
-                      ...campaign,
-                      id,
-                    }}
-                    _delete={() => {
-                      _delete(id)
-                    }}
-                    _edit={_edit}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table.Root>
+            <thead>
+              <Table.R inside="head">
+                <Table.H>Título</Table.H>
+                <Table.H>Início</Table.H>
+                <Table.H>Fim</Table.H>
+                <Table.H>Data de criação</Table.H>
+                <Table.H>Data de atualização</Table.H>
+                <Table.H>Productos</Table.H>
+                <Table.H>Padrão</Table.H>
+                <Table.H>Fixado</Table.H>
+                <Table.H>-</Table.H>
+                <Table.H>-</Table.H>
+              </Table.R>
+            </thead>
+            <Table.Body>
+              {Object.entries(campaignData).map(([id, campaign]) => (
+                <TableRow
+                  key={id}
+                  data={{
+                    ...campaign,
+                    id,
+                  }}
+                  _delete={() => {
+                    _delete(id)
+                  }}
+                  _edit={_edit}
+                />
+              ))}
+            </Table.Body>
+          </Table.Root>
         </DataState>
       </article>
       <Modal.Campaign

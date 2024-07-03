@@ -30,6 +30,7 @@ import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
@@ -62,56 +63,31 @@ function TableRow({ product, _delete, _edit }: TableRowProps) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
   return (
-    <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <Image
-            width={70}
-            height={70}
-            src={product.photo}
-            alt={product.name}
-            draggable={false}
-            className="select-none"
-          />
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">{product.name}</div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-black font-medium">
-          {product.category}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {money.format(product.price)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {product.quantity}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {publishedSince(product.createdAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="text-center text-gray-400 font-medium">
-          {publishedSince(product.updatedAt)}
-        </div>
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setOpenDeleteModal(true)}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-red-500 font-medium">Apagar</span>
-          </button>
-        </div>
+    <Table.R inside="body">
+      <Table.D>
+        <Image
+          width={70}
+          height={70}
+          src={product.photo}
+          alt={product.name}
+          draggable={false}
+          className="select-none"
+        />
+      </Table.D>
+      <Table.D>{product.name}</Table.D>
+      <Table.D>{product.category}</Table.D>
+      <Table.D>{money.format(product.price)}</Table.D>
+      <Table.D>{product.quantity}</Table.D>
+      <Table.D>{publishedSince(product.createdAt)}</Table.D>
+      <Table.D>{publishedSince(product.updatedAt)}</Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-red-500"
+          onClick={() => setOpenDeleteModal(true)}
+        >
+          Apagar
+        </Button>
         <Modal.Dialog
           title="Apagar producto"
           description="Você tem certeza que queres apagar esse producto difinitivamente?"
@@ -121,16 +97,15 @@ function TableRow({ product, _delete, _edit }: TableRowProps) {
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
         />
-      </td>
-      <td className="p-3">
-        <div className="flex items-center justify-center">
-          <button
-            onClick={() => setOpenEditModal(true)}
-            className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-          >
-            <span className="text-violet-600 font-medium">Editar</span>
-          </button>
-        </div>
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-violet-600"
+          onClick={() => setOpenEditModal(true)}
+        >
+          Editar
+        </Button>
         <Modal.Product
           title="Editar producto"
           actionTitle="Editar"
@@ -139,8 +114,8 @@ function TableRow({ product, _delete, _edit }: TableRowProps) {
           action={_edit}
           defaultProduct={{ ...product }}
         />
-      </td>
-    </tr>
+      </Table.D>
+    </Table.R>
   )
 }
 
@@ -410,62 +385,42 @@ export default function ProductPage() {
         </div>
       </article>
 
-      <article className="container mx-auto mt-8 max-sm:p-9">
+      <article className="px-8 mx-auto mb-8 max-sm:p-9">
         <DataState
           dataCount={Object.entries(productData).length}
           loading={loading}
           noDataMessage="Os productos cadastrados aparecerão aqui"
         >
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-[#dddddd]">
-              <thead>
-                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Foto
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Nome
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Categória
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Preço
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Quantidade
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Data de criação
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Data de atualização
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-sm font-light">
-                {Object.entries(productData).map(([id, product]) => (
-                  <TableRow
-                    key={id}
-                    product={{
-                      ...product,
-                      id,
-                    }}
-                    _delete={() => {
-                      _delete(id, product?.campaign)
-                    }}
-                    _edit={_edit}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table.Root>
+            <thead>
+              <Table.R inside="head">
+                <Table.H>Foto</Table.H>
+                <Table.H>Nome</Table.H>
+                <Table.H>Categória</Table.H>
+                <Table.H>Preço</Table.H>
+                <Table.H>Quantidade</Table.H>
+                <Table.H>Data de criação</Table.H>
+                <Table.H>Data de atualização</Table.H>
+                <Table.H>-</Table.H>
+                <Table.H>-</Table.H>
+              </Table.R>
+            </thead>
+            <Table.Body>
+              {Object.entries(productData).map(([id, product]) => (
+                <TableRow
+                  key={id}
+                  product={{
+                    ...product,
+                    id,
+                  }}
+                  _delete={() => {
+                    _delete(id, product?.campaign)
+                  }}
+                  _edit={_edit}
+                />
+              ))}
+            </Table.Body>
+          </Table.Root>
         </DataState>
       </article>
       <Modal.Product

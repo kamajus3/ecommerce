@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import clsx from 'clsx'
 import {
   equalTo,
   onValue,
   orderByChild,
   orderByKey,
-  Query,
   query,
   ref,
   remove,
@@ -20,14 +18,15 @@ import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { Order } from '@/@types'
+import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
+import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
-import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FilterFormData {
@@ -47,128 +46,85 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
   const [openSoldModal, setOpenSoldModal] = useState(false)
 
   return (
-    <div>
-      <tr className="border-y border-gray-200 border-y-[#dfdfdf]">
-        <td className="p-3">
-          <div className="text-center text-black font-medium">{order.id}</div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {order.products.length}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {`${order.firstName} ${order.lastName}`}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {order.phone}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {order.address}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {order.state === 'not-sold' ? 'Não vendido' : 'Vendido'}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {publishedSince(order.createdAt)}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="text-center text-gray-400 font-medium">
-            {money.format(
-              order.products.reduce((total, product) => {
-                if (product.promotion) {
-                  return (
-                    total +
-                    (product.price * product.quantity - product.promotion)
-                  )
-                } else {
-                  return total + product.price * product.quantity
-                }
-              }, 0),
-            )}
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="flex items-center justify-center">
-            <button
-              onClick={() => {
-                if (order.state === 'not-sold') {
-                  setOpenDeleteModal(true)
-                }
-              }}
-              disabled={order.state === 'sold'}
-              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 disabled:cursor-not-allowed"
-            >
-              <span
-                className={clsx('text-disabledText font-medium', {
-                  'text-red-500': order.state !== 'sold',
-                })}
-              >
-                Cancelar
-              </span>
-            </button>
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="flex items-center justify-center">
-            <button
-              onClick={() => {
-                if (order.state === 'not-sold') {
-                  setOpenSoldModal(true)
-                }
-              }}
-              disabled={order.state === 'sold'}
-              className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100 disabled:cursor-not-allowed"
-            >
-              <span
-                className={clsx('text-[#00A4C7] font-medium', {
-                  'text-disabledText': order.state === 'sold',
-                })}
-              >
-                Vendido
-              </span>
-            </button>
-          </div>
-        </td>
-        <td className="p-3">
-          <div className="flex items-center justify-center">
-            <Link href={`/invoice/${order.id}`}>
-              <button className="text-gray-700 p-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-                <span className="text-main font-medium">Baixar</span>
-              </button>
-            </Link>
-          </div>
-        </td>
-      </tr>
-      <Modal.Dialog
-        title="Cancelar pedido"
-        description="Você tem certeza que queres cancelar esse pedido?"
-        actionTitle="Confirmar"
-        themeColor={contants.colors.error}
-        action={deleteOrder}
-        isOpen={openDeleteModal}
-        setOpen={setOpenDeleteModal}
-      />
+    <Table.R inside="body">
+      <Table.D>{order.id}</Table.D>
+      <Table.D>{order.products.length}</Table.D>
+      <Table.D>{`${order.firstName} ${order.lastName}`}</Table.D>
+      <Table.D>{order.phone}</Table.D>
+      <Table.D>{order.address}</Table.D>
+      <Table.D>
+        {order.state === 'not-sold' ? 'Não vendido' : 'Vendido'}
+      </Table.D>
+      <Table.D>{publishedSince(order.createdAt)}</Table.D>
+      <Table.D>
+        {money.format(
+          order.products.reduce((total, product) => {
+            if (product.promotion) {
+              return (
+                total + (product.price * product.quantity - product.promotion)
+              )
+            } else {
+              return total + product.price * product.quantity
+            }
+          }, 0),
+        )}
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-red-500"
+          onClick={() => {
+            if (order.state === 'not-sold') {
+              setOpenDeleteModal(true)
+            }
+          }}
+          disabled={order.state === 'sold'}
+        >
+          Cancelar
+        </Button>
 
-      <Modal.Dialog
-        title="Colocar como vendido"
-        description="Você tem queres colocar o estado desse pedido para vendido?"
-        actionTitle="Confirmar"
-        action={putAsSold}
-        isOpen={openSoldModal}
-        setOpen={setOpenSoldModal}
-      />
-    </div>
+        <Modal.Dialog
+          title="Cancelar pedido"
+          description="Você tem certeza que queres cancelar esse pedido?"
+          actionTitle="Confirmar"
+          themeColor={contants.colors.error}
+          action={deleteOrder}
+          isOpen={openDeleteModal}
+          setOpen={setOpenDeleteModal}
+        />
+      </Table.D>
+      <Table.D>
+        <Button
+          variant="no-background"
+          className="mx-auto text-secondary"
+          onClick={() => {
+            if (order.state === 'not-sold') {
+              setOpenSoldModal(true)
+            }
+          }}
+          disabled
+        >
+          Vendido
+        </Button>
+
+        <Modal.Dialog
+          title="Colocar como vendido"
+          description="Você tem queres colocar o estado desse pedido para vendido?"
+          actionTitle="Confirmar"
+          action={putAsSold}
+          isOpen={openSoldModal}
+          setOpen={setOpenSoldModal}
+        />
+      </Table.D>
+
+      <Table.D>
+        <Link href={`/invoice/${order.id}`}>
+          <Button variant="no-background" className="mx-auto text-main">
+            Baixar
+          </Button>
+        </Link>
+      </Table.D>
+    </Table.R>
   )
 }
 
@@ -193,39 +149,33 @@ export default function CartPage() {
     },
     resolver: zodResolver(schema),
   })
-  const code = watch('code')
 
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
   const [loading, setLoading] = useState(true)
-  const user = useUserStore((state) => state.metadata)
+  const code = watch('code')
 
   useEffect(() => {
     const fetchProducts = async () => {
-      if (user) {
-        const reference = ref(database, 'orders/')
-        let orderQuery: Query
-        if (code) {
-          orderQuery = query(reference, orderByKey(), equalTo(code))
-        } else {
-          orderQuery = query(reference, orderByChild('createdAt'))
+      const reference = ref(database, 'orders/')
+      const orderQuery = code
+        ? query(reference, orderByKey(), equalTo(code))
+        : query(reference, orderByChild('createdAt'))
+
+      onValue(orderQuery, (snapshot) => {
+        const results: Record<string, Order> = {}
+        if (snapshot.exists()) {
+          snapshot.forEach(function (child) {
+            results[child.key] = child.val()
+          })
         }
 
-        onValue(orderQuery, (snapshot) => {
-          const results: Record<string, Order> = {}
-          if (snapshot.exists()) {
-            snapshot.forEach(function (child) {
-              results[child.key] = child.val()
-            })
-            setOrderData(reverseData(results))
-          }
-
-          setLoading(false)
-        })
-      }
+        setOrderData(reverseData(results))
+        setLoading(false)
+      })
     }
 
     fetchProducts()
-  }, [user, setOrderData, code])
+  }, [setOrderData, code])
 
   async function updateOrderState(orderId: string, state: string) {
     try {
@@ -293,12 +243,10 @@ export default function CartPage() {
   return (
     <section className="bg-white min-h-screen overflow-hidden">
       <Header.Admin />
-      <article className="mb-2 mt-5">
-        <h1 className="text-black font-semibold text-3xl p-9 max-sm:text-center">
-          Pedidos
-        </h1>
+      <article className="mb-4 mt-5">
+        <h1 className="text-black font-semibold text-3xl p-9">Pedidos</h1>
 
-        <div className="mb-10 px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
+        <div className="px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
           <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
             <Hash size={15} color="#6B7280" />
             <input
@@ -310,7 +258,8 @@ export default function CartPage() {
           </div>
         </div>
       </article>
-      <article className="container mx-auto mt-8 mb-8 max-sm:p-9">
+
+      <article className="px-8 mx-auto mb-8 max-sm:p-9">
         <DataState
           dataCount={Object.entries(orderData).length}
           loading={loading}
@@ -320,60 +269,36 @@ export default function CartPage() {
               : 'Os pedidos dos clientes aparecerão aqui'
           }
         >
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-[#dddddd]">
-              <thead>
-                <tr className="bg-[#F9FAFB] text-gray-600 uppercase text-sm">
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Referência
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Entidades
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Nome
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Telefone
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    Destinação
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Estado
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    Data
-                  </th>
-                  <th className="p-3 normal-case font-semibold text-base text-[#111827]">
-                    A pagar
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                  <th className="p-3 capitalize font-semibold text-base text-[#111827]">
-                    -
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="text-gray-600 text-sm font-light">
-                {Object.entries(orderData).map(([id, order]) => (
-                  <OrderTableRow
-                    key={id}
-                    order={{
-                      ...order,
-                      id,
-                    }}
-                    deleteOrder={() => deleteOrder(id)}
-                    putAsSold={() => updateOrderState(id, 'sold')}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table.Root>
+            <thead>
+              <Table.R inside="head">
+                <Table.H>Referência</Table.H>
+                <Table.H>Entidades</Table.H>
+                <Table.H>Nome</Table.H>
+                <Table.H>Telefone</Table.H>
+                <Table.H>Destinação</Table.H>
+                <Table.H>Estado</Table.H>
+                <Table.H>Data</Table.H>
+                <Table.H>A pagar</Table.H>
+                <Table.H>-</Table.H>
+                <Table.H>-</Table.H>
+                <Table.H>-</Table.H>
+              </Table.R>
+            </thead>
+            <Table.Body>
+              {Object.entries(orderData).map(([id, order]) => (
+                <OrderTableRow
+                  key={id}
+                  order={{
+                    ...order,
+                    id,
+                  }}
+                  deleteOrder={() => deleteOrder(id)}
+                  putAsSold={() => updateOrderState(id, 'sold')}
+                />
+              ))}
+            </Table.Body>
+          </Table.Root>
         </DataState>
       </article>
     </section>
