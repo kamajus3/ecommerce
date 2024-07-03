@@ -58,7 +58,7 @@ export default function Avatar() {
           },
         )}
       >
-        Minhas campanhas
+        Campanhas
       </Link>
       <Link
         href="/"
