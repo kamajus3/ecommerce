@@ -70,7 +70,7 @@ export type CategoryLabel =
 export interface ProductQuery {
   search?: string
   limit?: number
-  category?: CategoryLabel
+  category?: CategoryLabel | string
   campaign?: string
   except?: string
   exceptOthersProduct?: boolean
