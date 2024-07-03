@@ -9,9 +9,9 @@ import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import { publishedSince } from '@/functions'
-import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
+import useUserStore from '@/store/UserStore'
 
 function OrderTableRow(order: Order) {
   const money = useMoneyFormat()
@@ -81,7 +81,7 @@ function reverseData(obj: Record<string, Order>) {
 export default function CartPage() {
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
   const [loading, setLoading] = useState(true)
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   useEffect(() => {
     const fetchProducts = async () => {

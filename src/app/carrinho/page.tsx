@@ -19,6 +19,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
 import { getProduct } from '@/lib/firebase/database'
 import useCartStore from '@/store/CartStore'
+import useUserStore from '@/store/UserStore'
 
 import Header from '../../components/ui/Header'
 import Modal from '../../components/ui/Modal'
@@ -156,7 +157,8 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
-  const { user, initialized } = useAuth()
+  const { initialized } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   const cartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState<string[]>([])

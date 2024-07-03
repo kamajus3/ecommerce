@@ -6,7 +6,7 @@ import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
 import Field from '@/components/ui/Field'
-import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FormData {
@@ -45,7 +45,7 @@ export function PasswordUpdate() {
     resolver: zodResolver(schema),
   })
 
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   function onSubmit(data: FormData) {
     if (user && user.email) {

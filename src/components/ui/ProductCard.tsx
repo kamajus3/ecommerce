@@ -4,16 +4,16 @@ import { X } from 'lucide-react'
 
 import { ProductItem } from '@/@types'
 import { campaignValidator } from '@/functions'
-import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
+import useUserStore from '@/store/UserStore'
 
 export default function ProductCard(product: ProductItem) {
   const money = useMoneyFormat()
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
-  const { userDB } = useAuth()
+  const userDB = useUserStore((state) => state.data)
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
 
   return (

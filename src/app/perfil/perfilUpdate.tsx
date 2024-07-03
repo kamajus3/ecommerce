@@ -9,8 +9,8 @@ import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
 import Field from '@/components/ui/Field'
-import { useAuth } from '@/hooks/useAuth'
 import { database } from '@/lib/firebase/config'
+import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z.object({
@@ -39,7 +39,8 @@ interface FormData {
 }
 
 export default function PerfilUpdate() {
-  const { userDB, user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
+  const userDB = useUserStore((state) => state.data)
 
   const {
     register,

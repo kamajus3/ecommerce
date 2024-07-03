@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 import { User } from 'lucide-react'
 
-import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 
 export default function Avatar({ children }: { children: ReactNode }) {
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)

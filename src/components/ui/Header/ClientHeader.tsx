@@ -9,9 +9,9 @@ import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { useAuth } from '@/hooks/useAuth'
 import { getProduct } from '@/lib/firebase/database'
 import useCartStore from '@/store/CartStore'
+import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import Avatar from '../Avatar'
@@ -35,7 +35,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
   const { register, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
-  const { userDB } = useAuth()
+  const userDB = useUserStore((state) => state.data)
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)

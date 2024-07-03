@@ -5,7 +5,7 @@ import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -42,7 +42,7 @@ export default function PasswordModal(props: PasswordModalProps) {
     resolver: zodResolver(schema),
   })
 
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   function closeModal() {
     props.setOpen(false)

@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 
 import { ProductItem } from '@/@types'
 import Button from '@/components/ui/Button'
-import { useAuth } from '@/hooks/useAuth'
 import useCartStore from '@/store/CartStore'
+import useUserStore from '@/store/UserStore'
 import useViewStore from '@/store/ViewStore'
 
 export default function PostAction(product: ProductItem) {
@@ -16,7 +16,9 @@ export default function PostAction(product: ProductItem) {
   const AddToCart = useCartStore((state) => state.addProduct)
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
-  const { userDB } = useAuth()
+  const IsproductInCart = !!cartProducts.find((p) => p.id === product?.id)
+
+  const userDB = useUserStore((state) => state.data)
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
 
   const increaseQuantity = () => {
@@ -39,7 +41,7 @@ export default function PostAction(product: ProductItem) {
         <button
           className="bg-black rounded-l-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={decreaseQuantity}
-          disabled={userIsAdmin}
+          disabled={userIsAdmin || IsproductInCart}
         >
           -
         </button>
@@ -48,17 +50,17 @@ export default function PostAction(product: ProductItem) {
           type="number"
           value={quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
-          disabled={userIsAdmin}
+          disabled={userIsAdmin || IsproductInCart}
         />
         <button
           className="bg-black rounded-r-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={increaseQuantity}
-          disabled={userIsAdmin}
+          disabled={userIsAdmin || IsproductInCart}
         >
           +
         </button>
       </div>
-      {cartProducts.find((p) => p.id === product?.id) && !userIsAdmin ? (
+      {IsproductInCart && !userIsAdmin ? (
         <Button
           onClick={() => {
             if (product?.id) {

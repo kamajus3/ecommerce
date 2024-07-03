@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { ProductItem } from '@/@types'
-import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -66,7 +66,7 @@ export default function ConfirmOrder(props: ConfirmOrderProps) {
     resolver: zodResolver(schema),
   })
 
-  const { userDB } = useAuth()
+  const userDB = useUserStore((state) => state.data)
 
   function onSubmit(data: FormData) {
     props.setOpen(false)

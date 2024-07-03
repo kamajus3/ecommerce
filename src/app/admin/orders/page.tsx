@@ -25,9 +25,9 @@ import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
-import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
+import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FilterFormData {
@@ -197,7 +197,7 @@ export default function CartPage() {
 
   const [orderData, setOrderData] = useState<Record<string, Order>>({})
   const [loading, setLoading] = useState(true)
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   useEffect(() => {
     const fetchProducts = async () => {

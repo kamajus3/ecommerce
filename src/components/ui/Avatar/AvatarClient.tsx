@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
-import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 
 export default function Avatar() {
   const pathname = usePathname()
-  const { user } = useAuth()
+  const user = useUserStore((state) => state.metadata)
 
   return (
     <div>

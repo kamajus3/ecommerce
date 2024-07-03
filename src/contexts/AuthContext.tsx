@@ -1,30 +1,18 @@
 'use client'
 
-import React, {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react'
+import React, { createContext, ReactNode, useEffect, useState } from 'react'
 import {
   AuthError,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  User,
 } from 'firebase/auth'
 import { child, get, ref, set } from 'firebase/database'
 
 import { UserDatabase, UserRole } from '@/@types'
 import { auth, database } from '@/lib/firebase/config'
+import useUserStore from '@/store/UserStore'
 
 interface AuthContextProps {
-  user: User | null | undefined
-  userDB: UserDatabase | null | undefined
-  setUserDB: React.Dispatch<
-    React.SetStateAction<UserDatabase | null | undefined>
-  >
   initialized: boolean
   signInWithEmail: (
     email: string,
@@ -37,15 +25,10 @@ interface AuthContextProps {
     password: string,
   ) => Promise<UserDatabase | null>
   logout(): Promise<void>
-  setUser: Dispatch<SetStateAction<User | null | undefined>>
 }
 
 export const AuthContext = createContext<AuthContextProps>({
-  user: null,
-  userDB: null,
-  setUserDB: () => {},
   initialized: false,
-  setUser: () => {},
   signInWithEmail: () => Promise.resolve(null),
   signUpWithEmail: () => Promise.resolve(null),
   logout: () => Promise.resolve(),
@@ -53,9 +36,8 @@ export const AuthContext = createContext<AuthContextProps>({
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [initialized, setInitialized] = useState<boolean>(false)
-  const [user, setUser] = useState<User | null>()
-  const [userDB, setUserDB] = useState<UserDatabase | null>()
   const [userDBRole, setUserDBRole] = useState<UserRole | undefined>()
+  const updateUser = useUserStore((state) => state.updateUser)
 
   async function signInWithEmail(
     email: string,
@@ -68,10 +50,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         const snapshot = await get(child(ref(database), `users/${user.uid}`))
 
         if (snapshot.exists()) {
-          const userDBData = snapshot.val()
+          const userDBData = {
+            id: user.uid,
+            ...snapshot.val(),
+          }
           if (snapshot.val().role === userRole) {
-            setUser(user)
-            setUserDB(userDBData)
+            updateUser({
+              metadata: user,
+              data: userDBData,
+            })
+
             return userDBData
           }
           await auth.signOut()
@@ -114,8 +102,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           throw new Error('Aconteceu algum erro ao tentar criar a conta')
         })
 
-        setUser(user)
-        setUserDB(userDBData)
+        updateUser({
+          metadata: user,
+          data: userDBData,
+        })
 
         return userDBData
       })
@@ -128,8 +118,10 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logout() {
     await auth.signOut()
-    setUser(null)
-    setUserDB(null)
+    updateUser({
+      metadata: null,
+      data: null,
+    })
   }
 
   useEffect(() => {
@@ -137,16 +129,17 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         const snapshot = await get(child(ref(database), `users/${user.uid}`))
 
-        console.log(`é ${userDBRole === snapshot.val().role}`)
-        console.log(`é ${userDBRole}`)
-        console.log(`é ${!userDBRole}`)
-
         if (
           snapshot.exists() &&
           (userDBRole === snapshot.val().role || !userDBRole)
         ) {
-          setUserDB(snapshot.val())
-          setUser(user)
+          updateUser({
+            metadata: user,
+            data: {
+              id: user.uid,
+              ...snapshot.val(),
+            },
+          })
         }
         setUserDBRole(undefined)
       }
@@ -156,19 +149,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       unsubscribe()
     }
-  }, [user, userDBRole])
+  }, [userDBRole, updateUser])
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        userDB,
-        setUserDB,
         initialized,
         signInWithEmail,
         signUpWithEmail,
         logout,
-        setUser,
       }}
     >
       {children}

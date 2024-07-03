@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { UserRole } from '@/@types'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
+import useUserStore from '@/store/UserStore'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -20,7 +21,10 @@ export default function ProtectedRoute({
   pathWhenAuthorizated = '/admin/dashboard',
   pathWhenNotAuthorizated = '/admin/login',
 }: ProtectedRouteProps) {
-  const { user, userDB, initialized } = useAuth()
+  const user = useUserStore((state) => state.metadata)
+  const userDB = useUserStore((state) => state.data)
+  const { initialized } = useAuth()
+
   const router = useRouter()
   const pathname = usePathname()
 
