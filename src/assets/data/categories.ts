@@ -3,7 +3,7 @@ import { Category } from '@/@types'
 const CATEGORIES: Category[] = [
   {
     label: 'Higiene Pessoal',
-    img: '/categories/personal-hygiene.jpg',
+    img: '/categories/hygiene.jpg',
   },
   {
     label: 'Bebê',

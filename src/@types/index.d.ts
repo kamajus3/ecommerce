@@ -60,10 +60,17 @@ export interface NewCampaign extends CampaignBase {
   products: ProductInputProps[]
 }
 
+export type CategoryLabel =
+  | 'Bebê'
+  | 'Higiene Pessoal'
+  | 'Saúde'
+  | 'Inseticidas'
+  | 'Alimentação'
+
 export interface ProductQuery {
   search?: string
   limit?: number
-  category?: string
+  category?: CategoryLabel
   campaign?: string
   except?: string
   exceptOthersProduct?: boolean
@@ -71,7 +78,7 @@ export interface ProductQuery {
 }
 
 export interface Category {
-  label: string
+  label: CategoryLabel
   img: string
 }
 

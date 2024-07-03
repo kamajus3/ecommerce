@@ -17,16 +17,16 @@ export default function Home() {
       <Header.Client />
       <Carousel />
       <ProductList
-        title="Produtos em Destaque"
+        title="Em destaque"
         query={{
           orderBy: 'mostViews',
           limit: 10,
         }}
       />
       <div className="h-32 border-b" />
-      <CategoryFilter title="Pesquise por Categoria" />
+      <CategoryFilter title="Filtrar por Categoria" />
       <ProductList
-        title="Recém adicionados"
+        title="Novidades da Semana"
         query={{
           orderBy: 'updatedAt',
           limit: 7,
@@ -35,9 +35,37 @@ export default function Home() {
       <div className="h-32 border-b" />
       <BigCampaign />
       <ProductList
-        title="Produtos para a sua saúde"
+        title="Cuide da Sua Saúde"
         query={{
           category: 'Saúde',
+          limit: 8,
+        }}
+      />
+      <ProductList
+        title="Essenciais para Bebês"
+        query={{
+          category: 'Bebê',
+          limit: 8,
+        }}
+      />
+      <ProductList
+        title="Cuidados Pessoais"
+        query={{
+          category: 'Higiene Pessoal',
+          limit: 8,
+        }}
+      />
+      <ProductList
+        title="Controle de Pragas"
+        query={{
+          category: 'Inseticidas',
+          limit: 8,
+        }}
+      />
+      <ProductList
+        title="Alimentos Saudáveis"
+        query={{
+          category: 'Alimentação',
           limit: 8,
         }}
       />
