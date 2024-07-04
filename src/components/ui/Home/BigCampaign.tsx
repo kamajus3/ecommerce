@@ -109,7 +109,7 @@ export default function PromoBig() {
 
         <div className="w-full lg:w-3/6 mt-6 lg:mt-0">
           <Image
-            src={formatPhotoUrl(fixedCampaign.photo)}
+            src={formatPhotoUrl(fixedCampaign.photo, fixedCampaign.updatedAt)}
             alt={fixedCampaign.title}
             width={400}
             height={400}

@@ -53,7 +53,7 @@ export default function ProductCard(product: IProduct) {
 
           <Link href={`/producto/${product.id}`}>
             <Image
-              src={formatPhotoUrl(product.photo)}
+              src={formatPhotoUrl(product.photo, product.updatedAt)}
               alt={product.name}
               draggable={false}
               className="select-none object-cover object-center"

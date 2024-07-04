@@ -72,7 +72,7 @@ export default function Carousel() {
           </article>
           <article className="w-1/2 flex-shrink-0 flex-grow-0 max-sm:w-full sm:h-full flex items-center justify-center">
             <Image
-              src={formatPhotoUrl(campaign.photo)}
+              src={formatPhotoUrl(campaign.photo, campaign.updatedAt)}
               alt={campaign.title}
               width={500}
               height={500}

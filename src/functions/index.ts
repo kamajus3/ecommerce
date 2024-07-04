@@ -15,8 +15,8 @@ export async function URLtoFile(url: string) {
   throw Error('Erro ao converter URL para arquivo')
 }
 
-export function formatPhotoUrl(photoUrl: string) {
-  photoUrl = photoUrl + '?timestamp=' + new Date().getTime()
+export function formatPhotoUrl(photoUrl: string, updateAt: string) {
+  photoUrl = photoUrl + '?timestamp=' + updateAt
   return photoUrl
 }
 

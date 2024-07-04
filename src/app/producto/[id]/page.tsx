@@ -89,7 +89,7 @@ export default async function ProductPage({
                   )}
 
                 <Image
-                  src={formatPhotoUrl(product.photo)}
+                  src={formatPhotoUrl(product.photo, product.updatedAt)}
                   alt={product.name}
                   draggable={false}
                   className="select-none object-cover object-center"

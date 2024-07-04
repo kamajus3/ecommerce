@@ -84,7 +84,7 @@ function TableRow({
           <Image
             width={70}
             height={70}
-            src={formatPhotoUrl(product.photo)}
+            src={formatPhotoUrl(product.photo, product.updatedAt)}
             alt={product.name}
             draggable={false}
             className="select-none"
