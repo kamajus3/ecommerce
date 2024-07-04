@@ -1,0 +1,32 @@
+{
+  "rules": {
+    ".indexOn": ["products", "orders"],
+    "products": {
+      ".indexOn": ["campaign/id", "nameLowerCase", "category", "updatedAt",  "createdAt"],
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "campaigns": {
+      ".indexOn": ["updatedAt",  "createdAt"],
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "informations": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "views": {
+      ".read": true,
+      ".write": true
+    },
+    "users": {
+      ".read": true,
+      ".write": true
+    },
+    "orders": {
+      ".indexOn": ["updatedAt", "createdAt", "userId"],
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
