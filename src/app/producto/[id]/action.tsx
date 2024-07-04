@@ -38,23 +38,23 @@ export default function PostAction(product: IProduct) {
   return (
     <div>
       <div className="flex mt-4">
-        <button
-          className="bg-black rounded-l-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+        <Button
+          className="rounded-none rounded-l-md px-4"
           onClick={decreaseQuantity}
           disabled={userIsAdmin || IsproductInCart || quantity === 1}
         >
           -
-        </button>
+        </Button>
         <input
-          className="w-16 h-12 text-center bg-gray-100 disabled:text-disabledText text-black font-medium outline-none border-b border-t"
+          className="w-10 px-3 py-2 text-center bg-gray-100 disabled:text-disabledText text-black font-medium outline-none border-b border-t"
           type="number"
           value={quantity}
           max={product.quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
           disabled={userIsAdmin || IsproductInCart || product.quantity === 0}
         />
-        <button
-          className="bg-black rounded-r-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
+        <Button
+          className="rounded-none rounded-r-md px-4"
           onClick={increaseQuantity}
           disabled={
             userIsAdmin ||
@@ -64,7 +64,7 @@ export default function PostAction(product: IProduct) {
           }
         >
           +
-        </button>
+        </Button>
       </div>
       {IsproductInCart && !userIsAdmin ? (
         <Button

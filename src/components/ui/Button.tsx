@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes } from 'react'
 import clsx from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 function LoadingState() {
   return (
@@ -23,11 +24,14 @@ function PrimaryButton({
 }: IButtonVariant) {
   return (
     <button
-      className={clsx(
-        `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-default disabled:brightness-50 ${className}`,
-        {
-          'transition-all hover:brightness-75 active:scale-90': !disabled,
-        },
+      className={twMerge(
+        clsx(
+          `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-default disabled:brightness-50`,
+          {
+            'transition-all hover:brightness-75 active:scale-90': !disabled,
+          },
+        ),
+        className,
       )}
       {...props}
       disabled={disabled}
@@ -47,12 +51,15 @@ function NoBackgroundButton({
 }: IButtonVariant) {
   return (
     <button
-      className={clsx(
-        `no-background text-gray-700 p-1 flex justify-center items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold disabled:text-disabledText disabled:cursor-default ${className}`,
-        {
-          'hover:brightness-75 active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ring-offset-2 focus:ring-offset-gray-100':
-            !disabled,
-        },
+      className={twMerge(
+        clsx(
+          `no-background text-gray-700 p-1 flex justify-center items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold disabled:text-disabledText disabled:cursor-default`,
+          {
+            'hover:brightness-75 active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ring-offset-2 focus:ring-offset-gray-100':
+              !disabled,
+          },
+        ),
+        className,
       )}
       {...props}
       disabled={disabled}

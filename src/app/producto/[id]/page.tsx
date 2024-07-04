@@ -3,7 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import clsx from 'clsx'
+import { Share } from 'lucide-react'
 
+import Button from '@/components/ui/Button'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
@@ -88,6 +90,10 @@ export default async function ProductPage({
                     </Link>
                   )}
 
+                <Button className="absolute z-50 right-0 top-0 rounded-full p-2 bg-black">
+                  <Share size={20} />
+                </Button>
+
                 <Image
                   src={formatPhotoUrl(product.photo, product.updatedAt)}
                   alt={product.name}
@@ -100,9 +106,12 @@ export default async function ProductPage({
           </div>
           <div className="mt-4 sm:w-80 w-full flex flex-col items-start justify-center">
             <div
-              className={clsx('w-full flex items-center justify-start', {
-                hidden: product.quantity > 5,
-              })}
+              className={clsx(
+                'w-full flex items-center justify-start cursor-default',
+                {
+                  hidden: product.quantity > 5,
+                },
+              )}
             >
               <span
                 className={clsx(

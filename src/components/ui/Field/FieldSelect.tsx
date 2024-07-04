@@ -1,5 +1,7 @@
 import { ForwardedRef, forwardRef, SelectHTMLAttributes } from 'react'
+import clsx from 'clsx'
 import { FieldError } from 'react-hook-form'
+import { twMerge } from 'tailwind-merge'
 
 interface IFieldSelect extends SelectHTMLAttributes<HTMLSelectElement> {
   error?: FieldError | undefined
@@ -16,7 +18,15 @@ function CustomSelect(
   return (
     <select
       {...props}
-      className={`mt-2 rounded-lg bg-neutral-100 px-3 py-2 text-gray-500 bg-transparent outline-none border ${props.error && 'border-red-500'} ${props.className}`}
+      className={twMerge(
+        clsx(
+          'mt-2 rounded-lg bg-neutral-100 px-3 py-2 text-gray-500 bg-transparent outline-none border',
+          {
+            'border-red-500': props.error,
+          },
+        ),
+        props.className,
+      )}
       ref={ref}
     >
       {props.options.map((option) => (

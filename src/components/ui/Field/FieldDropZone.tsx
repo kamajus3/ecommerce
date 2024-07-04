@@ -35,7 +35,12 @@ function CustomFileInput(
         backgroundImage: `url(${props.photoPreview})`,
         backgroundSize: 'cover',
       }}
-      className={`flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95 ${props.error && 'border-red-500 bg-red-100'}`}
+      className={clsx(
+        'flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:brightness-95',
+        {
+          'border-red-500 bg-red-100': props.error,
+        },
+      )}
     >
       <div
         className={clsx('flex flex-col items-center justify-center pt-5 pb-6', {

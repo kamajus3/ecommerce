@@ -1,12 +1,17 @@
 import { LabelHTMLAttributes } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-export default function FieldLabel(props: LabelHTMLAttributes<HTMLElement>) {
-  const { className, ...rest } = props
-
+export default function FieldLabel({
+  className,
+  ...props
+}: LabelHTMLAttributes<HTMLElement>) {
   return (
     <label
-      className={`block text-sm font-medium leading-6 text-gray-900 ${className}`}
-      {...rest}
+      className={twMerge(
+        'block text-sm font-medium leading-6 text-gray-900',
+        className,
+      )}
+      {...props}
     />
   )
 }

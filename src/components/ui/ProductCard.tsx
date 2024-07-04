@@ -87,9 +87,12 @@ export default function ProductCard(product: IProduct) {
           {product.name}
         </span>
         <div
-          className={clsx('w-full flex items-center justify-start', {
-            hidden: product.quantity > 5,
-          })}
+          className={clsx(
+            'w-full flex items-center justify-start cursor-default',
+            {
+              hidden: product.quantity > 5,
+            },
+          )}
         >
           <span
             className={clsx(
