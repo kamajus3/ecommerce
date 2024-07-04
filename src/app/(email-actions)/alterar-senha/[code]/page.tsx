@@ -34,7 +34,7 @@ interface IFormData {
 }
 
 export default function ChangePassword({
-  params,
+  params: { code },
 }: {
   params: { code: string }
 }) {
@@ -48,7 +48,7 @@ export default function ChangePassword({
   const router = useRouter()
 
   function onSubmit(data: IFormData) {
-    confirmPasswordReset(auth, params.code, data.password)
+    confirmPasswordReset(auth, code, data.password)
       .then(() => {
         toast.success('A sua palavra-passe foi alterada com sucesso', {
           position: 'top-right',
@@ -98,14 +98,14 @@ export default function ChangePassword({
   }
 
   useEffect(() => {
-    checkActionCode(auth, params.code)
+    checkActionCode(auth, code)
       .then(() => {
         setLoading(false)
       })
       .catch(() => {
         notFound()
       })
-  }, [params])
+  }, [code])
 
   return loading ? (
     <Loading />
