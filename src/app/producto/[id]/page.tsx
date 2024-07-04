@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import clsx from 'clsx'
 
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
@@ -95,6 +96,24 @@ export default async function ProductPage({
             )}
           </div>
           <div className="mt-4 sm:w-80 w-full flex flex-col items-start justify-center">
+            <div
+              className={clsx('w-full flex items-center justify-start', {
+                hidden: product.quantity > 5,
+              })}
+            >
+              <span
+                className={clsx(
+                  'inline-block p-2 rounded-md bg-gray-500 text-white text-xs font-semibold',
+                  {
+                    'bg-red-500': product.quantity !== 0,
+                  },
+                )}
+              >
+                {product.quantity > 0
+                  ? `Apenas ${product.quantity} em estoque`
+                  : 'Esgotado'}
+              </span>
+            </div>
             <Link
               href={`/categoria/${product.category}`}
               className="text-gray-600 font-medium"

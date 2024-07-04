@@ -17,16 +17,17 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { Order } from '@/@types'
+import { Order, ProductItem } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { publishedSince } from '@/functions'
+import { formatPhoneNumber, publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
+import { getProduct } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface FilterFormData {
@@ -45,12 +46,22 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openSoldModal, setOpenSoldModal] = useState(false)
 
+  const abbrTitle =
+    `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replace(
+      ',',
+      '',
+    )
+
   return (
     <Table.R inside="body">
       <Table.D>{order.id}</Table.D>
-      <Table.D>{order.products.length}</Table.D>
+      <Table.D>
+        <abbr title={abbrTitle} className="w-full border-none cursor-default">
+          {order.products.length}
+        </abbr>
+      </Table.D>
       <Table.D>{`${order.firstName} ${order.lastName}`}</Table.D>
-      <Table.D>{order.phone}</Table.D>
+      <Table.D>{formatPhoneNumber(order.phone)}</Table.D>
       <Table.D>{order.address}</Table.D>
       <Table.D>
         {order.state === 'not-sold' ? 'Não vendido' : 'Vendido'}
@@ -82,7 +93,6 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
         >
           Cancelar
         </Button>
-
         <Modal.Dialog
           title="Cancelar pedido"
           description="Você tem certeza que queres cancelar esse pedido?"
@@ -102,11 +112,10 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
               setOpenSoldModal(true)
             }
           }}
-          disabled
+          disabled={order.state === 'sold'}
         >
-          Vendido
+          Vender
         </Button>
-
         <Modal.Dialog
           title="Colocar como vendido"
           description="Você tem queres colocar o estado desse pedido para vendido?"
@@ -116,7 +125,6 @@ function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
           setOpen={setOpenSoldModal}
         />
       </Table.D>
-
       <Table.D>
         <Link href={`/invoice/${order.id}`}>
           <Button variant="no-background" className="mx-auto text-main">
@@ -142,7 +150,7 @@ function reverseData(obj: Record<string, Order>) {
   return newObj
 }
 
-export default function CartPage() {
+export default function OrderPage() {
   const { register, watch } = useForm<FilterFormData>({
     defaultValues: {
       orderBy: 'createdAt',
@@ -177,12 +185,57 @@ export default function CartPage() {
     fetchProducts()
   }, [setOrderData, code])
 
-  async function updateOrderState(orderId: string, state: string) {
+  async function updateOrderState(order: Order, state: 'sold' | 'not-sold') {
+    let errorMessage = 'Erro ao alterar o estado do pedido'
+    const soldProducts: ProductItem[] = []
+
     try {
-      update(ref(database, `orders/${orderId}`), {
+      if (state === 'sold') {
+        for (const p of order.products) {
+          const product = await getProduct(p.id)
+
+          if (product) {
+            soldProducts.push({
+              ...product,
+              id: p.id,
+            })
+
+            if (product.quantity === 0) {
+              errorMessage = `O/A ${product.name} está fora de estoque`
+              throw new Error(errorMessage)
+            }
+
+            if (p.quantity > product.quantity) {
+              errorMessage = `Tem apenas ${product.quantity} ${product.name} em estoque`
+              throw new Error(errorMessage)
+            }
+
+            if (p.quantity > product.quantity) {
+              errorMessage = `Não tem nenhum ${product.name} em estoque`
+              throw new Error(errorMessage)
+            }
+          } else {
+            errorMessage = `O producto ${p.name} não está no estoque`
+            throw new Error(errorMessage)
+          }
+        }
+      }
+
+      await update(ref(database, `orders/${order.id}`), {
         updatedAt: new Date().toISOString(),
         state,
       })
+
+      for (const p of soldProducts) {
+        const orderProduct = order.products.find((op) => op.id === p.id)
+
+        if (orderProduct) {
+          await update(ref(database, `products/${p.id}`), {
+            quantity: p.quantity - orderProduct.quantity,
+          })
+        }
+      }
+
       toast.success('O estado do pedido foi alterado com sucesso', {
         position: 'top-right',
         autoClose: 5000,
@@ -195,7 +248,7 @@ export default function CartPage() {
         transition: Bounce,
       })
     } catch {
-      toast.error('Erro ao alterar o estado do pedido', {
+      toast.error(errorMessage, {
         position: 'top-right',
         autoClose: 5000,
         hideProgressBar: false,
@@ -294,7 +347,7 @@ export default function CartPage() {
                     id,
                   }}
                   deleteOrder={() => deleteOrder(id)}
-                  putAsSold={() => updateOrderState(id, 'sold')}
+                  putAsSold={() => updateOrderState({ ...order, id }, 'sold')}
                 />
               ))}
             </Table.Body>

@@ -50,15 +50,14 @@ function NoBackgroundButton({
   return (
     <button
       className={clsx(
-        `no-background opac text-gray-700 p-1 flex justify-center items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold ${className}`,
+        `no-background text-gray-700 p-1 flex justify-center items-center gap-2 rounded-md px-3 py-2 text-sm font-semibold disabled:text-disabledText disabled:cursor-not-allowed ${className}`,
         {
           'hover:brightness-75 active:scale-90 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 ring-offset-2 focus:ring-offset-gray-100':
             !disabled,
-          'cursor-not-allowed text-disabledText': disabled,
         },
       )}
-      disabled={disabled}
       {...props}
+      disabled={disabled}
     >
       {!loading && children}
       {loading && <LoadingState />}

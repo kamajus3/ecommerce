@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import clsx from 'clsx'
 import { X } from 'lucide-react'
 
 import { ProductItem } from '@/@types'
@@ -85,6 +86,24 @@ export default function ProductCard(product: ProductItem) {
         <span className="w-72 text-base text-left text-gray-700 font-medium">
           {product.name}
         </span>
+        <div
+          className={clsx('w-full flex items-center justify-start', {
+            hidden: product.quantity > 5,
+          })}
+        >
+          <span
+            className={clsx(
+              'inline-block p-2 rounded-md bg-gray-500 text-white text-xs font-semibold',
+              {
+                'bg-red-500': product.quantity !== 0,
+              },
+            )}
+          >
+            {product.quantity > 0
+              ? `Apenas ${product.quantity} em estoque`
+              : 'Esgotado'}
+          </span>
+        </div>
       </div>
     </div>
   )

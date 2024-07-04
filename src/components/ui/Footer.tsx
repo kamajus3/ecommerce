@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ChevronUp, MoveUpRight } from 'lucide-react'
 
 import { env } from '@/env'
+import { formatPhoneNumber } from '@/functions'
 
 interface FooterProps {
   disableBackButton?: boolean
@@ -48,7 +49,9 @@ export default function Footer({ disableBackButton = false }: FooterProps) {
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="tel:+244926437705">+244 935 420 498</Link>
+                  <Link href="tel:+244926437705">
+                    {formatPhoneNumber('935420498')}
+                  </Link>
                 </li>
               </ul>
             </div>

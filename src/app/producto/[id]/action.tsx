@@ -41,7 +41,7 @@ export default function PostAction(product: ProductItem) {
         <button
           className="bg-black rounded-l-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={decreaseQuantity}
-          disabled={userIsAdmin || IsproductInCart}
+          disabled={userIsAdmin || IsproductInCart || quantity === 1}
         >
           -
         </button>
@@ -49,13 +49,19 @@ export default function PostAction(product: ProductItem) {
           className="w-16 h-12 text-center bg-gray-100 disabled:text-disabledText text-black font-medium outline-none border-b border-t"
           type="number"
           value={quantity}
+          max={product.quantity}
           onChange={(e) => setQuantity(parseInt(e.target.value))}
-          disabled={userIsAdmin || IsproductInCart}
+          disabled={userIsAdmin || IsproductInCart || product.quantity === 0}
         />
         <button
           className="bg-black rounded-r-md hover:brightness-90 active:brightness-75 font-semibold h-12 w-12"
           onClick={increaseQuantity}
-          disabled={userIsAdmin || IsproductInCart}
+          disabled={
+            userIsAdmin ||
+            IsproductInCart ||
+            product.quantity === 0 ||
+            quantity === product.quantity
+          }
         >
           +
         </button>
@@ -69,7 +75,7 @@ export default function PostAction(product: ProductItem) {
             }
           }}
           className="h-12 mt-4 bg-red-500"
-          disabled={userIsAdmin}
+          disabled={userIsAdmin || product.quantity === 0}
         >
           Remover do carrinho
         </Button>
@@ -84,7 +90,7 @@ export default function PostAction(product: ProductItem) {
             }
           }}
           className="h-12 mt-4 bg-secondary"
-          disabled={userIsAdmin}
+          disabled={userIsAdmin || product.quantity === 0}
         >
           Adicionar ao carrinho
         </Button>

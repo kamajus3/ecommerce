@@ -64,3 +64,17 @@ export function hexToRGBA(hex: string, alpha: number): string {
 
   return rgba
 }
+
+export function formatPhoneNumber(phone: string) {
+  phone = phone.replaceAll(' ', '')
+
+  if (!/^(?:\+244)?\d{9}$/.test(phone)) {
+    throw new Error('Invalid number')
+  }
+
+  if (phone.startsWith('+244')) {
+    return `+244 ${phone.slice(4, 7)} ${phone.slice(7, 10)} ${phone.slice(10)}`
+  }
+
+  return `+244 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`
+}

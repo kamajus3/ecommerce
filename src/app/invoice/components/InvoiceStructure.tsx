@@ -1,4 +1,5 @@
 import { Order, ProductOrder } from '@/@types'
+import { formatPhoneNumber } from '@/functions'
 import {
   Document,
   Font,
@@ -136,7 +137,7 @@ export const InvoiceStructure = ({ orderData }: { orderData: Order }) => (
           Endereço: Rua Amilcar Cabral, Bloco A12, 7°A, P73, Distrito Urbano do
           Kilamba, Belas, Luanda, Angola
         </Text>
-        <Text>Tel.: +244 935 420 498</Text>
+        <Text>Tel.: {formatPhoneNumber('935420498')}</Text>
         <Text>Email: geral@raciuscare.com</Text>
       </View>
 
@@ -145,7 +146,7 @@ export const InvoiceStructure = ({ orderData }: { orderData: Order }) => (
         <Text>
           Nome: {orderData.firstName} {orderData.lastName}
         </Text>
-        <Text>Telefone: {orderData.phone}</Text>
+        <Text>Telefone: {formatPhoneNumber(orderData.phone)}</Text>
         <Text>Endereço: {orderData.address}</Text>
       </View>
 
