@@ -1,20 +1,21 @@
 import { Metadata } from 'next'
 import { child, get, ref } from 'firebase/database'
 
-import { campaignValidator } from '@/functions'
+import { campaignValidator, formatPhotoUrl } from '@/functions'
 import { database } from '@/lib/firebase/config'
 
 import { CampaingPage } from './campaign'
 
 export async function generateMetadata({
-  params,
+  params: { id },
 }: {
   params: { id: string }
 }): Promise<Metadata> {
   return new Promise((resolve) => {
-    get(child(ref(database), `campaigns/${params.id}`)).then((snapshot) => {
+    get(child(ref(database), `campaigns/${id}`)).then((snapshot) => {
       if (snapshot.exists()) {
-        if (!campaignValidator(snapshot.val())) {
+        const data = snapshot.val()
+        if (!campaignValidator(data)) {
           resolve({
             title: 'Campanha não encontrada.',
           })
@@ -22,14 +23,17 @@ export async function generateMetadata({
           return { notFound: true }
         }
         resolve({
-          title: snapshot.val().title,
-          description: snapshot.val().description.slice(0, 100) + '...',
+          title: data.title,
+          description:
+            data.description.length <= 100
+              ? data.description
+              : `${data.description.slice(0, 100)}...`,
           openGraph: {
             type: 'article',
-            title: snapshot.val().title,
-            description: snapshot.val().description,
+            title: data.title,
+            description: data.description,
             siteName: 'Racius Care',
-            images: snapshot.val().photo,
+            images: formatPhotoUrl(data.photo, data.updatedAt),
           },
         })
       } else {

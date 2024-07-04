@@ -32,7 +32,7 @@ export async function generateMetadata({
             title: data.name,
             description: data.description,
             siteName: 'Racius Care',
-            images: data.photo,
+            images: formatPhotoUrl(data.photo, data.updatedAt),
           },
         })
       } else {

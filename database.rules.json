@@ -4,16 +4,16 @@
     "products": {
       ".indexOn": ["campaign/id", "nameLowerCase", "category", "updatedAt",  "createdAt"],
       ".read": true,
-      ".write": "auth != null"
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },
     "campaigns": {
       ".indexOn": ["updatedAt",  "createdAt"],
       ".read": true,
-      ".write": "auth != null"
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },
     "informations": {
       ".read": true,
-      ".write": "auth != null"
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },
     "views": {
       ".read": true,
