@@ -4,7 +4,7 @@ import { Dispatch, Fragment, SetStateAction, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { ProductItem } from '@/@types'
+import { IProduct } from '@/@types'
 import useUserStore from '@/store/UserStore'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,23 +12,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '../Button'
 import Field from '../Field'
 
-interface FormData {
+interface IFormData {
   firstName: string
   lastName: string
   address: string
   phone: string
 }
 
-interface CartProduct extends ProductItem {
+interface ICartProduct extends IProduct {
   quantity: number
 }
 
-interface ConfirmOrderProps {
+interface IConfirmOrder {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (data: FormData) => void | Promise<void>
+  action: (data: IFormData) => void | Promise<void>
   selectedProducts: string[]
-  productData: CartProduct[]
+  productData: ICartProduct[]
 }
 
 const schema = z.object({
@@ -55,20 +55,20 @@ const schema = z.object({
     .regex(/^(?:\+244)?\d{9}$/, 'O número de telefone está inválido'),
 })
 
-export default function ConfirmOrder(props: ConfirmOrderProps) {
+export default function ConfirmOrder(props: IConfirmOrder) {
   const cancelButtonRef = useRef(null)
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
   const userDB = useUserStore((state) => state.data)
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     props.setOpen(false)
     props.action(data)
   }

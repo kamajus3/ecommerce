@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { Order, ProductItem } from '@/@types'
+import { IOrder, IProduct } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
@@ -30,18 +30,18 @@ import { database } from '@/lib/firebase/config'
 import { getProduct } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-interface FilterFormData {
+interface IFilterData {
   code: string
   orderBy: string
 }
 
-interface OrderTableRowProps {
-  order: Order
+interface ITableRow {
+  order: IOrder
   deleteOrder(): void
   putAsSold(): void
 }
 
-function OrderTableRow({ order, deleteOrder, putAsSold }: OrderTableRowProps) {
+function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
   const money = useMoneyFormat()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openSoldModal, setOpenSoldModal] = useState(false)
@@ -141,8 +141,8 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, Order>) {
-  const newObj: Record<string, Order> = {}
+function reverseData(obj: Record<string, IOrder>) {
+  const newObj: Record<string, IOrder> = {}
   const revObj = Object.keys(obj).reverse()
   revObj.forEach(function (i) {
     newObj[i] = obj[i]
@@ -151,14 +151,14 @@ function reverseData(obj: Record<string, Order>) {
 }
 
 export default function OrderPage() {
-  const { register, watch } = useForm<FilterFormData>({
+  const { register, watch } = useForm<IFilterData>({
     defaultValues: {
       orderBy: 'createdAt',
     },
     resolver: zodResolver(schema),
   })
 
-  const [orderData, setOrderData] = useState<Record<string, Order>>({})
+  const [orderData, setOrderData] = useState<Record<string, IOrder>>({})
   const [loading, setLoading] = useState(true)
   const code = watch('code')
 
@@ -170,7 +170,7 @@ export default function OrderPage() {
         : query(reference, orderByChild('createdAt'))
 
       onValue(orderQuery, (snapshot) => {
-        const results: Record<string, Order> = {}
+        const results: Record<string, IOrder> = {}
         if (snapshot.exists()) {
           snapshot.forEach(function (child) {
             results[child.key] = child.val()
@@ -185,9 +185,9 @@ export default function OrderPage() {
     fetchProducts()
   }, [setOrderData, code])
 
-  async function updateOrderState(order: Order, state: 'sold' | 'not-sold') {
+  async function updateOrderState(order: IOrder, state: 'sold' | 'not-sold') {
     let errorMessage = 'Erro ao alterar o estado do pedido'
-    const soldProducts: ProductItem[] = []
+    const soldProducts: IProduct[] = []
 
     try {
       if (state === 'sold') {
@@ -340,7 +340,7 @@ export default function OrderPage() {
             </thead>
             <Table.Body>
               {Object.entries(orderData).map(([id, order]) => (
-                <OrderTableRow
+                <TableRow
                   key={id}
                   order={{
                     ...order,

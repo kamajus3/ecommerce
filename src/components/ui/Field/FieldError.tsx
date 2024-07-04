@@ -1,19 +1,23 @@
-import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form'
+import {
+  FieldError as FormFieldError,
+  FieldErrorsImpl,
+  Merge,
+} from 'react-hook-form'
 
-interface FieldErrorProps {
+interface IFieldError {
   error:
-    | FieldError
+    | FormFieldError
     | Merge<
-        FieldError,
+        FormFieldError,
         (
-          | Merge<FieldError, FieldErrorsImpl<{ id: string; name: string }>>
+          | Merge<FormFieldError, FieldErrorsImpl<{ id: string; name: string }>>
           | undefined
         )[]
       >
     | undefined
 }
 
-export default function FieldError(props: FieldErrorProps) {
+export default function FieldError(props: IFieldError) {
   return (
     <div>
       {props.error && (

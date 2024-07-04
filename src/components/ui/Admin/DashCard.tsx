@@ -1,6 +1,6 @@
 import { TrendingDown, TrendingUp } from 'lucide-react'
 
-interface DashCardProps {
+interface IDashCard {
   title: string
   quantity: number
   rate?: number
@@ -12,7 +12,7 @@ export default function DashCard({
   quantity,
   rate,
   rateMessage,
-}: DashCardProps) {
+}: IDashCard) {
   return (
     <div className="rounded-md flex flex-col gap-4 border p-4">
       <h3 className="text-[#979797] font-medium">{title}</h3>

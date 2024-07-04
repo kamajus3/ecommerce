@@ -1,6 +1,6 @@
-import { Category } from '@/@types'
+import { ICategory } from '@/@types'
 
-const CATEGORIES: Category[] = [
+const CATEGORIES: ICategory[] = [
   {
     label: 'Higiene Pessoal',
     img: '/categories/hygiene.jpg',

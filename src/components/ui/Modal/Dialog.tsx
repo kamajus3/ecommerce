@@ -7,7 +7,7 @@ import { Dialog, Transition } from '@headlessui/react'
 
 import Button from '../Button'
 
-interface DialogModalProps {
+interface IDialogModal {
   title: string
   themeColor?: string
   actionTitle: string
@@ -20,7 +20,7 @@ interface DialogModalProps {
 export default function DialogModal({
   themeColor = contants.colors.main,
   ...props
-}: DialogModalProps) {
+}: IDialogModal) {
   const cancelButtonRef = useRef(null)
 
   return (

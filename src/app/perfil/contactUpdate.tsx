@@ -23,7 +23,7 @@ const schema = z.object({
   email: z.string().email('Email inválido'),
 })
 
-interface FormData {
+interface IFormData {
   email: string
   phone: string
 }
@@ -37,14 +37,14 @@ export default function ContactUpdate() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting, dirtyFields },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
   const [openPasswordModal, setPasswordModal] = useState(false)
   const [newEmail, setNewEmail] = useState('')
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: IFormData) => {
     if (user && userDB) {
       if (dirtyFields.email || dirtyFields.phone) {
         update(ref(database, `users/${user.uid}`), {
@@ -138,7 +138,7 @@ export default function ContactUpdate() {
   }
 
   const updateFieldAsDefault = useCallback(
-    (data?: FormData) => {
+    (data?: IFormData) => {
       if (userDB && user) {
         const userData = data || userDB
         setValue('email', user.email || '', {

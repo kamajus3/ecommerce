@@ -8,7 +8,7 @@ import { ref, set } from 'firebase/database'
 import { nanoid } from 'nanoid'
 import { Bounce, toast } from 'react-toastify'
 
-import { ProductItem, ProductOrder } from '@/@types'
+import { IProduct, IProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
@@ -25,21 +25,21 @@ import useUserStore from '@/store/UserStore'
 import Header from '../../components/ui/Header'
 import Modal from '../../components/ui/Modal'
 
-interface CartProduct extends ProductItem {
+interface ICartProduct extends IProduct {
   quantity: number
 }
 
-interface CartTableRowProps {
-  product: CartProduct
+interface ITableRow {
+  product: ICartProduct
   selectedProducts: string[]
   setSelectedProduct: Dispatch<SetStateAction<string[]>>
 }
 
-function CartTableRow({
+function TableRow({
   product,
   selectedProducts,
   setSelectedProduct,
-}: CartTableRowProps) {
+}: ITableRow) {
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const money = useMoneyFormat()
@@ -130,7 +130,7 @@ function CartTableRow({
 export default function CartPage() {
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [totalPrice, setTotalPrice] = useState(0)
-  const [productData, setProductData] = useState<CartProduct[]>([])
+  const [productData, setProductData] = useState<ICartProduct[]>([])
 
   const [isModalOpened, setModalOpen] = useState(false)
   const [openLoginModal, setOpenLoginModal] = useState(false)
@@ -146,16 +146,16 @@ export default function CartPage() {
   const { initialized } = useAuth()
   const user = useUserStore((state) => state.metadata)
 
-  const cartProducts = useCartStore((state) => state.products)
+  const ICartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState<string[]>([])
   const money = useMoneyFormat()
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const fetchedProducts: CartProduct[] = []
+      const fetchedProducts: ICartProduct[] = []
 
-      if (cartProducts.length > 0) {
-        for (const p of cartProducts) {
+      if (ICartProducts.length > 0) {
+        for (const p of ICartProducts) {
           await getProduct(p.id).then((product) => {
             if (product) {
               const productPrice =
@@ -183,7 +183,7 @@ export default function CartPage() {
 
     setLoading(false)
     fetchProducts()
-  }, [cartProducts])
+  }, [ICartProducts])
 
   useEffect(() => {
     const selectedTotalPrice = productData.reduce((total, product) => {
@@ -194,9 +194,9 @@ export default function CartPage() {
     }, 0)
 
     setTotalPrice(selectedTotalPrice)
-  }, [selectedProducts, cartProducts, productData])
+  }, [selectedProducts, ICartProducts, productData])
 
-  interface FormData {
+  interface IFormData {
     firstName: string
     lastName: string
     address: string
@@ -229,18 +229,18 @@ export default function CartPage() {
     }
   }
 
-  async function confirmOrder(data: FormData) {
-    const productsList: ProductOrder[] = []
+  async function confirmOrder(data: IFormData) {
+    const productsList: IProductOrder[] = []
 
     for (const id of selectedProducts) {
       const product = await getProduct(id)
-      const cartProduct = cartProducts.find((p) => p.id === id)
+      const ICartProduct = ICartProducts.find((p) => p.id === id)
 
-      if (product && cartProduct) {
+      if (product && ICartProduct) {
         productsList.push({
           id,
           name: product.name,
-          quantity: cartProduct.quantity,
+          quantity: ICartProduct.quantity,
           price: product.price,
           promotion: product.campaign?.reduction
             ? Number(product.campaign?.reduction)
@@ -292,7 +292,7 @@ export default function CartPage() {
         <article className="px-8 mx-auto mb-8 max-sm:p-9">
           <div className="overflow-x-auto">
             <DataState
-              dataCount={cartProducts.length}
+              dataCount={ICartProducts.length}
               loading={loading}
               noDataMessage="Os productos que adicionar no carrinho aparecerão aqui"
             >
@@ -305,11 +305,11 @@ export default function CartPage() {
                         id="select-all-products"
                         name="select-all-products"
                         checked={
-                          selectedProducts.length === cartProducts.length
+                          selectedProducts.length === ICartProducts.length
                         }
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setSelectedProduct(cartProducts.map((p) => p.id))
+                            setSelectedProduct(ICartProducts.map((p) => p.id))
                           } else {
                             setSelectedProduct([])
                           }
@@ -327,7 +327,7 @@ export default function CartPage() {
                 </thead>
                 <Table.Body>
                   {productData.map((product) => (
-                    <CartTableRow
+                    <TableRow
                       key={product.id}
                       product={product}
                       setSelectedProduct={setSelectedProduct}

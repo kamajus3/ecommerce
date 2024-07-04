@@ -1,11 +1,11 @@
 import { ForwardedRef, forwardRef, InputHTMLAttributes } from 'react'
 import { FieldError } from 'react-hook-form'
 
-interface FieldInput extends InputHTMLAttributes<HTMLInputElement> {
+interface IFieldInput extends InputHTMLAttributes<HTMLInputElement> {
   error: FieldError | undefined
 }
 
-function CustomInput(props: FieldInput, ref: ForwardedRef<HTMLInputElement>) {
+function CustomInput(props: IFieldInput, ref: ForwardedRef<HTMLInputElement>) {
   const { className, ...rest } = props
 
   return (

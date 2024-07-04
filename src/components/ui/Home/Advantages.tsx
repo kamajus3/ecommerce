@@ -1,13 +1,13 @@
 import dynamic from 'next/dynamic'
 import dynamicIconImports from 'lucide-react/dynamicIconImports'
 
-interface AdvantageCardProps {
+interface IAdvantageCard {
   title: string
   description: string
   icon: keyof typeof dynamicIconImports
 }
 
-function AdvantageCard(props: AdvantageCardProps) {
+function AdvantageCard(props: IAdvantageCard) {
   const LucideIcon = dynamic(dynamicIconImports[props.icon])
 
   return (

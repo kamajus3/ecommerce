@@ -19,7 +19,7 @@ const schema = z.object({
     .min(6, 'A palavra-passe precisa de no minimo 6 caracteres'),
 })
 
-interface FormData {
+interface IFormData {
   email: string
   password: string
 }
@@ -32,9 +32,9 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<IFormData>({ resolver: zodResolver(schema) })
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     signInWithEmail(data.email, data.password, 'admin')
       .then(async () => {
         router.push('/admin/dashboard')

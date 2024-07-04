@@ -5,7 +5,7 @@ import clsx from 'clsx'
 import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { ProductItem, ProductQuery } from '@/@types'
+import { IProduct, IProductQuery } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 
 import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
@@ -20,13 +20,11 @@ import 'swiper/css/scrollbar'
 
 interface ProductListProps {
   title: string
-  query: ProductQuery
+  query: IProductQuery
 }
 
 export default function ProductList(props: ProductListProps) {
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
+  const [productData, setProductData] = useState<Record<string, IProduct>>({})
 
   const [loading, setLoading] = useState(true)
 
@@ -68,13 +66,9 @@ export default function ProductList(props: ProductListProps) {
         }}
       >
         {Object.entries(productData).map(([id, product]) => (
-          <div key={id}>
-            {id !== props.query?.except && (
-              <SwiperSlide>
-                <ProductCard {...product} id={id} />
-              </SwiperSlide>
-            )}
-          </div>
+          <SwiperSlide key={id}>
+            <ProductCard {...product} id={id} />
+          </SwiperSlide>
         ))}
 
         {loading &&

@@ -12,11 +12,11 @@ import {
   startAt,
 } from 'firebase/database'
 
-import { Order, ProductItem, ProductQuery } from '@/@types'
+import { IOrder, IProduct, IProductQuery } from '@/@types'
 
 import { database } from './config'
 
-export function getProduct(id: string): Promise<ProductItem | undefined> {
+export function getProduct(id: string): Promise<IProduct | undefined> {
   const documentRef = ref(database, `products/${id}`)
   return new Promise((resolve) => {
     onValue(documentRef, (snapshot) => {
@@ -29,7 +29,7 @@ export function getProduct(id: string): Promise<ProductItem | undefined> {
   })
 }
 
-export function getOrder(id: string): Promise<Order | undefined> {
+export function getOrder(id: string): Promise<IOrder | undefined> {
   const documentRef = ref(database, `orders/${id}`)
   return new Promise((resolve) => {
     onValue(documentRef, (snapshot) => {
@@ -43,8 +43,8 @@ export function getOrder(id: string): Promise<Order | undefined> {
 }
 
 export async function getProducts(
-  props?: ProductQuery,
-): Promise<Record<string, ProductItem>> {
+  props?: IProductQuery,
+): Promise<Record<string, IProduct>> {
   const reference = ref(database, 'products/')
   const constraints: QueryConstraint[] = []
   let productMostVieweds: string[] = []
@@ -103,11 +103,18 @@ export async function getProducts(
     onValue(productQuery, (snapshot) => {
       const data = snapshot.val()
       if (data) {
+        if (props?.exceptProductId) {
+          delete data[props.exceptProductId]
+          productMostVieweds = productMostVieweds.filter(
+            (id) => id !== props.exceptProductId,
+          )
+        }
+
         if (productMostVieweds.length !== 0) {
-          const filteredData: Record<string, ProductItem> = {}
+          const filteredData: Record<string, IProduct> = {}
           productMostVieweds.forEach((id) => {
             if (data[id]) {
-              filteredData[id] = data[id] as ProductItem
+              filteredData[id] = data[id] as IProduct
             }
           })
           resolve(filteredData)

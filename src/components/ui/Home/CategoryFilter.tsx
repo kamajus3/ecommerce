@@ -5,18 +5,18 @@ import Link from 'next/link'
 import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { Category } from '@/@types'
+import { ICategory } from '@/@types'
 import CATEGORIES from '@/assets/data/categories'
 
 import '@/assets/swiper.css'
 
 import 'swiper/css/scrollbar'
 
-interface CategoryFilterProps {
+interface ICategoryFilter {
   title: string
 }
 
-function CategoryCard(props: Category) {
+function CategoryCard(props: ICategory) {
   return (
     <Link className="inline-block w-48" href={`/categoria/${props.label}`}>
       <div className="w-48 h-48 relative">
@@ -35,7 +35,7 @@ function CategoryCard(props: Category) {
   )
 }
 
-export default function CategoryFilter(props: CategoryFilterProps) {
+export default function CategoryFilter(props: ICategoryFilter) {
   return (
     <div className="p-6 mt-6">
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>

@@ -1,7 +1,7 @@
 import { ForwardedRef, forwardRef, SelectHTMLAttributes } from 'react'
 import { FieldError } from 'react-hook-form'
 
-interface FieldSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+interface IFieldSelect extends SelectHTMLAttributes<HTMLSelectElement> {
   error?: FieldError | undefined
   options: {
     value: string
@@ -10,7 +10,7 @@ interface FieldSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 function CustomSelect(
-  props: FieldSelectProps,
+  props: IFieldSelect,
   ref: ForwardedRef<HTMLSelectElement>,
 ) {
   return (

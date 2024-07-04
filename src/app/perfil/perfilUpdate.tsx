@@ -32,7 +32,7 @@ const schema = z.object({
     .trim(),
 })
 
-interface FormData {
+interface IFormData {
   firstName: string
   lastName: string
   address: string
@@ -47,11 +47,11 @@ export default function PerfilUpdate() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting, dirtyFields },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: IFormData) => {
     if (user && userDB) {
       if (
         dirtyFields.firstName ||
@@ -111,7 +111,7 @@ export default function PerfilUpdate() {
   }
 
   const updateFieldAsDefault = useCallback(
-    (data?: FormData) => {
+    (data?: IFormData) => {
       if (userDB && user) {
         const userData = data || userDB
         setValue('firstName', userData.firstName, {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 
-import { Order } from '@/@types'
+import { IOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
@@ -15,7 +15,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
 import useUserStore from '@/store/UserStore'
 
-function OrderTableRow(order: Order) {
+function OrderTableRow(order: IOrder) {
   const money = useMoneyFormat()
 
   return (
@@ -51,8 +51,8 @@ function OrderTableRow(order: Order) {
   )
 }
 
-function reverseData(obj: Record<string, Order>) {
-  const newObj: Record<string, Order> = {}
+function reverseData(obj: Record<string, IOrder>) {
+  const newObj: Record<string, IOrder> = {}
   const revObj = Object.keys(obj).reverse()
   revObj.forEach(function (i) {
     newObj[i] = obj[i]
@@ -61,7 +61,7 @@ function reverseData(obj: Record<string, Order>) {
 }
 
 export default function CartPage() {
-  const [orderData, setOrderData] = useState<Record<string, Order>>({})
+  const [orderData, setOrderData] = useState<Record<string, IOrder>>({})
   const [loading, setLoading] = useState(true)
   const user = useUserStore((state) => state.metadata)
 
@@ -76,7 +76,7 @@ export default function CartPage() {
         )
 
         onValue(orderQuery, (snapshot) => {
-          const results: Record<string, Order> = {}
+          const results: Record<string, IOrder> = {}
           snapshot.forEach(function (child) {
             results[child.key] = child.val()
           })
@@ -89,8 +89,8 @@ export default function CartPage() {
             },
           )
 
-          const recordFormat: Record<string, Order> = sortedArray.reduce(
-            (acc: Record<string, Order>, [key, value]) => {
+          const recordFormat: Record<string, IOrder> = sortedArray.reduce(
+            (acc: Record<string, IOrder>, [key, value]) => {
               acc[key] = value
               return acc
             },

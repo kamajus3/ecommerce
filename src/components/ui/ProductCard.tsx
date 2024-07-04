@@ -3,13 +3,13 @@ import Link from 'next/link'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
-import { ProductItem } from '@/@types'
+import { IProduct } from '@/@types'
 import { campaignValidator } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
-export default function ProductCard(product: ProductItem) {
+export default function ProductCard(product: IProduct) {
   const money = useMoneyFormat()
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)

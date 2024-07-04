@@ -8,26 +8,26 @@ import {
 } from 'firebase/auth'
 import { child, get, ref, set } from 'firebase/database'
 
-import { UserDatabase, UserRole } from '@/@types'
+import { IUser, UserRole } from '@/@types'
 import { auth, database } from '@/lib/firebase/config'
 import useUserStore from '@/store/UserStore'
 
-interface AuthContextProps {
+interface IAuthContext {
   initialized: boolean
   signInWithEmail: (
     email: string,
     password: string,
     userRole: UserRole,
-  ) => Promise<UserDatabase | null>
+  ) => Promise<IUser | null>
   signUpWithEmail: (
     name: string,
     email: string,
     password: string,
-  ) => Promise<UserDatabase | null>
+  ) => Promise<IUser | null>
   logout(): Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextProps>({
+export const AuthContext = createContext<IAuthContext>({
   initialized: false,
   signInWithEmail: () => Promise.resolve(null),
   signUpWithEmail: () => Promise.resolve(null),

@@ -3,14 +3,14 @@
 import { ReactNode } from 'react'
 import { AlertCircle } from 'lucide-react'
 
-interface DataStateProps {
+interface IDataState {
   dataCount: number
   noDataMessage: string
   loading: boolean
-  children: ReactNode // Data Render Component
+  children: ReactNode
 }
 
-export default function DataState(props: DataStateProps) {
+export default function DataState(props: IDataState) {
   return (
     <article>
       {!props.loading && props.dataCount === 0 && (

@@ -14,12 +14,12 @@ import { getProduct } from '@/lib/firebase/database'
 import PostAction from './action'
 
 export async function generateMetadata({
-  params,
+  params: { id },
 }: {
   params: { id: string }
 }): Promise<Metadata> {
   return new Promise((resolve) => {
-    getProduct(params.id).then((data) => {
+    getProduct(id).then((data) => {
       if (data) {
         resolve({
           title: data.name,
@@ -45,12 +45,15 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage({
-  params,
+  params: { id },
 }: {
   params: { id: string }
 }) {
-  const product = await getProduct(params.id)
+  const product = await getProduct(id)
+
   if (!product) notFound()
+  else product.id = id
+
   const money = useMoneyFormat()
 
   return (
@@ -143,7 +146,7 @@ export default async function ProductPage({
                   {money.format(product.price)}
                 </span>
               )}
-            <PostAction {...product} id={params.id} />
+            <PostAction {...product} />
           </div>
         </div>
       </div>
@@ -151,7 +154,7 @@ export default async function ProductPage({
         title="Produtos relacionados"
         query={{
           category: product.category,
-          except: params.id,
+          exceptProductId: id,
           limit: 15,
         }}
       />

@@ -37,7 +37,7 @@ const schema = z
     path: ['confirmPassword'],
   })
 
-interface FormData {
+interface IFormData {
   name: string
   email: string
   password: string
@@ -50,12 +50,12 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<IFormData>({ resolver: zodResolver(schema) })
 
   const router = useRouter()
   const { signUpWithEmail } = useAuth()
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     signUpWithEmail(data.name, data.email, data.password)
       .then(() => {
         toast.success('A conta foi criada com sucesso', {

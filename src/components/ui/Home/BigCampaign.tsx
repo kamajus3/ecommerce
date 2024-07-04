@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { CampaignBase } from '@/@types'
+import { ICampaignBase } from '@/@types'
 import { campaignValidator } from '@/functions'
 import { useCampaign } from '@/hooks/useCampaign'
 import { useInformation } from '@/hooks/useInformation'
@@ -32,7 +32,7 @@ function calculateTimeRemaining(finishDate: Date) {
 export default function PromoBig() {
   const { campaignData } = useCampaign()
   const { informationsData } = useInformation()
-  const [fixedCampaign, setFixedCampaign] = useState<CampaignBase | null>(null)
+  const [fixedCampaign, setFixedCampaign] = useState<ICampaignBase | null>(null)
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,

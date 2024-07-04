@@ -8,7 +8,7 @@ import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
 import useUserStore from '@/store/UserStore'
 
-interface ProtectedRouteProps {
+interface IProtectedRoute {
   children: ReactNode
   role?: UserRole
   pathWhenAuthorizated?: string
@@ -20,7 +20,7 @@ export default function ProtectedRoute({
   role = 'admin',
   pathWhenAuthorizated = '/admin/dashboard',
   pathWhenNotAuthorizated = '/admin/login',
-}: ProtectedRouteProps) {
+}: IProtectedRoute) {
   const user = useUserStore((state) => state.metadata)
   const userDB = useUserStore((state) => state.data)
   const { initialized } = useAuth()

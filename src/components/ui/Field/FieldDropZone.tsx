@@ -8,7 +8,7 @@ import {
 import clsx from 'clsx'
 import { FieldError } from 'react-hook-form'
 
-interface FieldDropZoneProps extends InputHTMLAttributes<HTMLInputElement> {
+interface IFieldDropZone extends InputHTMLAttributes<HTMLInputElement> {
   supportedImageResolution?: number[]
   photoPreview: string | null
   setImageDimension?: Dispatch<SetStateAction<number[]>>
@@ -16,7 +16,7 @@ interface FieldDropZoneProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 function CustomFileInput(
-  props: FieldDropZoneProps,
+  props: IFieldDropZone,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
   const img = new Image()

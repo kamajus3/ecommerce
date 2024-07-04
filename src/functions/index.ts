@@ -1,14 +1,14 @@
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-import { CampaignProduct } from '@/@types'
+import { IProductCampaign } from '@/@types'
 
 export async function URLtoFile(url: string) {
   const response = await fetch(url)
   const responseType = response.headers.get('content-type')
   const blob = await response.blob()
   if (responseType) {
-    return new File([blob], 'product-photo', {
+    return new File([blob], 'photo', {
       type: responseType,
     })
   }
@@ -31,7 +31,7 @@ export function publishedSince(date: string): string {
 }
 
 export function campaignValidator(
-  campaign?: CampaignProduct,
+  campaign?: IProductCampaign,
 ): undefined | 'campaign' | 'campaign-with-promotion' {
   if (
     campaign &&

@@ -15,7 +15,7 @@ const schema = z.object({
   email: z.string().email('Preencha com um e-mail válido'),
 })
 
-interface FormData {
+interface IFormData {
   email: string
 }
 
@@ -25,9 +25,9 @@ export default function RecoverAccount() {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<IFormData>({ resolver: zodResolver(schema) })
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
         reset({

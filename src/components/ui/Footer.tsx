@@ -7,11 +7,11 @@ import { ChevronUp, MoveUpRight } from 'lucide-react'
 import { env } from '@/env'
 import { formatPhoneNumber } from '@/functions'
 
-interface FooterProps {
+interface IFooter {
   disableBackButton?: boolean
 }
 
-export default function Footer({ disableBackButton = false }: FooterProps) {
+export default function Footer({ disableBackButton = false }: IFooter) {
   return (
     <footer className="bg-main relative footer">
       {!disableBackButton && (

@@ -12,11 +12,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '../Button'
 import Field from '../Field'
 
-interface FormData {
+interface IFormData {
   password: string
 }
 
-interface PasswordModalProps {
+interface IPasswordModal {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   action?: () => void | Promise<void>
@@ -30,7 +30,7 @@ const schema = z.object({
     .min(6, 'A palavras-passe precisa de no minimo 6 caracteres'),
 })
 
-export default function PasswordModal(props: PasswordModalProps) {
+export default function PasswordModal(props: IPasswordModal) {
   const cancelButtonRef = useRef(null)
   const {
     register,
@@ -38,7 +38,7 @@ export default function PasswordModal(props: PasswordModalProps) {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
@@ -49,7 +49,7 @@ export default function PasswordModal(props: PasswordModalProps) {
     reset()
   }
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: IFormData) {
     if (user && user.email) {
       const credential = EmailAuthProvider.credential(user.email, data.password)
 

@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import { notFound, useParams, useRouter } from 'next/navigation'
 import FileSaver from 'file-saver'
 
-import { Order } from '@/@types'
+import { IOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import Device from '@/components/ui/Device'
 import Loading from '@/components/ui/Loading'
@@ -26,7 +26,7 @@ const PDFViewer = dynamic(
 
 export default function Invoice() {
   const userDB = useUserStore((state) => state.data)
-  const [orderData, setOrderData] = useState<Order>()
+  const [orderData, setOrderData] = useState<IOrder>()
   const { initialized } = useAuth()
   const router = useRouter()
   const { id } = useParams<{ id: string }>()

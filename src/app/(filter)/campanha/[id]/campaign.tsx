@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'
 import clsx from 'clsx'
 import { child, get, ref } from 'firebase/database'
 
-import { CampaignBase, ProductItem } from '@/@types'
+import { ICampaignBase, IProduct } from '@/@types'
 import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
@@ -15,10 +15,8 @@ import { database } from '@/lib/firebase/config'
 import { getProducts } from '@/lib/firebase/database'
 
 export function CampaingPage() {
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
-  const [campaignData, setCampaignData] = useState<CampaignBase>()
+  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const [campaignData, setCampaignData] = useState<ICampaignBase>()
   const [loading, setLoading] = useState(true)
   const { id: campaign } = useParams<{ id: string }>()
 

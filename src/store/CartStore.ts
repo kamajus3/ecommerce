@@ -1,19 +1,19 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { Product, ProductCart } from '@/@types'
+import { IProduct, IProductCart } from '@/@types'
 
-interface CartProduct extends Product {
+interface ICartProduct extends IProduct {
   quantity: number
 }
 
-interface CartState {
-  products: ProductCart[]
-  addProduct: (product: CartProduct) => void
+interface ICartState {
+  products: IProductCart[]
+  addProduct: (product: ICartProduct) => void
   removeProduct: (id: string) => void
 }
 
-const useCartStore = create<CartState>()(
+const useCartStore = create<ICartState>()(
   persist(
     (set) => ({
       products: [],

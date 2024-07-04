@@ -9,7 +9,7 @@ import Field from '@/components/ui/Field'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-interface FormData {
+interface IFormData {
   oldPassword: string
   newPassword: string
   confirmPassword: string
@@ -41,13 +41,13 @@ export function PasswordUpdate() {
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
   const user = useUserStore((state) => state.metadata)
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     if (user && user.email) {
       const credential = EmailAuthProvider.credential(
         user.email,

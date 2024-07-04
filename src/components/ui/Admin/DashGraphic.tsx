@@ -12,11 +12,11 @@ import {
 
 import constants from '@/constants'
 
-interface DashGraphicProps {
+interface IDashGraphic {
   sales: number[]
 }
 
-export default function DashGraphic(props: DashGraphicProps) {
+export default function DashGraphic(props: IDashGraphic) {
   const data = [
     { name: 'Jan', qtd: props.sales[0] },
     { name: 'Fev', qtd: props.sales[1] },

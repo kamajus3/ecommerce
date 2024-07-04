@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { CampaignEdit, ProductInputProps } from '@/@types'
+import { ICampaign, IProductInput } from '@/@types'
 import { URLtoFile } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
 import { getProducts } from '@/lib/firebase/database'
@@ -22,7 +22,7 @@ import Button from '../Button'
 import Field from '../Field'
 import ProductInput from '../ProductInput'
 
-interface FormData {
+interface IFormData {
   title: string
   default: boolean
   fixed: boolean
@@ -30,17 +30,17 @@ interface FormData {
   reduction?: string
   startDate?: string
   finishDate?: string
-  products?: ProductInputProps[]
+  products?: IProductInput[]
   photo: Blob
 }
 
-interface CampaignModalProps {
+interface ICampaignModal {
   title: string
   actionTitle: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (data: FormData, oldProduct?: CampaignEdit) => void | Promise<void>
-  defaultData?: CampaignEdit
+  action: (data: IFormData, oldProduct?: ICampaign) => void | Promise<void>
+  defaultData?: ICampaign
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
@@ -48,7 +48,7 @@ const DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 const PERCENTAGE_REGEX = /^(100|[1-9]?[0-9])$/
 const ALLOWED_IMAGE_DIMENSION = [778, 455]
 
-export default function CampaignModal(props: CampaignModalProps) {
+export default function CampaignModal(props: ICampaignModal) {
   const [imageDimension, setImageDimension] = useState([0, 0])
   const [isDefaultState, setDefaultState] = useState(
     !!(props.defaultData && props.defaultData.default),
@@ -204,7 +204,7 @@ export default function CampaignModal(props: CampaignModalProps) {
     setValue,
     watch,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       default: false,
@@ -250,7 +250,7 @@ export default function CampaignModal(props: CampaignModalProps) {
           campaign: props.defaultData.id,
         })
 
-        const finalProducts: ProductInputProps[] = []
+        const finalProducts: IProductInput[] = []
 
         Object.entries(products).forEach(([id, product]) => {
           const newProduct = { id, name: product.name }
@@ -284,7 +284,7 @@ export default function CampaignModal(props: CampaignModalProps) {
     setPhotoPreview('')
   }
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: IFormData) {
     if (!isDirty) {
       toast.warn('Nenhum campo foi alterado', {
         position: 'top-right',
@@ -317,18 +317,14 @@ export default function CampaignModal(props: CampaignModalProps) {
     closeModal()
   }
 
-  function appendProduct(product: ProductInputProps) {
+  function appendProduct(product: IProductInput) {
     const allProducts = getValues('products')
-
     if (allProducts) {
       pushProduct(allProducts, product)
     }
   }
 
-  function pushProduct(
-    products: ProductInputProps[],
-    product: ProductInputProps,
-  ) {
+  function pushProduct(products: IProductInput[], product: IProductInput) {
     products.push(product)
     setValue('products', products)
   }
@@ -447,7 +443,7 @@ export default function CampaignModal(props: CampaignModalProps) {
                       )}
 
                       {!isDefault && (
-                        <>
+                        <div>
                           <div className="mb-4">
                             <Field.Label htmlFor="startDate">
                               Início da campanha
@@ -470,7 +466,7 @@ export default function CampaignModal(props: CampaignModalProps) {
                             />
                             <Field.Error error={errors.finishDate} />
                           </div>
-                        </>
+                        </div>
                       )}
                       <div className="mb-4">
                         <Field.Label htmlFor="description">

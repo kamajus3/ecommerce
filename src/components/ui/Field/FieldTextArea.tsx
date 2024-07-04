@@ -1,12 +1,12 @@
 import { ForwardedRef, forwardRef, TextareaHTMLAttributes } from 'react'
 import { FieldError } from 'react-hook-form'
 
-interface FieldTextArea extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface IFieldTextArea extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error: FieldError | undefined
 }
 
 function CustomTextArea(
-  props: FieldTextArea,
+  props: IFieldTextArea,
   ref: ForwardedRef<HTMLTextAreaElement>,
 ) {
   return (
@@ -18,5 +18,5 @@ function CustomTextArea(
   )
 }
 
-const FieldTextArea = forwardRef(CustomTextArea)
-export default FieldTextArea
+const IFieldTextArea = forwardRef(CustomTextArea)
+export default IFieldTextArea

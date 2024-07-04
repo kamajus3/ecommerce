@@ -4,12 +4,12 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { database } from '@/lib/firebase/config'
 
-interface ViewStore {
+interface IViewStore {
   productVieweds: string[]
   viewProduct: (id: string) => void
 }
 
-const useViewStore = create<ViewStore>()(
+const useViewStore = create<IViewStore>()(
   persist(
     (set) => ({
       productVieweds: [],

@@ -1,18 +1,4 @@
-export interface Product {
-  id: string
-  name: string
-  photo: string
-  price: number
-  category: string
-  description: string
-}
-
-export interface ProductCart {
-  id: string
-  quantity: number
-}
-
-export interface CampaignProduct {
+export interface IProductCampaign {
   id: string
   title: string
   reduction?: string
@@ -20,7 +6,7 @@ export interface CampaignProduct {
   finishDate?: string
 }
 
-export type ProductItem = {
+export type IProduct = {
   id: string
   name: string
   quantity: number
@@ -30,15 +16,20 @@ export type ProductItem = {
   description: string
   createdAt: string
   updatedAt: string
-  campaign?: CampaignProduct
+  campaign?: IProductCampaign
 }
 
-export interface ProductInputProps {
+export interface IProductCart {
+  id: string
+  quantity: number
+}
+
+export interface IProductInput {
   id: string
   name: string
 }
 
-export interface CampaignBase {
+export interface ICampaignBase {
   id: string
   title: string
   description: string
@@ -52,12 +43,8 @@ export interface CampaignBase {
   updatedAt: string
 }
 
-export interface CampaignEdit extends CampaignBase {
+export interface ICampaign extends ICampaignBase {
   products?: string[]
-}
-
-export interface NewCampaign extends CampaignBase {
-  products: ProductInputProps[]
 }
 
 export type CategoryLabel =
@@ -67,22 +54,22 @@ export type CategoryLabel =
   | 'Inseticidas'
   | 'Alimentação'
 
-export interface ProductQuery {
+export interface IProductQuery {
   search?: string
   limit?: number
   category?: CategoryLabel | string
   campaign?: string
-  except?: string
+  exceptProductId?: string
   exceptOthersProduct?: boolean
   orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
 }
 
-export interface Category {
+export interface ICategory {
   label: CategoryLabel
   img: string
 }
 
-export interface ProductOrder {
+export interface IProductOrder {
   id: string
   name: string
   quantity: number
@@ -90,7 +77,7 @@ export interface ProductOrder {
   promotion?: number | null
 }
 
-export interface Order {
+export interface IOrder {
   id: string
   userId: string
   firstName: string
@@ -99,12 +86,12 @@ export interface Order {
   phone: string
   createdAt: string
   state: 'not-sold' | 'sold'
-  products: ProductOrder[]
+  products: IProductOrder[]
 }
 
 export type UserRole = 'client' | 'admin'
 
-export interface UserDatabase {
+export interface IUser {
   id: string
   firstName: string
   lastName?: string

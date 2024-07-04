@@ -3,11 +3,11 @@ import { Check, Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { ProductInputProps as ProductInputObject, ProductItem } from '@/@types'
+import { IProduct, IProductInput as ProductInputObject } from '@/@types'
 import { getProducts } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-interface ProductInputProps {
+interface IProductInput {
   products: ProductInputObject[] | undefined | null
   campaignId?: string
   appendProduct: (product: ProductInputObject) => void
@@ -20,23 +20,21 @@ const schema = z.object({
   searchValue: z.string().min(1),
 })
 
-interface FormData {
+interface IFormData {
   searchValue: string
 }
 
-export default function ProductInput(props: ProductInputProps) {
-  const { register, watch, reset } = useForm<FormData>({
+export default function ProductInput(props: IProductInput) {
+  const { register, watch, reset } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
+  const [productData, setProductData] = useState<Record<string, IProduct>>({})
   const [isOpen, setIsOpen] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  function handleClick(product: ProductItem, id: string) {
+  function handleClick(product: IProduct, id: string) {
     if (props.products) {
       reset({
         searchValue: '',

@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { CampaignEdit, ProductInputProps } from '@/@types'
+import { ICampaign, IProductInput } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
@@ -35,7 +35,7 @@ import { database, storage } from '@/lib/firebase/config'
 import { getProducts } from '@/lib/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-interface FormData {
+interface IFormData {
   title: string
   default: boolean
   fixed: boolean
@@ -43,22 +43,22 @@ interface FormData {
   reduction?: string
   startDate?: string
   finishDate?: string
-  products?: ProductInputProps[]
+  products?: IProductInput[]
   photo: Blob
 }
 
-interface TableRowProps {
-  data: CampaignEdit
+interface ITableRow {
+  data: ICampaign
   _delete(): void
-  _edit(data: FormData, oldData?: CampaignEdit): Promise<void>
+  _edit(data: IFormData, oldData?: ICampaign): Promise<void>
 }
 
-interface FilterFormData {
+interface IFilterData {
   search: string
   orderBy: string
 }
 
-function TableRow({ data, _delete, _edit }: TableRowProps) {
+function TableRow({ data, _delete, _edit }: ITableRow) {
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const { informationsData } = useInformation()
@@ -123,8 +123,8 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, CampaignEdit>) {
-  const newObj: Record<string, CampaignEdit> = {}
+function reverseData(obj: Record<string, ICampaign>) {
+  const newObj: Record<string, ICampaign> = {}
   const revObj = Object.keys(obj).reverse()
   revObj.forEach(function (i) {
     newObj[i] = obj[i]
@@ -133,14 +133,14 @@ function reverseData(obj: Record<string, CampaignEdit>) {
 }
 
 export default function PromotionPage() {
-  const [campaignData, setCampaignData] = useState<
-    Record<string, CampaignEdit>
-  >({})
+  const [campaignData, setCampaignData] = useState<Record<string, ICampaign>>(
+    {},
+  )
   const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
 
-  const { register, watch } = useForm<FilterFormData>({
+  const { register, watch } = useForm<IFilterData>({
     defaultValues: {
       orderBy: 'updatedAt',
     },
@@ -151,7 +151,7 @@ export default function PromotionPage() {
 
   const { informationsData } = useInformation()
 
-  function _post(data: FormData) {
+  function _post(data: IFormData) {
     const id = randomBytes(20).toString('hex')
     const reference = storageRef(storage, `/campaigns/${id}`)
 
@@ -241,7 +241,7 @@ export default function PromotionPage() {
       })
   }
 
-  async function _edit(data: FormData, oldData?: CampaignEdit) {
+  async function _edit(data: IFormData, oldData?: ICampaign) {
     if (oldData && oldData.id) {
       const reference = storageRef(storage, `/campaigns/${oldData.id}`)
       await uploadBytes(reference, data.photo)
@@ -422,7 +422,7 @@ export default function PromotionPage() {
     const campaignQuery = query(reference, orderByChild(orderByValue))
 
     onValue(campaignQuery, (snapshot) => {
-      const results: Record<string, CampaignEdit> = {}
+      const results: Record<string, ICampaign> = {}
       if (snapshot.exists()) {
         snapshot.forEach(function (child) {
           results[child.key] = child.val()

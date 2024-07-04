@@ -19,7 +19,7 @@ import Button from '../Button'
 
 import FixedCampaign from './FixedCampaign'
 
-interface ClientHeaderProps {
+interface IClientHeader {
   searchDefault?: string | null
 }
 
@@ -27,12 +27,12 @@ const schema = z.object({
   searchValue: z.string().min(1),
 })
 
-interface FormData {
+interface IFormData {
   searchValue: string
 }
 
-export default function ClientHeader(props: ClientHeaderProps) {
-  const { register, handleSubmit } = useForm<FormData>({
+export default function ClientHeader(props: IClientHeader) {
+  const { register, handleSubmit } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
   const userDB = useUserStore((state) => state.data)
@@ -42,7 +42,7 @@ export default function ClientHeader(props: ClientHeaderProps) {
   const [isSearchOn, setSearchOn] = useState(false)
   const router = useRouter()
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     router.replace(`/pesquisa/${data.searchValue}`)
   }
 

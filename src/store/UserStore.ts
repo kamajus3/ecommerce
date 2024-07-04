@@ -1,17 +1,17 @@
 import { User } from 'firebase/auth'
 import { create } from 'zustand'
 
-import { UserDatabase } from '@/@types'
+import { IUser } from '@/@types'
 
-interface updateUserProps {
+interface IUpdateUser {
   metadata: User | null
-  data: UserDatabase | null
+  data: IUser | null
 }
 
 interface UserState {
   metadata: User | null
-  data: UserDatabase | null
-  updateUser: (data: updateUserProps) => void
+  data: IUser | null
+  updateUser: (data: IUpdateUser) => void
 }
 
 const useUserStore = create<UserState>()((set) => ({

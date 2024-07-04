@@ -5,16 +5,16 @@ import { child, get, ref } from 'firebase/database'
 
 import { database } from '@/lib/firebase/config'
 
-interface InformationsProps {
+interface IInformations {
   defaultCampaign: string | null
   fixedCampaign: string | null
 }
 
-interface InformationContextProps {
-  informationsData: InformationsProps
+interface IInformationContext {
+  informationsData: IInformations
 }
 
-export const InformationContext = createContext<InformationContextProps>({
+export const InformationContext = createContext<IInformationContext>({
   informationsData: {
     defaultCampaign: null,
     fixedCampaign: null,
@@ -26,7 +26,7 @@ export default function InformationProvider({
 }: {
   children: ReactNode
 }) {
-  const [informationsData, setInformationsData] = useState<InformationsProps>({
+  const [informationsData, setInformationsData] = useState<IInformations>({
     defaultCampaign: null,
     fixedCampaign: null,
   })

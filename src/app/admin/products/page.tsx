@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { ProductItem } from '@/@types'
+import { IProduct } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
@@ -37,7 +37,7 @@ import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database, storage } from '@/lib/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-interface FormData {
+interface IFormData {
   name: string
   quantity: number
   price: number
@@ -46,18 +46,18 @@ interface FormData {
   photo: Blob
 }
 
-interface FilterFormData {
+interface IFilterData {
   search: string
   orderBy: string
 }
 
-interface TableRowProps {
-  product: ProductItem
+interface ITableRow {
+  product: IProduct
   _delete(): void
-  _edit(data: FormData, oldProduct?: ProductItem): Promise<void>
+  _edit(data: IFormData, oldProduct?: IProduct): Promise<void>
 }
 
-function TableRow({ product, _delete, _edit }: TableRowProps) {
+function TableRow({ product, _delete, _edit }: ITableRow) {
   const money = useMoneyFormat()
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -124,8 +124,8 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, ProductItem>) {
-  const newObj: Record<string, ProductItem> = {}
+function reverseData(obj: Record<string, IProduct>) {
+  const newObj: Record<string, IProduct> = {}
   const revObj = Object.keys(obj).reverse()
   revObj.forEach(function (i) {
     newObj[i] = obj[i]
@@ -134,14 +134,12 @@ function reverseData(obj: Record<string, ProductItem>) {
 }
 
 export default function ProductPage() {
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
+  const [productData, setProductData] = useState<Record<string, IProduct>>({})
   const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
 
-  const { register, watch } = useForm<FilterFormData>({
+  const { register, watch } = useForm<IFilterData>({
     defaultValues: {
       orderBy: 'updatedAt',
     },
@@ -150,7 +148,7 @@ export default function ProductPage() {
 
   const orderByValue = watch('orderBy')
 
-  function _create(data: FormData) {
+  function _create(data: IFormData) {
     const id = randomBytes(20).toString('hex')
     const reference = storageRef(storage, `/products/${id}`)
 
@@ -210,7 +208,7 @@ export default function ProductPage() {
       })
   }
 
-  async function _edit(data: FormData, oldProduct?: ProductItem) {
+  async function _edit(data: IFormData, oldProduct?: IProduct) {
     if (oldProduct && oldProduct.id) {
       const reference = storageRef(storage, `/products/${oldProduct.id}`)
 
@@ -326,7 +324,7 @@ export default function ProductPage() {
     const productQuery = query(reference, orderByChild(orderByValue))
 
     onValue(productQuery, (snapshot) => {
-      const results: Record<string, ProductItem> = {}
+      const results: Record<string, IProduct> = {}
       if (snapshot.exists()) {
         snapshot.forEach(function (child) {
           results[child.key] = child.val()

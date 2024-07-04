@@ -12,7 +12,7 @@ function LoadingState() {
   )
 }
 
-interface ButtonVariant extends ButtonHTMLAttributes<HTMLElement> {
+interface IButtonVariant extends ButtonHTMLAttributes<HTMLElement> {
   loading?: boolean
 }
 
@@ -22,7 +22,7 @@ function PrimaryButton({
   loading,
   className,
   ...props
-}: ButtonVariant) {
+}: IButtonVariant) {
   return (
     <button
       className={clsx(
@@ -46,7 +46,7 @@ function NoBackgroundButton({
   loading,
   className,
   ...props
-}: ButtonVariant) {
+}: IButtonVariant) {
   return (
     <button
       className={clsx(
@@ -65,12 +65,12 @@ function NoBackgroundButton({
   )
 }
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLElement> {
+interface IButton extends ButtonHTMLAttributes<HTMLElement> {
   variant?: 'default' | 'no-background'
   loading?: boolean
 }
 
-export default function Button({ variant = 'default', ...props }: ButtonProps) {
+export default function Button({ variant = 'default', ...props }: IButton) {
   if (variant === 'default') {
     return <PrimaryButton {...props} />
   }

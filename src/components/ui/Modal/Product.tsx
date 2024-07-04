@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { Bounce, toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { ProductItem } from '@/@types'
+import { IProduct } from '@/@types'
 import CATEGORIES from '@/assets/data/categories'
 import { URLtoFile } from '@/functions'
 import { Dialog, Transition } from '@headlessui/react'
@@ -21,7 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Button from '../Button'
 import Field from '../Field'
 
-interface FormData {
+interface IFormData {
   name: string
   description: string
   quantity: number
@@ -30,19 +30,19 @@ interface FormData {
   photo: Blob
 }
 
-interface ProductModalProps {
+interface IProductModal {
   title: string
   actionTitle: string
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
-  action: (data: FormData, oldProduct?: ProductItem) => void | Promise<void>
-  defaultProduct?: ProductItem
+  action: (data: IFormData, oldProduct?: IProduct) => void | Promise<void>
+  defaultProduct?: IProduct
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 const ALLOWED_IMAGE_DIMENSION = [700, 700]
 
-export default function ProductModal(props: ProductModalProps) {
+export default function ProductModal(props: IProductModal) {
   const [imageDimension, setImageDimension] = useState([0, 0])
 
   const schema = z.object({
@@ -104,7 +104,7 @@ export default function ProductModal(props: ProductModalProps) {
     getValues,
     setValue,
     formState: { errors, isSubmitting, isDirty },
-  } = useForm<FormData>({
+  } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
 
@@ -147,7 +147,7 @@ export default function ProductModal(props: ProductModalProps) {
     setPhotoPreview('')
   }
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: IFormData) {
     if (isDirty) {
       if (props.defaultProduct) {
         await props.action(data, props.defaultProduct)

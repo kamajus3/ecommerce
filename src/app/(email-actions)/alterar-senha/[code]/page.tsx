@@ -28,7 +28,7 @@ const schema = z
     path: ['confirmPassword'],
   })
 
-interface FormData {
+interface IFormData {
   password: string
   confirmPassword: string
 }
@@ -42,12 +42,12 @@ export default function ChangePassword({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<IFormData>({ resolver: zodResolver(schema) })
 
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  function onSubmit(data: FormData) {
+  function onSubmit(data: IFormData) {
     confirmPasswordReset(auth, params.code, data.password)
       .then(() => {
         toast.success('A sua palavra-passe foi alterada com sucesso', {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import clsx from 'clsx'
 
-import { ProductItem } from '@/@types'
+import { IProduct } from '@/@types'
 import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
@@ -12,9 +12,7 @@ import ProductCard from '@/components/ui/ProductCard'
 import { getProducts } from '@/lib/firebase/database'
 
 export default function SearchPage() {
-  const [productData, setProductData] = useState<Record<string, ProductItem>>(
-    {},
-  )
+  const [productData, setProductData] = useState<Record<string, IProduct>>({})
   const [loading, setLoading] = useState(true)
   const { value: searchValue } = useParams<{ value: string }>()
   const search = decodeURIComponent(searchValue)

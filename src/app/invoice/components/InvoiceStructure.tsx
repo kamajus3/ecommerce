@@ -1,4 +1,4 @@
-import { Order, ProductOrder } from '@/@types'
+import { IOrder, IProductOrder } from '@/@types'
 import { formatPhoneNumber } from '@/functions'
 import {
   Document,
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const calculateTotalPrice = (products: ProductOrder[]) => {
+const calculateTotalPrice = (products: IProductOrder[]) => {
   let totalPrice = 0
   products.forEach((product) => {
     const discountedPrice = calculateDiscount(product.price, product.promotion)
@@ -119,7 +119,7 @@ const calculateDiscount = (
   promotion: number | null | undefined,
 ) => (promotion ? price - (price * promotion) / 100 : price)
 
-export const InvoiceStructure = ({ orderData }: { orderData: Order }) => (
+export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
