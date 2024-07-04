@@ -32,7 +32,7 @@ import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { publishedSince } from '@/functions'
+import { formatPhotoUrl, publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database, storage } from '@/lib/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -68,7 +68,7 @@ function TableRow({ product, _delete, _edit }: ITableRow) {
         <Image
           width={70}
           height={70}
-          src={product.photo}
+          src={formatPhotoUrl(product.photo)}
           alt={product.name}
           draggable={false}
           className="select-none"

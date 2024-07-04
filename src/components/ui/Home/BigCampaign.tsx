@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { ICampaignBase } from '@/@types'
-import { campaignValidator } from '@/functions'
+import { campaignValidator, formatPhotoUrl } from '@/functions'
 import { useCampaign } from '@/hooks/useCampaign'
 import { useInformation } from '@/hooks/useInformation'
 
@@ -109,8 +109,8 @@ export default function PromoBig() {
 
         <div className="w-full lg:w-3/6 mt-6 lg:mt-0">
           <Image
-            src={fixedCampaign.photo}
-            alt={fixedCampaign.photo}
+            src={formatPhotoUrl(fixedCampaign.photo)}
+            alt={fixedCampaign.title}
             width={400}
             height={400}
             className="m-auto"

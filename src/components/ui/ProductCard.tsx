@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { X } from 'lucide-react'
 
 import { IProduct } from '@/@types'
-import { campaignValidator } from '@/functions'
+import { campaignValidator, formatPhotoUrl } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
@@ -53,7 +53,7 @@ export default function ProductCard(product: IProduct) {
 
           <Link href={`/producto/${product.id}`}>
             <Image
-              src={product.photo}
+              src={formatPhotoUrl(product.photo)}
               alt={product.name}
               draggable={false}
               className="select-none object-cover object-center"

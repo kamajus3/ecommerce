@@ -7,7 +7,7 @@ import clsx from 'clsx'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
-import { campaignValidator } from '@/functions'
+import { campaignValidator, formatPhotoUrl } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { getProduct } from '@/lib/firebase/database'
 
@@ -89,7 +89,7 @@ export default async function ProductPage({
                   )}
 
                 <Image
-                  src={product.photo}
+                  src={formatPhotoUrl(product.photo)}
                   alt={product.name}
                   draggable={false}
                   className="select-none object-cover object-center"

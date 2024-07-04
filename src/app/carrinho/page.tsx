@@ -14,7 +14,7 @@ import DataState from '@/components/ui/DataState'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { campaignValidator } from '@/functions'
+import { campaignValidator, formatPhotoUrl } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { database } from '@/lib/firebase/config'
@@ -84,7 +84,7 @@ function TableRow({
           <Image
             width={70}
             height={70}
-            src={product.photo}
+            src={formatPhotoUrl(product.photo)}
             alt={product.name}
             draggable={false}
             className="select-none"

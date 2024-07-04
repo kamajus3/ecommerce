@@ -13,6 +13,7 @@ import {
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import contants from '@/constants'
+import { formatPhotoUrl } from '@/functions'
 import { useCampaign } from '@/hooks/useCampaign'
 import useDimensions from '@/hooks/useDimensions'
 
@@ -71,7 +72,7 @@ export default function Carousel() {
           </article>
           <article className="w-1/2 flex-shrink-0 flex-grow-0 max-sm:w-full sm:h-full flex items-center justify-center">
             <Image
-              src={campaign.photo}
+              src={formatPhotoUrl(campaign.photo)}
               alt={campaign.title}
               width={500}
               height={500}

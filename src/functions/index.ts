@@ -15,6 +15,11 @@ export async function URLtoFile(url: string) {
   throw Error('Erro ao converter URL para arquivo')
 }
 
+export function formatPhotoUrl(photoUrl: string) {
+  photoUrl = photoUrl + '?timestamp=' + new Date().getTime()
+  return photoUrl
+}
+
 export function publishedSince(date: string): string {
   try {
     const publishedSince = formatDistanceToNowStrict(parseISO(date), {
