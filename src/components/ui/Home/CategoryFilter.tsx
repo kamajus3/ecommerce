@@ -41,11 +41,10 @@ export default function CategoryFilter(props: CategoryFilterProps) {
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>
       <Swiper
         modules={[Scrollbar]}
-        slidesPerView={5}
         scrollbar={{
           enabled: true,
         }}
-        className="product-card"
+        className="swiperCard"
         breakpoints={{
           0: {
             slidesPerView: 1,

@@ -51,8 +51,7 @@ export default function ProductList(props: ProductListProps) {
       <Swiper
         modules={[Scrollbar]}
         spaceBetween={20}
-        slidesPerView={3}
-        className="product-card"
+        className="swiperCard"
         scrollbar={{
           enabled: true,
         }}
@@ -63,7 +62,7 @@ export default function ProductList(props: ProductListProps) {
           768: {
             slidesPerView: 2,
           },
-          1280: {
+          1200: {
             slidesPerView: 3,
           },
         }}

@@ -17,8 +17,8 @@ export default function ProductCard(product: ProductItem) {
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
 
   return (
-    <div className="flex-shrink-0 grow-0 overflow-hidden">
-      <div className="w-72 h-72 rounded-md group-hover:opacity-75">
+    <div className="flex-shrink-0 grow-0 overflow-hidden mx-auto">
+      <div className="w-72 h-72 rounded-md">
         <div className="w-full h-full relative select-none" draggable={false}>
           {cartProducts.find((p) => p.id === product.id) && !userIsAdmin && (
             <button
@@ -82,11 +82,9 @@ export default function ProductCard(product: ProductItem) {
               </p>
             )}
         </div>
-        <div className="w-full flex justify-between items-center">
-          <span className="text-base text-gray-700 font-medium">
-            {product.name}
-          </span>
-        </div>
+        <span className="w-72 text-base text-left text-gray-700 font-medium">
+          {product.name}
+        </span>
       </div>
     </div>
   )
