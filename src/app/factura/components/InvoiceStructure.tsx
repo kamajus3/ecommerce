@@ -1,5 +1,9 @@
 import { IOrder, IProductOrder } from '@/@types'
-import { formatMoney, formatPhoneNumber } from '@/functions'
+import {
+  calculateDiscountedPrice,
+  formatMoney,
+  formatPhoneNumber,
+} from '@/functions'
 import {
   Document,
   Font,
@@ -155,10 +159,11 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
             </Text>
             <Text style={styles.tableCell}>
               {formatMoney(
-                product.promotion
-                  ? product.price * product.quantity -
-                      product.price * product.promotion
-                  : product.price * product.quantity,
+                calculateDiscountedPrice(
+                  product.price,
+                  product.quantity,
+                  product.promotion,
+                ),
               )}
             </Text>
           </View>

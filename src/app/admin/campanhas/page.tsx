@@ -187,17 +187,17 @@ export default function PromotionPage() {
             }
 
             if (data.default) {
-              if (informationsData.defaultCampaign) {
-                update(
-                  ref(
-                    database,
-                    `/campaigns/${informationsData.defaultCampaign}`,
-                  ),
-                  {
-                    default: false,
-                  },
-                )
-              }
+              // if (informationsData.defaultCampaign) {
+              //   update(
+              //     ref(
+              //       database,
+              //       `/campaigns/${informationsData.defaultCampaign}`,
+              //     ),
+              //     {
+              //       default: false,
+              //     },
+              //   )
+              // }
 
               update(ref(database, 'informations/'), {
                 defaultCampaign: id,

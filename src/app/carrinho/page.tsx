@@ -16,7 +16,12 @@ import Modal from '@/components/ui/Modal'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
+import {
+  calculateDiscountedPrice,
+  campaignValidator,
+  formatMoney,
+  formatPhotoUrl,
+} from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import sendOrder from '@/services/email/send'
 import { database } from '@/services/firebase/config'
@@ -92,13 +97,22 @@ function TableRow({
       <Table.D>
         <Link href={`/producto/${product.id}`}>{product.name}</Link>
       </Table.D>
-      <Table.D>{formatMoney(product.price)}</Table.D>
       <Table.D>x{product.quantity}</Table.D>
+      <Table.D>{formatMoney(product.price)}</Table.D>
       <Table.D>
         {product.campaign &&
         campaignValidator(product.campaign) === 'campaign-with-promotion'
           ? `${product.campaign?.reduction} %`
           : '-'}
+      </Table.D>
+      <Table.D>
+        {formatMoney(
+          calculateDiscountedPrice(
+            product.price,
+            product.quantity,
+            product.campaign?.reduction,
+          ),
+        )}
       </Table.D>
       <Table.D>
         <Button
@@ -155,18 +169,10 @@ export default function CartPage() {
         for (const p of ICartProducts) {
           await getProduct(p.id).then((product) => {
             if (product) {
-              const productPrice =
-                product.campaign?.reduction &&
-                Number(product.campaign?.reduction) !== 0
-                  ? product.price -
-                    product.price * (Number(product.campaign.reduction) / 100)
-                  : product.price
-
               fetchedProducts.push({
                 ...product,
                 id: p.id,
                 quantity: p.quantity,
-                price: productPrice,
               })
             }
           })
@@ -185,7 +191,14 @@ export default function CartPage() {
   useEffect(() => {
     const selectedTotalPrice = productData.reduce((total, product) => {
       if (product && selectedProducts.includes(product.id)) {
-        return total + product.price * product.quantity
+        return (
+          total +
+          calculateDiscountedPrice(
+            product.price,
+            product.quantity,
+            product.campaign?.reduction,
+          )
+        )
       }
       return total
     }, 0)
@@ -214,6 +227,7 @@ export default function CartPage() {
               totalPrice,
             })
           }
+
           selectedProducts.map((id) => removeFromCart(id))
           setSelectedProduct([])
           setOrderConfirmedModal([true, orderId])
@@ -325,9 +339,10 @@ export default function CartPage() {
                     </Table.H>
                     <Table.H>Foto</Table.H>
                     <Table.H>Nome</Table.H>
-                    <Table.H>Preço</Table.H>
                     <Table.H>Quantidade</Table.H>
-                    <Table.H>Promoção</Table.H>
+                    <Table.H>Preço unidade</Table.H>
+                    <Table.H>Desconto</Table.H>
+                    <Table.H>Preço total</Table.H>
                     <Table.H>-</Table.H>
                   </Table.R>
                 </thead>

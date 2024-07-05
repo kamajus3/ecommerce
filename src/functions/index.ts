@@ -3,6 +3,17 @@ import { ptBR } from 'date-fns/locale'
 
 import { IProductCampaign } from '@/@types'
 
+export const calculateDiscountedPrice = (
+  price: number,
+  quantity: number,
+  reduction: number | string | undefined | null,
+) => {
+  if (reduction && Number(reduction) !== 0) {
+    return price * quantity * (1 - Number(reduction) / 100)
+  }
+  return price * quantity
+}
+
 export async function URLtoFile(url: string) {
   const response = await fetch(url)
   const responseType = response.headers.get('content-type')
