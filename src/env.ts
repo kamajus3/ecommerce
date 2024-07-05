@@ -17,6 +17,9 @@ export const env = createEnv({
       .string()
       .url()
       .transform((str: string) => str.replace(/\/$/, '')),
+    NEXT_PUBLIC_EMAILJS_KEY: z.string(),
+    NEXT_PUBLIC_EMAILJS_SERVICE_ID: z.string(),
+    NEXT_PUBLIC_EMAILJS_TEMPLATE_ORDER: z.string(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -35,5 +38,9 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
     NEXT_PUBLIC_EMAIL_ADDRESS: process.env.NEXT_PUBLIC_EMAIL_ADDRESS,
     NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
+    NEXT_PUBLIC_EMAILJS_KEY: process.env.NEXT_PUBLIC_EMAILJS_KEY,
+    NEXT_PUBLIC_EMAILJS_SERVICE_ID: process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+    NEXT_PUBLIC_EMAILJS_TEMPLATE_ORDER:
+      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ORDER,
   },
 })

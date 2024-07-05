@@ -14,7 +14,7 @@ import * as z from 'zod'
 import { ICampaign, IProductInput } from '@/@types'
 import { URLtoFile } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
-import { getProducts } from '@/lib/firebase/database'
+import { getProducts } from '@/services/firebase/database'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 

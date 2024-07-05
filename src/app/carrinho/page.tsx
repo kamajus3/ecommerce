@@ -8,22 +8,22 @@ import { ref, set } from 'firebase/database'
 import { nanoid } from 'nanoid'
 import { Bounce, toast } from 'react-toastify'
 
-import { IProduct, IProductOrder } from '@/@types'
+import { IOrder, IProduct, IProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
+import Header from '@/components/ui/Header'
+import Modal from '@/components/ui/Modal'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { campaignValidator, formatPhotoUrl } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { database } from '@/lib/firebase/config'
-import { getProduct } from '@/lib/firebase/database'
+import sendOrder from '@/services/email/send'
+import { database } from '@/services/firebase/config'
+import { getProduct } from '@/services/firebase/database'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
-
-import Header from '../../components/ui/Header'
-import Modal from '../../components/ui/Modal'
 
 interface ICartProduct extends IProduct {
   quantity: number
@@ -139,7 +139,7 @@ export default function CartPage() {
     [boolean, string | undefined]
   >([false, undefined])
 
-  const [orderData, setOrderData] = useState({})
+  const [orderData, setOrderData] = useState<IOrder>()
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
@@ -209,6 +209,14 @@ export default function CartPage() {
     if (user) {
       await set(ref(database, `orders/${orderId}`), orderData)
         .then(() => {
+          if (orderData && user.email) {
+            sendOrder({
+              ...orderData,
+              id: orderId,
+              email: user.email,
+              totalPrice,
+            })
+          }
           selectedProducts.map((id) => removeFromCart(id))
           setSelectedProduct([])
           setOrderConfirmedModal([true, orderId])
@@ -251,6 +259,7 @@ export default function CartPage() {
 
     if (user && productsList.length > 0) {
       setOrderData({
+        id: '',
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address,

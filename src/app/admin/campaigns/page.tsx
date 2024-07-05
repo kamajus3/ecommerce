@@ -31,8 +31,8 @@ import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { useInformation } from '@/hooks/useInformation'
-import { database, storage } from '@/lib/firebase/config'
-import { getProducts } from '@/lib/firebase/database'
+import { database, storage } from '@/services/firebase/config'
+import { getProducts } from '@/services/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFormData {

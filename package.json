@@ -11,6 +11,7 @@
     "deploy": "firebase deploy"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@headlessui/react": "^1.7.18",
     "@hookform/resolvers": "^3.3.4",
     "@react-pdf/renderer": "^3.4.4",

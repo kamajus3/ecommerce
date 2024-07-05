@@ -9,7 +9,7 @@ import {
 import { child, get, ref, set } from 'firebase/database'
 
 import { IUser, UserRole } from '@/@types'
-import { auth, database } from '@/lib/firebase/config'
+import { auth, database } from '@/services/firebase/config'
 import useUserStore from '@/store/UserStore'
 
 interface IAuthContext {

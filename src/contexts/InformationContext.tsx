@@ -3,7 +3,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react'
 import { child, get, ref } from 'firebase/database'
 
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 
 interface IInformations {
   defaultCampaign: string | null

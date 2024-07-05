@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { child, get, ref } from 'firebase/database'
 
 import { campaignValidator, formatPhotoUrl } from '@/functions'
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 
 import { CampaingPage } from './campaign'
 

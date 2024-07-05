@@ -26,8 +26,8 @@ import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { formatPhoneNumber, publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { database } from '@/lib/firebase/config'
-import { getProduct } from '@/lib/firebase/database'
+import { database } from '@/services/firebase/config'
+import { getProduct } from '@/services/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFilterData {

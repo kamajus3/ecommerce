@@ -6,7 +6,7 @@ import { applyActionCode } from 'firebase/auth'
 import { Bounce, toast } from 'react-toastify'
 
 import Loading from '@/components/ui/Loading'
-import { auth } from '@/lib/firebase/config'
+import { auth } from '@/services/firebase/config'
 
 export default function ChangeEmail({
   params: { code },

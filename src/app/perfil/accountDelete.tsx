@@ -8,7 +8,7 @@ import { Bounce, toast } from 'react-toastify'
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import contants from '@/constants'
-import { auth, database } from '@/lib/firebase/config'
+import { auth, database } from '@/services/firebase/config'
 
 export default function AccountDelete() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)

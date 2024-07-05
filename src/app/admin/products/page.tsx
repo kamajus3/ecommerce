@@ -34,7 +34,7 @@ import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { formatPhotoUrl, publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { database, storage } from '@/lib/firebase/config'
+import { database, storage } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFormData {

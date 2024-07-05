@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import { IProduct, IProductInput as ProductInputObject } from '@/@types'
-import { getProducts } from '@/lib/firebase/database'
+import { getProducts } from '@/services/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IProductInput {

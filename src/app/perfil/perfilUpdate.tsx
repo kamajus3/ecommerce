@@ -9,7 +9,7 @@ import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
 import Field from '@/components/ui/Field'
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 

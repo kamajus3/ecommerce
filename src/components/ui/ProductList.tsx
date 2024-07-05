@@ -6,7 +6,7 @@ import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { IProduct, IProductQuery } from '@/@types'
-import { getProducts } from '@/lib/firebase/database'
+import { getProducts } from '@/services/firebase/database'
 
 import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
 import ProductCard from './ProductCard'

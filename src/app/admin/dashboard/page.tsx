@@ -7,7 +7,7 @@ import { onValue, ref } from 'firebase/database'
 import Admin from '@/components/ui/Admin'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 
 const START_YEAR = 2024
 const currentYear = new Date().getFullYear()

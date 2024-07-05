@@ -12,7 +12,7 @@ import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import { publishedSince } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 import useUserStore from '@/store/UserStore'
 
 function OrderTableRow(order: IOrder) {

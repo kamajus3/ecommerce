@@ -11,8 +11,8 @@ import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductCard from '@/components/ui/ProductCard'
 import { campaignValidator, publishedSince } from '@/functions'
-import { database } from '@/lib/firebase/config'
-import { getProducts } from '@/lib/firebase/database'
+import { database } from '@/services/firebase/config'
+import { getProducts } from '@/services/firebase/database'
 
 export function CampaingPage() {
   const [productData, setProductData] = useState<Record<string, IProduct>>({})

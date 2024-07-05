@@ -10,7 +10,7 @@ import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
 import { campaignValidator, formatPhotoUrl } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
-import { getProduct } from '@/lib/firebase/database'
+import { getProduct } from '@/services/firebase/database'
 
 export async function generateMetadata({
   params: { id },

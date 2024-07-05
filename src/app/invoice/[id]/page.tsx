@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button'
 import Device from '@/components/ui/Device'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
-import { getOrder } from '@/lib/firebase/database'
+import { getOrder } from '@/services/firebase/database'
 import useUserStore from '@/store/UserStore'
 import { pdf } from '@react-pdf/renderer'
 

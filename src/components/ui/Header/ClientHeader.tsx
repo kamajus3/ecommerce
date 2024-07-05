@@ -9,7 +9,7 @@ import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { getProduct } from '@/lib/firebase/database'
+import { getProduct } from '@/services/firebase/database'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'

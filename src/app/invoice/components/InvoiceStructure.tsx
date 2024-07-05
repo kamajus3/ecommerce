@@ -10,23 +10,19 @@ import {
   View,
 } from '@react-pdf/renderer'
 
-// Register fonts
 Font.register({
   family: 'Roboto',
   fonts: [
-    {
-      src: '/fonts/Roboto-Regular.ttf',
-    },
-    {
-      src: '/fonts/Roboto-Bold.ttf',
-    },
+    { src: '/fonts/Roboto-Regular.ttf' },
+    { src: '/fonts/Roboto-Bold.ttf', fontWeight: 'bold' },
   ],
 })
+Font.register({ family: 'Madimi One', src: '/fonts/MadimiOne-Regular.ttf' })
 
-Font.register({
-  family: 'Madimi One',
-  src: '/fonts/MadimiOne-Regular.ttf',
-})
+const colors = {
+  main: '#201D63',
+  secondary: '#00A4C7',
+}
 
 const styles = StyleSheet.create({
   page: {
@@ -36,61 +32,60 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#14213d',
     lineHeight: 1.6,
+    position: 'relative',
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
+    borderBottom: `2px solid ${colors.main}`,
+    paddingBottom: 10,
   },
-  logo: {
-    width: 200,
-    height: 125,
-  },
+  logo: { width: 120, height: 75 },
   title: {
     fontFamily: 'Madimi One',
     fontSize: 25,
-    color: '#201D63',
+    color: colors.main,
   },
-  companyInfo: {
-    marginBottom: 40,
-  },
-  boldText: {
-    fontWeight: 'bold',
-  },
-  customerInfo: {
-    marginBottom: 40,
-  },
+  infoBlock: { marginBottom: 20 },
+  boldText: { fontWeight: 'bold' },
   table: {
     width: '100%',
-    borderCollapse: 'collapse',
     marginBottom: 30,
+    border: '1px solid #e0e0e0',
+    borderRadius: 5,
+    overflow: 'hidden',
   },
-  th: {
-    borderBottom: '1px solid #a9a',
-    color: '#a9a',
-    fontWeight: 400,
-    paddingBottom: 8,
+  tableRow: { flexDirection: 'row', backgroundColor: '#f4f4f4' },
+  tableHeader: {
+    paddingVertical: 8,
+    paddingHorizontal: 10,
     textTransform: 'uppercase',
     textAlign: 'center',
     fontSize: 10,
-  },
-  td: {
-    paddingTop: 20,
-    textAlign: 'center',
-  },
-  lastTd: {
-    color: '#201D63',
     fontWeight: 'bold',
-    textAlign: 'right',
+    flex: 1,
+    borderBottom: `1px solid ${colors.secondary}`,
+    color: colors.secondary,
+  },
+  tableCell: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    textAlign: 'center',
+    borderBottom: '1px solid #e0e0e0',
+    fontSize: 10,
+    flex: 1,
   },
   totalTable: {
-    borderColor: '#f6f6f6',
-    borderWidth: 2,
-    width: '100%',
+    borderTop: `2px solid ${colors.secondary}`,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     position: 'absolute',
-    bottom: 0,
-    fontSize: 20,
+    bottom: 30,
+    left: 0,
+    right: 0,
   },
 })
 
@@ -105,30 +100,27 @@ const calculateTotalPrice = (products: IProductOrder[]) => {
 
 const formatISODate = (isoDate: string) => {
   const date = new Date(isoDate)
-  return date.toLocaleString()
+  return date.toLocaleDateString('pt-BR')
 }
 
-const moneyFormat = Intl.NumberFormat('en-DE', {
+const moneyFormat = Intl.NumberFormat('pt-BR', {
   style: 'currency',
   currency: 'AOA',
 })
 const formatCurrency = (amount: number) => moneyFormat.format(amount)
 
-const calculateDiscount = (
-  price: number,
-  promotion: number | null | undefined,
-) => (promotion ? price - (price * promotion) / 100 : price)
+const calculateDiscount = (price: number, promotion?: number | null) =>
+  promotion ? price - (price * promotion) / 100 : price
 
 export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <Image style={styles.logo} src="/logo.png" />
         <Text style={styles.title}>Factura profomora</Text>
       </View>
 
-      <View style={styles.companyInfo}>
+      <View style={styles.infoBlock}>
         <Text style={styles.boldText}>
           RACIUS CARE - COMÉRCIO GERAL E PRESTAÇÃO DE SERVIÇOS
         </Text>
@@ -141,7 +133,7 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
         <Text>Email: geral@raciuscare.com</Text>
       </View>
 
-      <View style={styles.customerInfo}>
+      <View style={styles.infoBlock}>
         <Text style={styles.boldText}>Dados do cliente</Text>
         <Text>
           Nome: {orderData.firstName} {orderData.lastName}
@@ -150,54 +142,38 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
         <Text>Endereço: {orderData.address}</Text>
       </View>
 
-      <View>
-        <View style={styles.table}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={[styles.th, { flex: 1 }]}>Descrição</Text>
-            <Text style={[styles.th, { flex: 0.5 }]}>IVA(%)</Text>
-            <Text style={[styles.th, { flex: 0.5 }]}>Desc.</Text>
-            <Text style={[styles.th, { flex: 0.5 }]}>Qtd.</Text>
-            <Text style={[styles.th, { flex: 1 }]}>Valor unit.</Text>
-            <Text style={[styles.th, { flex: 1 }]}>Total unit.</Text>
-          </View>
-          {orderData.products.map((product, index: number) => (
-            <View key={index} style={{ flexDirection: 'row' }}>
-              <Text style={[styles.td, { flex: 1, textAlign: 'left' }]}>
-                {product.name}
-              </Text>
-              <Text style={[styles.td, { flex: 0.5 }]}>-</Text>
-              <Text style={[styles.td, { flex: 0.5 }]}>
-                {product.promotion ? `${product.promotion}%` : '-'}
-              </Text>
-              <Text style={[styles.td, { flex: 0.5 }]}>{product.quantity}</Text>
-              <Text style={[styles.td, { flex: 0.5 }]}>
-                {formatCurrency(product.price)}
-              </Text>
-              <Text style={[styles.td, { flex: 0.5 }]}>
-                {formatCurrency(
-                  calculateDiscount(product.price, product.promotion),
-                )}
-              </Text>
-            </View>
-          ))}
+      <View style={styles.table}>
+        <View style={styles.tableRow}>
+          <Text style={styles.tableHeader}>Produto</Text>
+          <Text style={styles.tableHeader}>Quantidade</Text>
+          <Text style={styles.tableHeader}>Preço</Text>
+          <Text style={styles.tableHeader}>Desconto</Text>
         </View>
+        {orderData.products.map((product, index: number) => (
+          <View key={index} style={styles.tableRow}>
+            <Text style={styles.tableCell}>{product.name}</Text>
+            <Text style={styles.tableCell}>{product.quantity}</Text>
+            <Text style={styles.tableCell}>
+              {formatCurrency(product.price)}
+            </Text>
+            <Text style={styles.tableCell}>
+              {product.promotion ? `${product.promotion}%` : '-'}
+            </Text>
+          </View>
+        ))}
       </View>
 
       <View style={styles.totalTable}>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[styles.th, { flex: 1 }]}>Referência</Text>
-          <Text style={[styles.th, { flex: 1 }]}>Data</Text>
-          <Text style={[styles.th, { flex: 1 }]}>Total a pagar</Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Text style={[styles.td, { flex: 0.5 }]}>{orderData.id}</Text>
-          <Text style={[styles.td, { flex: 0.5 }]}>
-            {formatISODate(orderData.createdAt)}
-          </Text>
-          <Text style={[styles.td, { flex: 0.5 }]}>
-            {formatCurrency(calculateTotalPrice(orderData.products))}
-          </Text>
-        </View>
+        <Text style={[styles.tableCell, { flex: 2 }]}>
+          Referência: {orderData.id}
+        </Text>
+        <Text style={[styles.tableCell, { flex: 2 }]}>
+          Data: {formatISODate(orderData.createdAt)}
+        </Text>
+        <Text style={[styles.tableCell, { flex: 2 }]}>
+          Total a pagar:{' '}
+          {formatCurrency(calculateTotalPrice(orderData.products))}
+        </Text>
       </View>
     </Page>
   </Document>

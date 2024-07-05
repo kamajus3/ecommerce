@@ -5,7 +5,7 @@ import { child, get, ref } from 'firebase/database'
 
 import { ICampaignBase } from '@/@types'
 import { campaignValidator } from '@/functions'
-import { database } from '@/lib/firebase/config'
+import { database } from '@/services/firebase/config'
 
 interface ICampaignContext {
   campaignData: Record<string, ICampaignBase>

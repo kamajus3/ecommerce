@@ -9,7 +9,7 @@ import * as z from 'zod'
 
 import Header from '@/components/ui/Header'
 import Loading from '@/components/ui/Loading'
-import { auth } from '@/lib/firebase/config'
+import { auth } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const schema = z
