@@ -15,13 +15,16 @@ export async function generateMetadata({
     get(child(ref(database), `campaigns/${id}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val()
+        console.log(data)
+
         if (!campaignValidator(data)) {
           resolve({
-            title: 'Campanha não encontrada.',
+            title: 'Campanha invalida.',
           })
 
           return { notFound: true }
         }
+
         resolve({
           title: data.title,
           description:
