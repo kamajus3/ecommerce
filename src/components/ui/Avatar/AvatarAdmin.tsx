@@ -28,33 +28,33 @@ export default function Avatar() {
         Dashboard
       </Link>
       <Link
-        href="/admin/products"
+        href="/admin/productos"
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/products',
+            'bg-main text-white hover:bg-main': pathname === '/admin/productos',
           },
         )}
       >
         Produtos
       </Link>
       <Link
-        href="/admin/orders"
+        href="/admin/pedidos"
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/orders',
+            'bg-main text-white hover:bg-main': pathname === '/admin/pedidos',
           },
         )}
       >
         Pedidos
       </Link>
       <Link
-        href="/admin/campaigns"
+        href="/admin/campanhas"
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/campaigns',
+            'bg-main text-white hover:bg-main': pathname === '/admin/campanhas',
           },
         )}
       >
