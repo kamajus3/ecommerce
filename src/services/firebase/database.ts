@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 import {
   child,
   endAt,
@@ -12,7 +13,8 @@ import {
   startAt,
 } from 'firebase/database'
 
-import { IOrder, IProduct, IProductQuery } from '@/@types'
+import { ICampaign, IOrder, IProduct, IProductQuery } from '@/@types'
+import { campaignValidator } from '@/functions'
 
 import { database } from './config'
 
@@ -38,6 +40,25 @@ export function getOrder(id: string): Promise<IOrder | undefined> {
         resolve(data)
       }
       resolve(undefined)
+    })
+  })
+}
+
+export function getCampaign(id: string): Promise<ICampaign> {
+  return new Promise((resolve, reject) => {
+    get(child(ref(database), `campaigns/${id}`)).then((snapshot) => {
+      let data = snapshot.val()
+      if (snapshot.exists() && data) {
+        data = { ...snapshot.val(), id }
+
+        if (!campaignValidator(data)) {
+          reject('Campanha não encontrada')
+        }
+
+        resolve(data)
+      } else {
+        reject('Campanha não encontrada')
+      }
     })
   })
 }
