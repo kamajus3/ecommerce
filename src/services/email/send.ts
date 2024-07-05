@@ -1,6 +1,10 @@
 import { IOrder } from '@/@types'
 import { env } from '@/env'
-import { formatMoney, formatPhoneNumber } from '@/functions'
+import {
+  calculateDiscountedPrice,
+  formatMoney,
+  formatPhoneNumber,
+} from '@/functions'
 import { send } from '@emailjs/browser'
 
 import './config'
@@ -29,9 +33,7 @@ export default function sendOrder({
       price,
       promotion,
       totalPrice: formatMoney(
-        p.promotion
-          ? p.price * p.quantity - p.price * p.promotion
-          : p.price * p.quantity,
+        calculateDiscountedPrice(p.price, p.quantity, p.promotion),
       ),
     }
   })
