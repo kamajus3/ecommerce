@@ -187,17 +187,36 @@ export default function PromotionPage() {
             }
 
             if (data.default) {
+              if (informationsData.defaultCampaign) {
+                update(
+                  ref(
+                    database,
+                    `/campaigns/${informationsData.defaultCampaign}`,
+                  ),
+                  {
+                    default: false,
+                  },
+                )
+              }
+
               update(ref(database, 'informations/'), {
                 defaultCampaign: id,
               })
             }
 
             if (data.fixed) {
-              if (data.default) {
-                update(ref(database, 'informations/'), {
-                  fixedCampaign: id,
-                })
+              if (informationsData.fixedCampaign) {
+                update(
+                  ref(database, `/campaigns/${informationsData.fixedCampaign}`),
+                  {
+                    fixed: false,
+                  },
+                )
               }
+
+              update(ref(database, 'informations/'), {
+                fixedCampaign: id,
+              })
             }
 
             toast.success('Campanha postada com sucesso', {
@@ -305,12 +324,30 @@ export default function PromotionPage() {
           }
 
           if (data.default) {
+            if (informationsData.defaultCampaign) {
+              update(
+                ref(database, `/campaigns/${informationsData.defaultCampaign}`),
+                {
+                  default: false,
+                },
+              )
+            }
+
             update(ref(database, 'informations/'), {
               defaultCampaign: oldData.id,
             })
           }
 
           if (data.fixed) {
+            if (informationsData.fixedCampaign) {
+              update(
+                ref(database, `/campaigns/${informationsData.fixedCampaign}`),
+                {
+                  fixed: false,
+                },
+              )
+            }
+
             update(ref(database, 'informations/'), {
               fixedCampaign: oldData.id,
             })
