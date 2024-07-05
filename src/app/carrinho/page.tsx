@@ -16,9 +16,8 @@ import Modal from '@/components/ui/Modal'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { campaignValidator, formatPhotoUrl } from '@/functions'
+import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
 import { useAuth } from '@/hooks/useAuth'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
 import sendOrder from '@/services/email/send'
 import { database } from '@/services/firebase/config'
 import { getProduct } from '@/services/firebase/database'
@@ -42,7 +41,6 @@ function TableRow({
 }: ITableRow) {
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const money = useMoneyFormat()
 
   const notifyDelete = () =>
     toast.success('Produto removido com sucesso', {
@@ -94,7 +92,7 @@ function TableRow({
       <Table.D>
         <Link href={`/producto/${product.id}`}>{product.name}</Link>
       </Table.D>
-      <Table.D>{money.format(product.price)}</Table.D>
+      <Table.D>{formatMoney(product.price)}</Table.D>
       <Table.D>x{product.quantity}</Table.D>
       <Table.D>
         {product.campaign &&
@@ -148,7 +146,6 @@ export default function CartPage() {
 
   const ICartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState<string[]>([])
-  const money = useMoneyFormat()
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -350,7 +347,7 @@ export default function CartPage() {
                 <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
                   <span className="text-gray-500">Total a pagar</span>
                   <span className="font-bold text-4xl">
-                    {money.format(totalPrice)}
+                    {formatMoney(totalPrice)}
                   </span>
                 </div>
                 <Button

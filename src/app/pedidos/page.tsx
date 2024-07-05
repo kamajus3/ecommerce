@@ -10,25 +10,32 @@ import DataState from '@/components/ui/DataState'
 import Header from '@/components/ui/Header'
 import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
-import { publishedSince } from '@/functions'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { formatMoney, publishedSince } from '@/functions'
 import { database } from '@/services/firebase/config'
 import useUserStore from '@/store/UserStore'
 
 function OrderTableRow(order: IOrder) {
-  const money = useMoneyFormat()
+  const abbrTitle =
+    `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replaceAll(
+      ',',
+      '',
+    )
 
   return (
     <Table.R inside="body">
       <Table.D>{order.id}</Table.D>
-      <Table.D>{order.products.length}</Table.D>
+      <Table.D>
+        <abbr title={abbrTitle} className="w-full border-none cursor-default">
+          {order.products.length}
+        </abbr>
+      </Table.D>
       <Table.D>{order.address}</Table.D>
       <Table.D>
         {order.state === 'not-sold' ? 'Em processamento' : 'Já pago'}
       </Table.D>
       <Table.D>{publishedSince(order.createdAt)}</Table.D>
       <Table.D>
-        {money.format(
+        {formatMoney(
           order.products.reduce((total, product) => {
             if (product.promotion) {
               return (

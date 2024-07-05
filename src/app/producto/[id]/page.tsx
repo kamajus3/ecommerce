@@ -8,8 +8,7 @@ import ProductPhoto from '@/app/producto/components/ProductPhoto'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
-import { campaignValidator, formatPhotoUrl } from '@/functions'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
 import { getProduct } from '@/services/firebase/database'
 
 export async function generateMetadata({
@@ -52,8 +51,6 @@ export default async function ProductPage({
 
   if (!product) notFound()
   else product.id = id
-
-  const money = useMoneyFormat()
 
   return (
     <section className="bg-white overflow-hidden">
@@ -103,18 +100,18 @@ export default async function ProductPage({
               {product.campaign &&
               product.campaign.reduction &&
               campaignValidator(product.campaign) === 'campaign-with-promotion'
-                ? money.format(
+                ? formatMoney(
                     product.price -
                       product.price *
                         (Number(product.campaign.reduction) / 100),
                   )
-                : money.format(product.price)}
+                : formatMoney(product.price)}
             </span>
             {product.campaign &&
               campaignValidator(product.campaign) ===
                 'campaign-with-promotion' && (
                 <span className="font-medium line-through text-gray-500 text-sm">
-                  {money.format(product.price)}
+                  {formatMoney(product.price)}
                 </span>
               )}
             <ProductAction {...product} />

@@ -83,3 +83,32 @@ export function formatPhoneNumber(phone: string) {
 
   return `+244 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`
 }
+
+export function formatMoney(
+  amount: number,
+  decimalCount = 2,
+  decimal = ',',
+  thousands = '.',
+) {
+  try {
+    decimalCount = Math.abs(decimalCount)
+    decimalCount = isNaN(decimalCount) ? 2 : decimalCount
+
+    const negativeSign = amount < 0 ? '-' : ''
+
+    let [integerPart, decimalPart] = Math.abs(Number(amount) || 0)
+      .toFixed(decimalCount)
+      .split('.')
+
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousands)
+
+    return (
+      negativeSign +
+      integerPart +
+      (decimalCount ? decimal + decimalPart.slice(0, decimalCount) : '') +
+      ' AKZ'
+    )
+  } catch (e) {
+    console.log(e)
+  }
+}

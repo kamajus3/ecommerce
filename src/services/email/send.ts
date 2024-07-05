@@ -1,6 +1,6 @@
 import { IOrder } from '@/@types'
 import { env } from '@/env'
-import { formatPhoneNumber } from '@/functions'
+import { formatMoney, formatPhoneNumber } from '@/functions'
 import { send } from '@emailjs/browser'
 
 import './config'
@@ -18,20 +18,21 @@ export default function sendOrder({
   lastName,
   address,
   products,
+  totalPrice,
 }: ISendOrder) {
-  const money = Intl.NumberFormat('en-DE', {
-    style: 'currency',
-    currency: 'AOA',
-  })
-
   const finalProducts = products.map((p) => {
-    const price = money.format(p.price)
+    const price = formatMoney(p.price)
     const promotion = p.promotion ? `${p.promotion}%` : '-'
 
     return {
       ...p,
       price,
       promotion,
+      totalPrice: formatMoney(
+        p.promotion
+          ? p.price * p.quantity - p.price * p.promotion
+          : p.price * p.quantity,
+      ),
     }
   })
 
@@ -46,6 +47,7 @@ export default function sendOrder({
       email,
       address,
       products: finalProducts,
+      totalPrice,
       invoiceUrl: `${env.NEXT_PUBLIC_WEBSITE_URL}/invoice/${id}`,
     },
   )

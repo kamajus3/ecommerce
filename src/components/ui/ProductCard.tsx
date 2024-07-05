@@ -4,13 +4,11 @@ import clsx from 'clsx'
 import { X } from 'lucide-react'
 
 import { IProduct } from '@/@types'
-import { campaignValidator, formatPhotoUrl } from '@/functions'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
 export default function ProductCard(product: IProduct) {
-  const money = useMoneyFormat()
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
 
@@ -68,18 +66,18 @@ export default function ProductCard(product: IProduct) {
             {product.campaign &&
             product.campaign.reduction &&
             campaignValidator(product.campaign) === 'campaign-with-promotion'
-              ? money.format(
+              ? formatMoney(
                   product.price -
                     product.price * (Number(product.campaign.reduction) / 100),
                 )
-              : money.format(product.price)}
+              : formatMoney(product.price)}
           </p>
 
           {product.campaign &&
             campaignValidator(product.campaign) ===
               'campaign-with-promotion' && (
               <p className="font-medium line-through text-gray-500 text-sm">
-                {money.format(product.price)}
+                {formatMoney(product.price)}
               </p>
             )}
         </div>

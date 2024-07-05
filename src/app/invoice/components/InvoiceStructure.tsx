@@ -1,5 +1,5 @@
 import { IOrder, IProductOrder } from '@/@types'
-import { formatPhoneNumber } from '@/functions'
+import { formatMoney, formatPhoneNumber } from '@/functions'
 import {
   Document,
   Font,
@@ -103,12 +103,6 @@ const formatISODate = (isoDate: string) => {
   return date.toLocaleDateString('pt-BR')
 }
 
-const moneyFormat = Intl.NumberFormat('pt-BR', {
-  style: 'currency',
-  currency: 'AOA',
-})
-const formatCurrency = (amount: number) => moneyFormat.format(amount)
-
 const calculateDiscount = (price: number, promotion?: number | null) =>
   promotion ? price - (price * promotion) / 100 : price
 
@@ -146,18 +140,25 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
         <View style={styles.tableRow}>
           <Text style={styles.tableHeader}>Produto</Text>
           <Text style={styles.tableHeader}>Quantidade</Text>
-          <Text style={styles.tableHeader}>Preço</Text>
+          <Text style={styles.tableHeader}>Preço unidade</Text>
           <Text style={styles.tableHeader}>Desconto</Text>
+          <Text style={styles.tableHeader}>Preço total</Text>
         </View>
         {orderData.products.map((product, index: number) => (
           <View key={index} style={styles.tableRow}>
             <Text style={styles.tableCell}>{product.name}</Text>
             <Text style={styles.tableCell}>{product.quantity}</Text>
-            <Text style={styles.tableCell}>
-              {formatCurrency(product.price)}
-            </Text>
+            <Text style={styles.tableCell}>{formatMoney(product.price)}</Text>
             <Text style={styles.tableCell}>
               {product.promotion ? `${product.promotion}%` : '-'}
+            </Text>
+            <Text style={styles.tableCell}>
+              {formatMoney(
+                product.promotion
+                  ? product.price * product.quantity -
+                      product.price * product.promotion
+                  : product.price * product.quantity,
+              )}
             </Text>
           </View>
         ))}
@@ -171,8 +172,7 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
           Data: {formatISODate(orderData.createdAt)}
         </Text>
         <Text style={[styles.tableCell, { flex: 2 }]}>
-          Total a pagar:{' '}
-          {formatCurrency(calculateTotalPrice(orderData.products))}
+          Total a pagar: {formatMoney(calculateTotalPrice(orderData.products))}
         </Text>
       </View>
     </Page>

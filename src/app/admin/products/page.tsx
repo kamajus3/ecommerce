@@ -32,8 +32,7 @@ import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { formatPhotoUrl, publishedSince } from '@/functions'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { formatMoney, formatPhotoUrl, publishedSince } from '@/functions'
 import { database, storage } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -58,7 +57,6 @@ interface ITableRow {
 }
 
 function TableRow({ product, _delete, _edit }: ITableRow) {
-  const money = useMoneyFormat()
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
@@ -76,7 +74,7 @@ function TableRow({ product, _delete, _edit }: ITableRow) {
       </Table.D>
       <Table.D>{product.name}</Table.D>
       <Table.D>{product.category}</Table.D>
-      <Table.D>{money.format(product.price)}</Table.D>
+      <Table.D>{formatMoney(product.price)}</Table.D>
       <Table.D>{product.quantity}</Table.D>
       <Table.D>{publishedSince(product.createdAt)}</Table.D>
       <Table.D>{publishedSince(product.updatedAt)}</Table.D>

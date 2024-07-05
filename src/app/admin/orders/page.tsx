@@ -24,8 +24,7 @@ import Header from '@/components/ui/Header'
 import Modal from '@/components/ui/Modal'
 import Table from '@/components/ui/Table'
 import contants from '@/constants'
-import { formatPhoneNumber, publishedSince } from '@/functions'
-import useMoneyFormat from '@/hooks/useMoneyFormat'
+import { formatMoney, formatPhoneNumber, publishedSince } from '@/functions'
 import { database } from '@/services/firebase/config'
 import { getProduct } from '@/services/firebase/database'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,12 +41,11 @@ interface ITableRow {
 }
 
 function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
-  const money = useMoneyFormat()
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openSoldModal, setOpenSoldModal] = useState(false)
 
   const abbrTitle =
-    `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replace(
+    `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replaceAll(
       ',',
       '',
     )
@@ -68,7 +66,7 @@ function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
       </Table.D>
       <Table.D>{publishedSince(order.createdAt)}</Table.D>
       <Table.D>
-        {money.format(
+        {formatMoney(
           order.products.reduce((total, product) => {
             if (product.promotion) {
               return (
