@@ -48,7 +48,7 @@ function OrderTableRow(order: IOrder) {
         )}
       </Table.D>
       <Table.D>
-        <Link href={`/invoice/${order.id}`}>
+        <Link href={`/factura/${order.id}`}>
           <Button variant="no-background" className="mx-auto text-secondary">
             Baixar factura
           </Button>

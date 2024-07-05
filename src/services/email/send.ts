@@ -47,8 +47,8 @@ export default function sendOrder({
       email,
       address,
       products: finalProducts,
-      totalPrice,
-      invoiceUrl: `${env.NEXT_PUBLIC_WEBSITE_URL}/invoice/${id}`,
+      totalPrice: formatMoney(totalPrice),
+      invoiceUrl: `${env.NEXT_PUBLIC_WEBSITE_URL}/factura/${id}`,
     },
   )
 }

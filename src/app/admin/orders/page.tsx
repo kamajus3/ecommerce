@@ -124,7 +124,7 @@ function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
         />
       </Table.D>
       <Table.D>
-        <Link href={`/invoice/${order.id}`}>
+        <Link href={`/factura/${order.id}`}>
           <Button variant="no-background" className="mx-auto text-main">
             Baixar
           </Button>
