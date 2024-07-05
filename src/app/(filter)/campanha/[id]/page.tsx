@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { child, get, ref } from 'firebase/database'
 
 import { campaignValidator, formatPhotoUrl } from '@/functions'
@@ -13,16 +14,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   return new Promise((resolve) => {
     get(child(ref(database), `campaigns/${id}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val()
-        console.log(data)
+      let data = snapshot.val()
+      if (snapshot.exists() && data) {
+        data = { ...snapshot.val(), id }
 
         if (!campaignValidator(data)) {
           resolve({
-            title: 'Campanha invalida.',
+            title: 'Campanha não encontrada',
           })
 
-          return { notFound: true }
+          notFound()
         }
 
         resolve({
@@ -41,10 +42,10 @@ export async function generateMetadata({
         })
       } else {
         resolve({
-          title: 'Campanha não encontrada.',
+          title: 'Campanha não encontrada',
         })
 
-        return { notFound: true }
+        notFound()
       }
     })
   })
