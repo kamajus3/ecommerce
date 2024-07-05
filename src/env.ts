@@ -13,6 +13,10 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: z.string(),
     NEXT_PUBLIC_FIREBASE_DATABASE_URL: z.string().url(),
     NEXT_PUBLIC_EMAIL_ADDRESS: z.string().email(),
+    NEXT_PUBLIC_WEBSITE_URL: z
+      .string()
+      .url()
+      .transform((str: string) => str.replace(/\/$/, '')),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -30,5 +34,6 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_DATABASE_URL:
       process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
     NEXT_PUBLIC_EMAIL_ADDRESS: process.env.NEXT_PUBLIC_EMAIL_ADDRESS,
+    NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
   },
 })

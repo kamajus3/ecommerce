@@ -1,19 +1,16 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import clsx from 'clsx'
-import { Share } from 'lucide-react'
 
-import Button from '@/components/ui/Button'
+import ProductAction from '@/app/producto/components/ProductAction'
+import ProductPhoto from '@/app/producto/components/ProductPhoto'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
 import { campaignValidator, formatPhotoUrl } from '@/functions'
 import useMoneyFormat from '@/hooks/useMoneyFormat'
 import { getProduct } from '@/lib/firebase/database'
-
-import PostAction from './action'
 
 export async function generateMetadata({
   params: { id },
@@ -67,42 +64,7 @@ export default async function ProductPage({
             className="w-full sm:w-80 h-80 relative select-none"
             draggable={false}
           >
-            {product && (
-              <div>
-                {product.campaign &&
-                  campaignValidator(product.campaign) ===
-                    'campaign-with-promotion' && (
-                    <Link
-                      href={`/campanha/${product.campaign?.id}`}
-                      className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
-                    >
-                      Promoção de {`${product.campaign?.reduction} %`}
-                    </Link>
-                  )}
-
-                {product.campaign &&
-                  campaignValidator(product.campaign) === 'campaign' && (
-                    <Link
-                      href={`/campanha/${product.campaign?.id}`}
-                      className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 top-0"
-                    >
-                      Em campanha
-                    </Link>
-                  )}
-
-                <Button className="absolute z-50 right-0 top-0 rounded-full p-2 bg-black">
-                  <Share size={20} />
-                </Button>
-
-                <Image
-                  src={formatPhotoUrl(product.photo, product.updatedAt)}
-                  alt={product.name}
-                  draggable={false}
-                  className="select-none object-cover object-center"
-                  fill
-                />
-              </div>
-            )}
+            {product && <ProductPhoto {...product} />}
           </div>
           <div className="mt-4 sm:w-80 w-full flex flex-col items-start justify-center">
             <div
@@ -155,7 +117,7 @@ export default async function ProductPage({
                   {money.format(product.price)}
                 </span>
               )}
-            <PostAction {...product} />
+            <ProductAction {...product} />
           </div>
         </div>
       </div>

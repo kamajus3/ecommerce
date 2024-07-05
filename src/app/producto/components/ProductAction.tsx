@@ -8,7 +8,7 @@ import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 import useViewStore from '@/store/ViewStore'
 
-export default function PostAction(product: IProduct) {
+export default function ProductAction(product: IProduct) {
   const [quantity, setQuantity] = useState(1)
   const viewProduct = useViewStore((state) => state.viewProduct)
 

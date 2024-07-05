@@ -27,6 +27,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.50.1",
     "react-toastify": "^10.0.4",
+    "react-web-share": "^2.0.2",
     "recharts": "^2.12.3",
     "swiper": "^11.0.6",
     "tailwind-merge": "^2.3.0",
