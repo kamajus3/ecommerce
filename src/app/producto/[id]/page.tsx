@@ -107,6 +107,7 @@ export default async function ProductPage({
                   )
                 : formatMoney(product.price)}
             </span>
+
             {product.campaign &&
               campaignValidator(product.campaign) ===
                 'campaign-with-promotion' && (
