@@ -1,9 +1,9 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { child, get, ref } from 'firebase/database'
 
-import { campaignValidator, formatPhotoUrl } from '@/functions'
-import { database } from '@/services/firebase/config'
+import { ICampaign } from '@/@types'
+import { formatPhotoUrl } from '@/functions'
+import { getCampaign } from '@/services/firebase/database'
 
 import { CampaingPage } from './campaign'
 
@@ -12,45 +12,45 @@ export async function generateMetadata({
 }: {
   params: { id: string }
 }): Promise<Metadata> {
-  return new Promise((resolve) => {
-    get(child(ref(database), `campaigns/${id}`)).then((snapshot) => {
-      let data = snapshot.val()
-      if (snapshot.exists() && data) {
-        data = { ...snapshot.val(), id }
-
-        if (!campaignValidator(data)) {
-          resolve({
-            title: 'Campanha não encontrada',
-          })
-
-          notFound()
-        }
-
-        resolve({
+  return getCampaign(id)
+    .then((data) => {
+      return {
+        title: data.title,
+        description:
+          data.description.length <= 100
+            ? data.description
+            : `${data.description.slice(0, 100)}...`,
+        openGraph: {
+          type: 'article',
           title: data.title,
-          description:
-            data.description.length <= 100
-              ? data.description
-              : `${data.description.slice(0, 100)}...`,
-          openGraph: {
-            type: 'article',
-            title: data.title,
-            description: data.description,
-            siteName: 'Racius Care',
-            images: formatPhotoUrl(data.photo, data.updatedAt),
-          },
-        })
-      } else {
-        resolve({
-          title: 'Campanha não encontrada',
-        })
-
-        notFound()
+          description: data.description,
+          siteName: 'Racius Care',
+          images: formatPhotoUrl(data.photo, data.updatedAt),
+          notFound: true,
+        },
       }
     })
-  })
+    .catch(() => {
+      return {
+        title: 'Campanha não encontrada.',
+        description:
+          'Desculpe, mas a campanha que você tentou acessar não foi encontrada.',
+        notFound: true,
+      }
+    })
 }
 
-export default function CampaingSearchPage() {
-  return <CampaingPage />
+export default async function CampaingSearchPage({
+  params: { id },
+}: {
+  params: { id: string }
+}) {
+  let campaign: ICampaign
+
+  try {
+    campaign = await getCampaign(id)
+  } catch {
+    notFound()
+  }
+  return <CampaingPage {...campaign} />
 }

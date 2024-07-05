@@ -1,36 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
 import clsx from 'clsx'
-import { child, get, ref } from 'firebase/database'
 
-import { ICampaignBase, IProduct } from '@/@types'
+import { ICampaign, IProduct } from '@/@types'
 import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductCard from '@/components/ui/ProductCard'
 import { campaignValidator, publishedSince } from '@/functions'
-import { database } from '@/services/firebase/config'
 import { getProducts } from '@/services/firebase/database'
 
-export function CampaingPage() {
+export function CampaingPage(campaign: ICampaign) {
   const [productData, setProductData] = useState<Record<string, IProduct>>({})
-  const [campaignData, setCampaignData] = useState<ICampaignBase>()
   const [loading, setLoading] = useState(true)
-  const { id: campaign } = useParams<{ id: string }>()
 
   useEffect(() => {
     async function unsubscribed() {
-      get(child(ref(database), `campaigns/${campaign}`)).then((snapshot) => {
-        const data = snapshot.val()
-        if (snapshot.exists() && campaignValidator(data)) {
-          setCampaignData(data)
-        }
-      })
-
       await getProducts({
-        campaign,
+        campaign: campaign.id,
       }).then((products) => {
         setProductData(products)
       })
@@ -38,31 +26,27 @@ export function CampaingPage() {
     }
 
     unsubscribed()
-  }, [campaign])
+  }, [campaign.id])
 
   const resultsCount = Object.keys(productData).length
 
   return (
-    <section className="bg-white min-h-screen">
+    <section className="bg-white min-h-screen overflow-x-hidden">
       <Header.Client />
 
-      {campaignData && (
-        <article className="p-4 mx-auto mt-9">
-          {campaignData.finishDate &&
-            campaignValidator(campaignData) === 'campaign-with-promotion' && (
-              <span className="text-black font-medium text-sm uppercase">
-                A promoção termina {publishedSince(campaignData.finishDate)}
-              </span>
-            )}
+      <article className="p-4 mx-auto mt-9">
+        {campaign.finishDate &&
+          campaignValidator(campaign) === 'campaign-with-promotion' && (
+            <span className="text-black font-medium text-sm uppercase">
+              A promoção termina {publishedSince(campaign.finishDate)}
+            </span>
+          )}
 
-          <h2 className="text-black font-semibold text-2xl">
-            {campaignData.title}
-          </h2>
-          <p className="text-[#212121] text-sm w-[80vw]">
-            {campaignData.description}
-          </p>
-        </article>
-      )}
+        <h2 className="text-black font-semibold text-2xl">{campaign.title}</h2>
+        <p className="text-[#212121] text-sm w-[80vw]">
+          {campaign.description}
+        </p>
+      </article>
 
       <p
         className={clsx(
