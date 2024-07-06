@@ -13,7 +13,7 @@ import {
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import contants from '@/constants'
-import { formatPhotoUrl } from '@/functions'
+import { formatPhotoUrl } from '@/functions/format'
 import { useCampaign } from '@/hooks/useCampaign'
 import useDimensions from '@/hooks/useDimensions'
 

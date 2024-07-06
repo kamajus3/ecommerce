@@ -5,29 +5,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { ICampaignBase } from '@/@types'
-import { campaignValidator, formatPhotoUrl } from '@/functions'
+import Button from '@/components/ui/Button'
+import { calculateTimeRemaining, campaignValidator } from '@/functions'
+import { formatPhotoUrl } from '@/functions/format'
 import { useCampaign } from '@/hooks/useCampaign'
 import { useInformation } from '@/hooks/useInformation'
-
-function calculateTimeRemaining(finishDate: Date) {
-  const currentTime = new Date().getTime()
-  const finishTime = new Date(finishDate).getTime()
-
-  if (finishTime < currentTime) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-  }
-
-  const timeDiff = finishTime - currentTime
-
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor(
-    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  )
-  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
-
-  return { days, hours, minutes, seconds }
-}
 
 export default function PromoBig() {
   const { campaignData } = useCampaign()
@@ -99,11 +81,10 @@ export default function PromoBig() {
             </div>
           </div>
 
-          <Link
-            href={`/campanha/${fixedCampaign.id}`}
-            className="mt-6 text-white bg-[#00A4C7] font-medium rounded py-4 px-9 active:scale-95 hover:brightness-75 border border-white"
-          >
-            Ver produtos
+          <Link href={`/campanha/${fixedCampaign.id}`}>
+            <Button className="mt-6 bg-secondary border border-white py-4 px-9 active:scale-95 hover:brightness-75">
+              Ver produtos
+            </Button>
           </Link>
         </div>
 

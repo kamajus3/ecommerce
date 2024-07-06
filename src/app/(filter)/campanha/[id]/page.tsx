@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { ICampaign } from '@/@types'
-import { formatPhotoUrl } from '@/functions'
+import { formatPhotoUrl } from '@/functions/format'
 import { getCampaign } from '@/services/firebase/database'
 
 import { CampaingPage } from './campaign'

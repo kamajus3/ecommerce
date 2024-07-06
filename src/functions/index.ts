@@ -26,11 +26,6 @@ export async function URLtoFile(url: string) {
   throw Error('Erro ao converter URL para arquivo')
 }
 
-export function formatPhotoUrl(photoUrl: string, updateAt: string) {
-  photoUrl = photoUrl + '?timestamp=' + updateAt
-  return photoUrl
-}
-
 export function publishedSince(date: string): string {
   try {
     const publishedSince = formatDistanceToNowStrict(parseISO(date), {
@@ -81,45 +76,22 @@ export function hexToRGBA(hex: string, alpha: number): string {
   return rgba
 }
 
-export function formatPhoneNumber(phone: string) {
-  phone = phone.replaceAll(' ', '')
+export function calculateTimeRemaining(finishDate: Date) {
+  const currentTime = new Date().getTime()
+  const finishTime = new Date(finishDate).getTime()
 
-  if (!/^(?:\+244)?\d{9}$/.test(phone)) {
-    throw new Error('Invalid number')
+  if (finishTime < currentTime) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
   }
 
-  if (phone.startsWith('+244')) {
-    return `+244 ${phone.slice(4, 7)} ${phone.slice(7, 10)} ${phone.slice(10)}`
-  }
+  const timeDiff = finishTime - currentTime
 
-  return `+244 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`
-}
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor(
+    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  )
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
 
-export function formatMoney(
-  amount: number,
-  decimalCount = 2,
-  decimal = ',',
-  thousands = '.',
-) {
-  try {
-    decimalCount = Math.abs(decimalCount)
-    decimalCount = isNaN(decimalCount) ? 2 : decimalCount
-
-    const negativeSign = amount < 0 ? '-' : ''
-
-    let [integerPart, decimalPart] = Math.abs(Number(amount) || 0)
-      .toFixed(decimalCount)
-      .split('.')
-
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousands)
-
-    return (
-      negativeSign +
-      integerPart +
-      (decimalCount ? decimal + decimalPart.slice(0, decimalCount) : '') +
-      ' AKZ'
-    )
-  } catch (e) {
-    console.log(e)
-  }
+  return { days, hours, minutes, seconds }
 }

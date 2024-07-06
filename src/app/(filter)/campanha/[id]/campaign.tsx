@@ -8,12 +8,18 @@ import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductCard from '@/components/ui/ProductCard'
-import { campaignValidator, publishedSince } from '@/functions'
+import { calculateTimeRemaining, campaignValidator } from '@/functions'
 import { getProducts } from '@/services/firebase/database'
 
 export function CampaingPage(campaign: ICampaign) {
   const [productData, setProductData] = useState<Record<string, IProduct>>({})
   const [loading, setLoading] = useState(true)
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  })
 
   useEffect(() => {
     async function unsubscribed() {
@@ -28,6 +34,17 @@ export function CampaingPage(campaign: ICampaign) {
     unsubscribed()
   }, [campaign.id])
 
+  useEffect(() => {
+    if (campaign.finishDate) {
+      const finishDate = new Date(campaign.finishDate)
+      const timer = setInterval(() => {
+        setTimeRemaining(calculateTimeRemaining(finishDate))
+      }, 1000)
+
+      return () => clearInterval(timer)
+    }
+  }, [campaign])
+
   const resultsCount = Object.keys(productData).length
 
   return (
@@ -38,7 +55,9 @@ export function CampaingPage(campaign: ICampaign) {
         {campaign.finishDate &&
           campaignValidator(campaign) === 'campaign-with-promotion' && (
             <span className="text-black font-medium text-sm uppercase">
-              A promoção termina {publishedSince(campaign.finishDate)}
+              A promoção termina em {timeRemaining.days} dias,{' '}
+              {timeRemaining.hours} horas, {timeRemaining.minutes} minutos e{' '}
+              {timeRemaining.seconds} segundos
             </span>
           )}
 

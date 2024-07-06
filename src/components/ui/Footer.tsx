@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ChevronUp, MoveUpRight } from 'lucide-react'
 
 import { env } from '@/env'
-import { formatPhoneNumber } from '@/functions'
+import { formatPhoneNumber } from '@/functions/format'
 
 interface IFooter {
   disableBackButton?: boolean
