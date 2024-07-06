@@ -1,4 +1,3 @@
-/* eslint-disable prefer-promise-reject-errors */
 import {
   child,
   endAt,
@@ -52,11 +51,13 @@ export function getCampaign(id: string): Promise<ICampaign> {
         data = { ...snapshot.val(), id }
 
         if (!campaignValidator(data)) {
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject('Campanha não encontrada')
         }
 
         resolve(data)
       } else {
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject('Campanha não encontrada')
       }
     })

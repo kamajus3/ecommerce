@@ -1,9 +1,6 @@
 import { IOrder, IProductOrder } from '@/@types'
-import {
-  calculateDiscountedPrice,
-  formatMoney,
-  formatPhoneNumber,
-} from '@/functions'
+import { calculateDiscountedPrice } from '@/functions'
+import { formatMoney, formatPhoneNumber } from '@/functions/format'
 import {
   Document,
   Font,

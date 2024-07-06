@@ -1,10 +1,7 @@
 import { IOrder } from '@/@types'
 import { env } from '@/env'
-import {
-  calculateDiscountedPrice,
-  formatMoney,
-  formatPhoneNumber,
-} from '@/functions'
+import { calculateDiscountedPrice } from '@/functions'
+import { formatMoney, formatPhoneNumber } from '@/functions/format'
 import { send } from '@emailjs/browser'
 
 import './config'
