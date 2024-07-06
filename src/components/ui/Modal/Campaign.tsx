@@ -381,6 +381,18 @@ export default function CampaignModal(props: ICampaignModal) {
                       >
                         {props.title}
                       </Dialog.Title>
+                      {informationsData.defaultCampaign &&
+                        isDefault &&
+                        ((props.defaultData &&
+                          props.defaultData.id !==
+                            informationsData.defaultCampaign) ||
+                          (!props.defaultData &&
+                            informationsData.defaultCampaign)) && (
+                          <div className="bg-red-300 p-2 rounded text-red-500 font-medium mb-4 flex items-center gap-x-2">
+                            A campanha selecionada anteriormente como padrão
+                            será apagada
+                          </div>
+                        )}
                       <div className="mb-4">
                         <Field.Label htmlFor="title">Título</Field.Label>
                         <Field.Input
