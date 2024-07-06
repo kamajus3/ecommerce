@@ -151,6 +151,14 @@ export default function PromotionPage() {
 
   const { informationsData } = useInformation()
 
+  async function deleteDefaultCampaign() {
+    if (informationsData.defaultCampaign) {
+      await remove(
+        ref(database, `/campaigns/${informationsData.defaultCampaign}`),
+      )
+    }
+  }
+
   function _post(data: IFormData) {
     const id = randomBytes(20).toString('hex')
     const reference = storageRef(storage, `/campaigns/${id}`)
@@ -171,7 +179,7 @@ export default function PromotionPage() {
           products: data.products ? data.products.map((p) => p.id) : null,
           photo,
         })
-          .then(() => {
+          .then(async () => {
             if (data.products) {
               data.products.map(async (p) => {
                 update(ref(database, `products/${p.id}`), {
@@ -187,18 +195,7 @@ export default function PromotionPage() {
             }
 
             if (data.default) {
-              // if (informationsData.defaultCampaign) {
-              //   update(
-              //     ref(
-              //       database,
-              //       `/campaigns/${informationsData.defaultCampaign}`,
-              //     ),
-              //     {
-              //       default: false,
-              //     },
-              //   )
-              // }
-
+              await deleteDefaultCampaign()
               update(ref(database, 'informations/'), {
                 defaultCampaign: id,
               })
@@ -324,15 +321,7 @@ export default function PromotionPage() {
           }
 
           if (data.default) {
-            if (informationsData.defaultCampaign) {
-              update(
-                ref(database, `/campaigns/${informationsData.defaultCampaign}`),
-                {
-                  default: false,
-                },
-              )
-            }
-
+            await deleteDefaultCampaign()
             update(ref(database, 'informations/'), {
               defaultCampaign: oldData.id,
             })
