@@ -151,8 +151,11 @@ export default function PromotionPage() {
 
   const { informationsData } = useInformation()
 
-  async function deleteDefaultCampaign() {
-    if (informationsData.defaultCampaign) {
+  async function deleteDefaultCampaign(campaignId: string) {
+    if (
+      informationsData.defaultCampaign &&
+      campaignId !== informationsData.defaultCampaign
+    ) {
       await remove(
         ref(database, `/campaigns/${informationsData.defaultCampaign}`),
       )
@@ -198,7 +201,7 @@ export default function PromotionPage() {
             }
 
             if (data.default) {
-              await deleteDefaultCampaign()
+              await deleteDefaultCampaign(id)
               update(ref(database, 'informations/'), {
                 defaultCampaign: id,
               })
@@ -324,7 +327,7 @@ export default function PromotionPage() {
           }
 
           if (data.default) {
-            await deleteDefaultCampaign()
+            await deleteDefaultCampaign(oldData.id)
             update(ref(database, 'informations/'), {
               defaultCampaign: oldData.id,
             })
