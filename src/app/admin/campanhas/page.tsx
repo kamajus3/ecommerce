@@ -156,6 +156,9 @@ export default function PromotionPage() {
       await remove(
         ref(database, `/campaigns/${informationsData.defaultCampaign}`),
       )
+      await deleteObject(
+        storageRef(storage, `/campaigns/${informationsData.defaultCampaign}`),
+      )
     }
   }
 
