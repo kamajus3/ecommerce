@@ -9,7 +9,8 @@ import { RWebShare } from 'react-web-share'
 import { IProduct } from '@/@types'
 import Button from '@/components/ui/Button'
 import { env } from '@/env'
-import { campaignValidator, formatPhotoUrl } from '@/functions'
+import { campaignValidator } from '@/functions'
+import { formatPhotoUrl } from '@/functions/format'
 
 export default function ProductPhoto(product: IProduct) {
   const pathname = usePathname()

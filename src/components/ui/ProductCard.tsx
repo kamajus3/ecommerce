@@ -4,7 +4,8 @@ import clsx from 'clsx'
 import { X } from 'lucide-react'
 
 import { IProduct } from '@/@types'
-import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
+import { campaignValidator } from '@/functions'
+import { formatMoney, formatPhotoUrl } from '@/functions/format'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 

@@ -8,7 +8,8 @@ import ProductPhoto from '@/app/producto/components/ProductPhoto'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
-import { campaignValidator, formatMoney, formatPhotoUrl } from '@/functions'
+import { campaignValidator } from '@/functions'
+import { formatMoney, formatPhotoUrl } from '@/functions/format'
 import { getProduct } from '@/services/firebase/database'
 
 export async function generateMetadata({
