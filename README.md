@@ -1,4 +1,4 @@
-# Racius Care (Health e-Commerce)
+# e-Commerce
 
 ## Main technologies
 
@@ -23,5 +23,3 @@ env.example file.
 ```bash
 npm run dev
 ```
-
-4. Still Working
