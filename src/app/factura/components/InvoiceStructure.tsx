@@ -21,8 +21,8 @@ Font.register({
 Font.register({ family: 'Madimi One', src: '/fonts/MadimiOne-Regular.ttf' })
 
 const colors = {
-  main: '#201D63',
-  secondary: '#00A4C7',
+  main: '#212121',
+  secondary: '#8B6CEF',
 }
 
 const styles = StyleSheet.create({
@@ -118,7 +118,7 @@ export const InvoiceStructure = ({ orderData }: { orderData: IOrder }) => (
 
       <View style={styles.infoBlock}>
         <Text style={styles.boldText}>
-          RACIUS CARE - COMÉRCIO GERAL E PRESTAÇÃO DE SERVIÇOS
+          Poubelle - COMÉRCIO GERAL E PRESTAÇÃO DE SERVIÇOS
         </Text>
         <Text>NIF: 5001866150</Text>
         <Text>

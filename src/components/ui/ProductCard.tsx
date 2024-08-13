@@ -30,8 +30,7 @@ export default function ProductCard(product: IProduct) {
           )}
 
           {product.campaign &&
-            campaignValidator(product.campaign) ===
-              'campaign-with-promotion' && (
+            campaignValidator(product.campaign) === 'promotional-campaign' && (
               <Link
                 href={`/campanha/${product.campaign?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
@@ -66,7 +65,7 @@ export default function ProductCard(product: IProduct) {
           <p className="text-lg font-semibold text-gray-900">
             {product.campaign &&
             product.campaign.reduction &&
-            campaignValidator(product.campaign) === 'campaign-with-promotion'
+            campaignValidator(product.campaign) === 'promotional-campaign'
               ? formatMoney(
                   product.price -
                     product.price * (Number(product.campaign.reduction) / 100),
@@ -75,8 +74,7 @@ export default function ProductCard(product: IProduct) {
           </p>
 
           {product.campaign &&
-            campaignValidator(product.campaign) ===
-              'campaign-with-promotion' && (
+            campaignValidator(product.campaign) === 'promotional-campaign' && (
               <p className="font-medium line-through text-gray-500 text-sm">
                 {formatMoney(product.price)}
               </p>

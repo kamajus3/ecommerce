@@ -1,42 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ref, remove } from 'firebase/database'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import Button from '@/components/ui/Button'
 import Modal from '@/components/ui/Modal'
 import contants from '@/constants'
-import { auth, database } from '@/services/firebase/config'
+import { UserRepository } from '@/repositories/user.repository'
+import { auth } from '@/services/firebase/config'
 
 export default function AccountDelete() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openPasswordModal, setPasswordModal] = useState(false)
   const router = useRouter()
 
-  function deleteAccount() {
-    if (auth.currentUser) {
-      const databaseReference = ref(database, `users/${auth.currentUser.uid}`)
+  const userRepository = useMemo(() => new UserRepository(), [])
 
-      auth.currentUser
-        ?.delete()
+  function deleteAccount() {
+    const { currentUser } = auth
+    if (currentUser) {
+      currentUser
+        .delete()
         .then(async () => {
-          await remove(databaseReference).catch(() => {})
+          await userRepository.deleteById(currentUser.uid)
           router.replace('/logout')
         })
         .catch(() => {
-          toast.error('Erro ao tentar apagar a sua conta', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+          toast.error('Erro ao tentar apagar a sua conta')
         })
     }
   }
@@ -49,8 +40,8 @@ export default function AccountDelete() {
         </h2>
         <p className="mt-1 text-sm leading-6 text-gray-600">
           Delete permanentemente a sua conta pessoal e todo o seu conteúdo do
-          Racius Care. Esta ação não é reversível, por isso proceda com
-          precaução. (os seus pedidos não serão cancelados)
+          Poubelle. Esta ação não é reversível, por isso proceda com precaução.
+          (os seus pedidos não serão cancelados)
         </p>
         <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <Button

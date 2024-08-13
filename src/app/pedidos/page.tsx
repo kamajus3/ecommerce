@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { equalTo, onValue, orderByChild, query, ref } from 'firebase/database'
 
 import { IOrder } from '@/@types'
 import Button from '@/components/ui/Button'
@@ -12,7 +11,7 @@ import ProtectedRoute from '@/components/ui/ProtectedRoute'
 import Table from '@/components/ui/Table'
 import { publishedSince } from '@/functions'
 import { formatMoney } from '@/functions/format'
-import { database } from '@/services/firebase/config'
+import { OrderRepository } from '@/repositories/order.repository'
 import useUserStore from '@/store/UserStore'
 
 function OrderTableRow(order: IOrder) {
@@ -59,60 +58,33 @@ function OrderTableRow(order: IOrder) {
   )
 }
 
-function reverseData(obj: Record<string, IOrder>) {
-  const newObj: Record<string, IOrder> = {}
-  const revObj = Object.keys(obj).reverse()
-  revObj.forEach(function (i) {
-    newObj[i] = obj[i]
-  })
-  return newObj
-}
-
 export default function CartPage() {
-  const [orderData, setOrderData] = useState<Record<string, IOrder>>({})
+  const [orderData, setOrderData] = useState<IOrder[]>([])
   const [loading, setLoading] = useState(true)
   const user = useUserStore((state) => state.metadata)
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      if (user) {
-        const reference = ref(database, 'orders/')
-        const orderQuery = query(
-          reference,
-          orderByChild('userId'),
-          equalTo(user.uid),
-        )
+  const orderRepository = useMemo(() => new OrderRepository(), [])
 
-        onValue(orderQuery, (snapshot) => {
-          const results: Record<string, IOrder> = {}
-          snapshot.forEach(function (child) {
-            results[child.key] = child.val()
-          })
+  const getOrders = useCallback(async () => {
+    if (user) {
+      const products = await orderRepository.find({
+        orderBy: 'updatedAt',
+        filterBy: {
+          userId: user.uid,
+        },
+      })
 
-          const sortedArray = Object.entries(results).sort(
-            ([, valueA], [, valueB]) => {
-              const dateA = new Date(valueA.createdAt)
-              const dateB = new Date(valueB.createdAt)
-              return dateA.getTime() - dateB.getTime()
-            },
-          )
-
-          const recordFormat: Record<string, IOrder> = sortedArray.reduce(
-            (acc: Record<string, IOrder>, [key, value]) => {
-              acc[key] = value
-              return acc
-            },
-            {},
-          )
-
-          setOrderData(reverseData(recordFormat))
-          setLoading(false)
-        })
-      }
+      setOrderData(products)
     }
+  }, [orderRepository, user])
 
-    fetchProducts()
-  }, [user])
+  useEffect(() => {
+    ;(async function () {
+      await getOrders().finally(() => {
+        setLoading(false)
+      })
+    })()
+  }, [getOrders])
 
   return (
     <ProtectedRoute

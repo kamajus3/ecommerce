@@ -1,27 +1,24 @@
 {
   "rules": {
-    ".indexOn": ["products", "orders"],
     "products": {
-      ".indexOn": ["campaign/id", "nameLowerCase", "category", "updatedAt",  "createdAt"],
+      ".indexOn": ["name", "nameLowerCase", "category", "views", "campaign/id", "updatedAt",  "createdAt"],
       ".read": true,
       ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+    },
+    "product_views": {
+      ".indexOn": ["updatedAt", "createdAt", "userId", "productId"],
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'client'"
     },
     "campaigns": {
       ".indexOn": ["updatedAt",  "createdAt"],
       ".read": true,
       ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },
-    "informations": {
-      ".read": true,
-      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
-    },
-    "views": {
-      ".read": true,
-      ".write": true
-    },
     "users": {
-      ".read": true,
-      ".write": true
+      ".indexOn": ["role"],
+      ".read": "auth != null",
+      ".write": "auth != null"
     },
     "orders": {
       ".indexOn": ["updatedAt", "createdAt", "userId"],

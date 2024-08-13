@@ -1,19 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { randomBytes } from 'crypto'
-import {
-  child,
-  get,
-  onValue,
-  orderByChild,
-  query,
-  ref,
-  remove,
-  set,
-  update,
-} from 'firebase/database'
 import {
   deleteObject,
   getDownloadURL,
@@ -21,10 +10,10 @@ import {
   uploadBytes,
 } from 'firebase/storage'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { IProduct } from '@/@types'
+import { IProduct, IProductCampaign } from '@/@types'
 import Button from '@/components/ui/Button'
 import DataState from '@/components/ui/DataState'
 import Field from '@/components/ui/Field'
@@ -34,7 +23,9 @@ import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { formatMoney, formatPhotoUrl } from '@/functions/format'
-import { database, storage } from '@/services/firebase/config'
+import { CampaignRepository } from '@/repositories/campaign.repository'
+import { ProductRepository } from '@/repositories/product.repository'
+import { storage } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFormData {
@@ -123,17 +114,8 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, IProduct>) {
-  const newObj: Record<string, IProduct> = {}
-  const revObj = Object.keys(obj).reverse()
-  revObj.forEach(function (i) {
-    newObj[i] = obj[i]
-  })
-  return newObj
-}
-
 export default function ProductPage() {
-  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const [productData, setProductData] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
 
   const [newModal, setNewModal] = useState(false)
@@ -147,6 +129,9 @@ export default function ProductPage() {
 
   const orderByValue = watch('orderBy')
 
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const campaignRepository = useMemo(() => new CampaignRepository(), [])
+
   function _create(data: IFormData) {
     const id = randomBytes(20).toString('hex')
     const reference = storageRef(storage, `/products/${id}`)
@@ -154,56 +139,31 @@ export default function ProductPage() {
     uploadBytes(reference, data.photo)
       .then(async () => {
         const photo = await getDownloadURL(reference)
-        set(ref(database, `products/${id}`), {
-          name: data.name,
-          nameLowerCase: data.name.toLocaleLowerCase(),
-          quantity: data.quantity,
-          price: data.price,
-          category: data.category,
-          description: data.description,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          photo,
-        })
-          .then(() => {
-            toast.success('Producto postada com sucesso', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+
+        productRepository
+          .create(
+            {
+              name: data.name,
+              nameLowerCase: data.name.toLocaleLowerCase(),
+              quantity: data.quantity,
+              price: data.price,
+              category: data.category,
+              views: 0,
+              description: data.description,
+              photo,
+            },
+            id,
+          )
+          .then((data) => {
+            setProductData((previousData) => [data, ...previousData])
+            toast.success('Producto postada com sucesso')
           })
           .catch(() => {
-            toast.error('Erro a fazer a postagem', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+            toast.error('Erro a fazer a postagem')
           })
       })
       .catch(() => {
-        toast.error('Erro a fazer a postagem', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.error('Erro a fazer a postagem')
       })
   }
 
@@ -212,128 +172,74 @@ export default function ProductPage() {
       const reference = storageRef(storage, `/products/${oldProduct.id}`)
 
       await uploadBytes(reference, data.photo)
-      update(ref(database, `/products/${oldProduct.id}`), {
-        name: data.name,
-        nameLowerCase: data.name.toLocaleLowerCase(),
-        quantity: data.quantity,
-        price: data.price,
-        category: data.category,
-        description: data.description,
-        photo: oldProduct.photo,
-        updatedAt: new Date().toISOString(),
-      })
-        .then(() => {
-          toast.success('Producto editado com sucesso', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+      productRepository
+        .update(
+          {
+            name: data.name,
+            nameLowerCase: data.name.toLocaleLowerCase(),
+            quantity: data.quantity,
+            price: data.price,
+            category: data.category,
+            description: data.description,
+            photo: oldProduct.photo,
+          },
+          oldProduct.id,
+        )
+        .then((data) => {
+          setProductData((previousData) => [
+            data,
+            ...previousData.filter((d) => d.id !== oldProduct.id),
+          ])
+          toast.success('Producto editado com sucesso')
         })
         .catch(() => {
-          toast.error('Erro a fazer a postagem', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+          toast.error('Erro a fazer a postagem')
         })
     } else {
-      toast.error('Erro a editar o produto', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.error('Erro a editar o produto')
     }
   }
 
-  async function _delete(
-    id: string,
-    campaign?: {
-      id: string
-      title: string
-      reduction?: string
-    },
-  ) {
-    const databaseReference = ref(database, `products/${id}`)
+  async function _delete(id: string, campaign?: IProductCampaign) {
     const storageReference = storageRef(storage, `products/${id}`)
 
     try {
-      await remove(databaseReference)
+      await productRepository.deleteById(id)
       await deleteObject(storageReference)
 
       if (campaign) {
-        get(child(ref(database), `campaigns/${campaign.id}`)).then(
-          (snapshot) => {
-            if (snapshot.exists()) {
-              update(ref(database, `campaigns/${campaign.id}`), {
-                products: snapshot
-                  .val()
-                  .products.filter((p: string) => p !== id),
-              })
-            }
-          },
-        )
+        campaignRepository.findById(id).then((campaign) => {
+          if (campaign?.products) {
+            campaignRepository.update(
+              {
+                products: campaign.products.filter((p: string) => p !== id),
+              },
+              id,
+            )
+          }
+        })
       }
-
-      toast.success('Produto apagado com sucesso', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.success('Produto apagado com sucesso')
     } catch (error) {
-      toast.error('Erro a apagar o produto', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.error('Erro a apagar o produto')
     }
   }
 
-  useEffect(() => {
-    const reference = ref(database, 'products/')
-    const productQuery = query(reference, orderByChild(orderByValue))
-
-    onValue(productQuery, (snapshot) => {
-      const results: Record<string, IProduct> = {}
-      if (snapshot.exists()) {
-        snapshot.forEach(function (child) {
-          results[child.key] = child.val()
-        })
-        setProductData(reverseData(results))
-      }
-
-      setLoading(false)
+  const getProducts = useCallback(async () => {
+    const products = await productRepository.find({
+      orderBy: orderByValue,
     })
-  }, [orderByValue])
+
+    setProductData(products)
+  }, [orderByValue, productRepository])
+
+  useEffect(() => {
+    ;(async function () {
+      await getProducts().finally(() => {
+        setLoading(false)
+      })
+    })()
+  }, [getProducts])
 
   return (
     <section className="bg-white min-h-screen pb-12">
@@ -384,7 +290,7 @@ export default function ProductPage() {
 
       <article className="px-8 mx-auto mb-8 max-sm:p-9">
         <DataState
-          dataCount={Object.entries(productData).length}
+          dataCount={productData.length}
           loading={loading}
           noDataMessage="Os productos cadastrados aparecerão aqui"
         >
@@ -403,19 +309,17 @@ export default function ProductPage() {
               </Table.R>
             </thead>
             <Table.Body>
-              {Object.entries(productData).map(([id, product]) => (
-                <TableRow
-                  key={id}
-                  product={{
-                    ...product,
-                    id,
-                  }}
-                  _delete={() => {
-                    _delete(id, product?.campaign)
-                  }}
-                  _edit={_edit}
-                />
-              ))}
+              {productData.length > 0 &&
+                productData.map((product) => (
+                  <TableRow
+                    key={product.id}
+                    product={product}
+                    _delete={() => {
+                      _delete(product.id, product?.campaign)
+                    }}
+                    _edit={_edit}
+                  />
+                ))}
             </Table.Body>
           </Table.Root>
         </DataState>

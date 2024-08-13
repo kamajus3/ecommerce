@@ -9,11 +9,11 @@ import Advantages from '@/components/ui/Home/Advantages'
 
 export const metadata: Metadata = {
   title: 'Sobre Nós',
-  description: `Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por Edvaldo e Sandra Cassendo. Especializada no comércio a retalho online, destacamo-nos pela oferta de produtos de saúde e higiene corporal.`,
+  description: `Apresentamos a Poubelle.`,
   openGraph: {
     type: 'website',
     title: 'Sobre Nós',
-    description: `Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por Edvaldo e Sandra Cassendo. Especializada no comércio a retalho online, destacamo-nos pela oferta de produtos de saúde e higiene corporal.`,
+    description: `Apresentamos a Poubelle.`,
     images: ['https://raciuscare.com/logo.png'],
   },
 }
@@ -28,18 +28,9 @@ export default function AboutPage() {
         <div className="grid w-full grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="w-full">
             <p className="text-zinc-800 mt-6 leading-normal">
-              Apresentamos a Racius Care, fundada em 22 de setembro de 2023 por
-              Edvaldo e Sandra Cassendo. Especializada no comércio varejista
+              Apresentamos a Poubelle. Especializada no comércio varejista
               online, destacamo-nos pela oferta de produtos de saúde e higiene
               corporal.
-            </p>
-
-            <p className="text-zinc-800 mt-8 leading-normal">
-              Nossa missão é oferecer aos nossos clientes produtos e serviços
-              que contribuam para uma vida mais saudável e feliz. Acreditamos
-              que o cuidado com o corpo e a mente é fundamental para o bem-estar
-              geral, e por isso, nos dedicamos a fornecer soluções que atendam
-              às necessidades de cada cliente.
             </p>
           </div>
           <div className="bg-[#EB7EA8]">

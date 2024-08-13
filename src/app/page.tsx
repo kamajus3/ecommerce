@@ -19,8 +19,8 @@ export default function Home() {
       <ProductList
         title="Em destaque"
         query={{
-          orderBy: 'mostViews',
-          limit: 10,
+          orderBy: 'views',
+          limit: 7,
         }}
       />
       <div className="h-32 border-b" />
@@ -29,7 +29,7 @@ export default function Home() {
         title="Novidades da Semana"
         query={{
           orderBy: 'updatedAt',
-          limit: 7,
+          limit: 8,
         }}
       />
       <div className="h-32 border-b" />
@@ -37,35 +37,35 @@ export default function Home() {
       <ProductList
         title="Cuide da Sua Saúde"
         query={{
-          category: 'Saúde',
+          filterBy: { category: 'Saúde' },
           limit: 8,
         }}
       />
       <ProductList
         title="Essenciais para Bebês"
         query={{
-          category: 'Bebê',
+          filterBy: { category: 'Bebê' },
           limit: 8,
         }}
       />
       <ProductList
         title="Cuidados Pessoais"
         query={{
-          category: 'Higiene Pessoal',
+          filterBy: { category: 'Higiene Pessoal' },
           limit: 8,
         }}
       />
       <ProductList
         title="Controle de Pragas"
         query={{
-          category: 'Inseticidas',
+          filterBy: { category: 'Inseticidas' },
           limit: 8,
         }}
       />
       <ProductList
         title="Alimentos Saudáveis"
         query={{
-          category: 'Alimentação',
+          filterBy: { category: 'Alimentação' },
           limit: 8,
         }}
       />

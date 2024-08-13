@@ -1,22 +1,20 @@
 import Link from 'next/link'
 
 import { useCampaign } from '@/hooks/useCampaign'
-import { useInformation } from '@/hooks/useInformation'
 
 export default function FixedCampaign() {
-  const { informationsData } = useInformation()
   const { campaignData } = useCampaign()
   let campaign
 
-  if (campaignData && informationsData.fixedCampaign) {
-    campaign = campaignData[informationsData.fixedCampaign]
+  if (campaignData) {
+    campaign = campaignData.find((c) => c.fixed === true)
   }
 
   return (
     <div>
-      {informationsData.fixedCampaign && campaign && (
+      {campaign && (
         <Link
-          href={`/campanha/${informationsData.fixedCampaign}`}
+          href={`/campanha/${campaign.id}`}
           className="inline-block w-full bg-secondary p-[6px]"
         >
           <p className="text-center text-sm font-bold">{campaign.title}</p>

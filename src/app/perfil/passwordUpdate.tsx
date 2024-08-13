@@ -1,7 +1,7 @@
 import { reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { EmailAuthProvider } from 'firebase/auth/cordova'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
@@ -58,30 +58,10 @@ export function PasswordUpdate() {
         .then(() => {
           updatePassword(user, data.newPassword)
             .then(() => {
-              toast.success('Palavra-passe atualizada com sucesso', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                transition: Bounce,
-              })
+              toast.success('Palavra-passe atualizada com sucesso')
             })
             .catch(() => {
-              toast.error('Erro ao atualizar palavra-passe', {
-                position: 'top-right',
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
-                theme: 'light',
-                transition: Bounce,
-              })
+              toast.error('Erro ao atualizar palavra-passe')
             })
         })
         .catch(() => {

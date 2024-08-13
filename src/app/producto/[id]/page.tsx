@@ -10,7 +10,9 @@ import Header from '@/components/ui/Header'
 import ProductList from '@/components/ui/ProductList'
 import { campaignValidator } from '@/functions'
 import { formatMoney, formatPhotoUrl } from '@/functions/format'
-import { getProduct } from '@/services/firebase/database'
+import { ProductRepository } from '@/repositories/product.repository'
+
+const productRepository = new ProductRepository()
 
 export async function generateMetadata({
   params: { id },
@@ -18,7 +20,7 @@ export async function generateMetadata({
   params: { id: string }
 }): Promise<Metadata> {
   return new Promise((resolve) => {
-    getProduct(id).then((data) => {
+    productRepository.findById(id).then((data) => {
       if (data) {
         resolve({
           title: data.name,
@@ -30,7 +32,7 @@ export async function generateMetadata({
             type: 'article',
             title: data.name,
             description: data.description,
-            siteName: 'Racius Care',
+            siteName: 'Poubelle',
             images: formatPhotoUrl(data.photo, data.updatedAt),
           },
         })
@@ -48,7 +50,7 @@ export default async function ProductPage({
 }: {
   params: { id: string }
 }) {
-  const product = await getProduct(id)
+  const product = await productRepository.findById(id)
 
   if (!product) notFound()
   else product.id = id
@@ -100,7 +102,7 @@ export default async function ProductPage({
             <span className="block mt-2 text-xl font-semibold text-gray-700">
               {product.campaign &&
               product.campaign.reduction &&
-              campaignValidator(product.campaign) === 'campaign-with-promotion'
+              campaignValidator(product.campaign) === 'promotional-campaign'
                 ? formatMoney(
                     product.price -
                       product.price *
@@ -111,7 +113,7 @@ export default async function ProductPage({
 
             {product.campaign &&
               campaignValidator(product.campaign) ===
-                'campaign-with-promotion' && (
+                'promotional-campaign' && (
                 <span className="font-medium line-through text-gray-500 text-sm">
                   {formatMoney(product.price)}
                 </span>

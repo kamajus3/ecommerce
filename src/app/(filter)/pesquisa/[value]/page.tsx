@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'next/navigation'
 import clsx from 'clsx'
 
@@ -9,26 +9,30 @@ import DataState from '@/components/ui/DataState'
 import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductCard from '@/components/ui/ProductCard'
-import { getProducts } from '@/services/firebase/database'
+import { ProductRepository } from '@/repositories/product.repository'
 
 export default function SearchPage() {
-  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const [productData, setProductData] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
   const { value: searchValue } = useParams<{ value: string }>()
   const search = decodeURIComponent(searchValue)
 
+  const productRepository = useMemo(() => new ProductRepository(), [])
+
   useEffect(() => {
     async function unsubscribed() {
-      await getProducts({
-        search,
-      }).then((products) => {
-        setProductData(products)
-      })
+      await productRepository
+        .findByName({
+          search,
+        })
+        .then((products) => {
+          setProductData(products)
+        })
       setLoading(false)
     }
 
     unsubscribed()
-  }, [search])
+  }, [productRepository, search])
 
   const resultsCount = Object.keys(productData).length
 
@@ -68,9 +72,10 @@ export default function SearchPage() {
             },
           )}
         >
-          {Object.entries(productData).map(([id, product]) => (
-            <ProductCard key={id} {...product} id={id} />
-          ))}
+          {productData.length > 0 &&
+            productData.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
         </div>
       </DataState>
       <Footer />

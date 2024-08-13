@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { notFound, useRouter } from 'next/navigation'
 import { applyActionCode } from 'firebase/auth'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import Loading from '@/components/ui/Loading'
 import { auth } from '@/services/firebase/config'
@@ -19,17 +19,7 @@ export default function ConfirmEmail({
     function handleVerifyEmail() {
       applyActionCode(auth, code)
         .then(() => {
-          toast.success('Email confirmado com sucesso', {
-            position: 'top-center',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+          toast.success('Email confirmado com sucesso')
 
           setTimeout(() => {
             router.replace('/logout')

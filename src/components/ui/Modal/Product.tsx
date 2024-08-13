@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { IProduct } from '@/@types'
@@ -156,17 +156,7 @@ export default function ProductModal(props: IProductModal) {
       }
       closeModal()
     } else {
-      toast.warn('Nenhum campo foi alterado', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.warn('Nenhum campo foi alterado')
     }
   }
 

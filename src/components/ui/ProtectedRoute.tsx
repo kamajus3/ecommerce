@@ -3,14 +3,14 @@
 import { ReactNode, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { UserRole } from '@/@types'
+import { EnumUserRole } from '@/@types'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
 import useUserStore from '@/store/UserStore'
 
 interface IProtectedRoute {
   children: ReactNode
-  role?: UserRole
+  role?: EnumUserRole
   pathWhenAuthorizated?: string
   pathWhenNotAuthorizated?: string
 }

@@ -1,13 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Script from 'next/script'
-import { onValue, ref } from 'firebase/database'
 
 import Admin from '@/components/ui/Admin'
 import Field from '@/components/ui/Field'
 import Header from '@/components/ui/Header'
-import { database } from '@/services/firebase/config'
+import { campaignValidator } from '@/functions'
+import { CampaignRepository } from '@/repositories/campaign.repository'
+import { OrderRepository } from '@/repositories/order.repository'
+import { ProductRepository } from '@/repositories/product.repository'
+import { UserRepository } from '@/repositories/user.repository'
 
 const START_YEAR = 2024
 const currentYear = new Date().getFullYear()
@@ -25,99 +28,88 @@ export default function DashBoard() {
   const [activeCampaign, setActiveCampaign] = useState(0)
   const [activeProducts, setActiveProducts] = useState(0)
   const [activeOrders, setActiveOrders] = useState(0)
-  const [currenteAndPastMonthRate, setCurrentAndPastMonthRate] = useState(0)
-  const [soldProductsMothly, setSoldProductsMonthly] = useState([
+  const [currentAndPastMonthRate, setCurrentAndPastMonthRate] = useState(0)
+  const [soldProductsMonthly, setSoldProductsMonthly] = useState([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ])
   const [salesOfYear, setSalesOfYear] = useState(new Date().getFullYear())
 
+  const userRepository = useMemo(() => new UserRepository(), [])
+  const campaignRepository = useMemo(() => new CampaignRepository(), [])
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const orderRepository = useMemo(() => new OrderRepository(), [])
+
   useEffect(() => {
-    function unsubscrib() {
-      onValue(ref(database, '/users'), (snapshot) => {
-        let usersCount = 0
-
-        snapshot.forEach((data) => {
-          if (data.val().role === 'client') {
-            usersCount++
-          }
-        })
-
-        setActiveUsers(usersCount)
+    async function fetchData() {
+      const activeUsersCount = await userRepository.find({
+        filterBy: {
+          role: 'client',
+        },
       })
+      setActiveUsers(activeUsersCount.length)
 
-      onValue(ref(database, '/campaigns'), (snapshot) => {
-        let campaignCount = 0
+      const activeCampaignsCount = (await campaignRepository.findAll()).filter(
+        (c) => campaignValidator(c),
+      )
+      setActiveCampaign(activeCampaignsCount.length)
 
-        snapshot.forEach((data) => {
-          if (new Date(data.val().finishDate) > new Date()) {
-            campaignCount++
-          }
-        })
+      const activeProductsCount = (await productRepository.findAll()).filter(
+        (p) => p.quantity > 0,
+      )
+      setActiveProducts(activeProductsCount.length)
 
-        setActiveCampaign(campaignCount)
-      })
+      const orders = await orderRepository.findAll()
 
-      onValue(ref(database, '/products'), (snapshot) => {
-        let productsCount = 0
+      let ordersCount = 0
+      let pastMonthOrdersCount = 0
+      let currentMonthOrdersCount = 0
 
-        snapshot.forEach((data) => {
-          if (data.val().quantity > 0) {
-            productsCount++
-          }
-        })
+      const monthlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        setActiveProducts(productsCount)
-      })
+      orders.forEach((data) => {
+        if (data.state === 'not-sold') {
+          ordersCount++
 
-      onValue(ref(database, '/orders'), (snapshot) => {
-        let ordersCount = 0
-        let pastMonthOrdersCount = 0
-        let currentMonthOrdersCount = 0
-
-        const monthlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-        snapshot.forEach((data) => {
-          if (data.val().state === 'not-sold') {
-            ordersCount++
-
-            if (
-              new Date(data.val().createdAt).getMonth() ===
-              new Date().getMonth() - 1
-            ) {
-              pastMonthOrdersCount++
-            }
-
-            if (
-              new Date(data.val().createdAt).getMonth() ===
-              new Date().getMonth()
-            ) {
-              currentMonthOrdersCount++
-            }
+          if (
+            new Date(data.createdAt).getMonth() ===
+            new Date().getMonth() - 1
+          ) {
+            pastMonthOrdersCount++
           }
 
-          const orderYear = new Date(data.val().createdAt).getFullYear()
-
-          if (data.val().state === 'sold' && orderYear === salesOfYear) {
-            const month = new Date(data.val().createdAt).getMonth()
-            monthlySales[month] = monthlySales[month] + 1
+          if (new Date(data.createdAt).getMonth() === new Date().getMonth()) {
+            currentMonthOrdersCount++
           }
-        })
+        }
 
-        setActiveOrders(ordersCount)
-        setSoldProductsMonthly(monthlySales)
+        const orderYear = new Date(data.createdAt).getFullYear()
 
-        if (pastMonthOrdersCount > 0) {
-          const evolution =
-            (pastMonthOrdersCount - currentMonthOrdersCount) /
-            pastMonthOrdersCount
-
-          setCurrentAndPastMonthRate(evolution)
+        if (data.state === 'sold' && orderYear === salesOfYear) {
+          const month = new Date(data.createdAt).getMonth()
+          monthlySales[month] = monthlySales[month] + 1
         }
       })
+
+      setActiveOrders(ordersCount)
+      setSoldProductsMonthly(monthlySales)
+
+      if (pastMonthOrdersCount > 0) {
+        const evolution =
+          (pastMonthOrdersCount - currentMonthOrdersCount) /
+          pastMonthOrdersCount
+
+        setCurrentAndPastMonthRate(evolution)
+      }
     }
 
-    unsubscrib()
-  }, [salesOfYear])
+    fetchData()
+  }, [
+    campaignRepository,
+    orderRepository,
+    productRepository,
+    salesOfYear,
+    userRepository,
+  ])
 
   return (
     <section className="bg-white min-h-screen overflow-hidden">
@@ -132,10 +124,10 @@ export default function DashBoard() {
           <Admin.Card
             title="Pedidos activos"
             quantity={activeOrders}
-            rate={currenteAndPastMonthRate}
+            rate={currentAndPastMonthRate}
             rateMessage={
               activeOrders > 0
-                ? currenteAndPastMonthRate > 0
+                ? currentAndPastMonthRate > 0
                   ? new Date().getDay() > 20
                     ? `menos que no mês passado`
                     : ''
@@ -167,7 +159,7 @@ export default function DashBoard() {
             />
           </div>
           <div className="pr-7">
-            <Admin.Graphic sales={soldProductsMothly} />
+            <Admin.Graphic sales={soldProductsMonthly} />
           </div>
         </article>
       </article>

@@ -1,15 +1,21 @@
 'use client'
 
-import React, { createContext, ReactNode, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   AuthError,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { child, get, ref, set } from 'firebase/database'
 
-import { IUser, UserRole } from '@/@types'
-import { auth, database } from '@/services/firebase/config'
+import { EnumUserRole, IUser } from '@/@types'
+import { UserRepository } from '@/repositories/user.repository'
+import { auth } from '@/services/firebase/config'
 import useUserStore from '@/store/UserStore'
 
 interface IAuthContext {
@@ -17,7 +23,7 @@ interface IAuthContext {
   signInWithEmail: (
     email: string,
     password: string,
-    userRole: UserRole,
+    userRole: EnumUserRole,
   ) => Promise<IUser | null>
   signUpWithEmail: (
     name: string,
@@ -35,32 +41,29 @@ export const AuthContext = createContext<IAuthContext>({
 })
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
+  const userRepository = useMemo(() => new UserRepository(), [])
   const [initialized, setInitialized] = useState<boolean>(false)
-  const [userDBRole, setUserDBRole] = useState<UserRole | undefined>()
+  const [userDBRole, setUserDBRole] = useState<EnumUserRole | undefined>()
   const updateUser = useUserStore((state) => state.updateUser)
 
   async function signInWithEmail(
     email: string,
     password: string,
-    userRole: UserRole,
+    userRole: EnumUserRole,
   ) {
     setUserDBRole(userRole)
     const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
-        const snapshot = await get(child(ref(database), `users/${user.uid}`))
+        const userData = await userRepository.findById(user.uid)
 
-        if (snapshot.exists()) {
-          const userDBData = {
-            id: user.uid,
-            ...snapshot.val(),
-          }
-          if (snapshot.val().role === userRole) {
+        if (userData) {
+          if (userData.role === userRole) {
             updateUser({
               metadata: user,
-              data: userDBData,
+              data: userData,
             })
 
-            return userDBData
+            return userData
           }
           await auth.signOut()
         }
@@ -87,27 +90,24 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   ) {
     const userData = await createUserWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
-        const userData = {
-          firstName: name,
-          phone: user.phoneNumber || '',
-          role: 'client' as UserRole,
-        }
-
-        const userDBData = {
-          id: user.uid,
-          ...userData,
-        }
-
-        await set(ref(database, `users/${user.uid}`), userData).catch(() => {
-          throw new Error('Aconteceu algum erro ao tentar criar a conta')
-        })
+        const data = await userRepository
+          .create(
+            {
+              firstName: name,
+              role: 'client',
+            },
+            user.uid,
+          )
+          .catch(() => {
+            throw new Error('Aconteceu algum erro ao tentar criar a conta')
+          })
 
         updateUser({
           metadata: user,
-          data: userDBData,
+          data,
         })
 
-        return userDBData
+        return data
       })
       .catch(() => {
         throw new Error('Aconteceu algum erro ao tentar criar a conta')
@@ -127,18 +127,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const snapshot = await get(child(ref(database), `users/${user.uid}`))
+        const userData = await userRepository.findById(user.uid)
 
-        if (
-          snapshot.exists() &&
-          (userDBRole === snapshot.val().role || !userDBRole)
-        ) {
+        if (userData && (userDBRole === userData.role || !userDBRole)) {
           updateUser({
             metadata: user,
-            data: {
-              id: user.uid,
-              ...snapshot.val(),
-            },
+            data: userData,
           })
         }
         setUserDBRole(undefined)
@@ -149,7 +143,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       unsubscribe()
     }
-  }, [userDBRole, updateUser])
+  }, [userDBRole, updateUser, userRepository])
 
   return (
     <AuthContext.Provider

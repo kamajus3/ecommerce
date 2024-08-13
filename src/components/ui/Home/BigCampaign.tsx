@@ -9,11 +9,9 @@ import Button from '@/components/ui/Button'
 import { calculateTimeRemaining, campaignValidator } from '@/functions'
 import { formatPhotoUrl } from '@/functions/format'
 import { useCampaign } from '@/hooks/useCampaign'
-import { useInformation } from '@/hooks/useInformation'
 
 export default function PromoBig() {
   const { campaignData } = useCampaign()
-  const { informationsData } = useInformation()
   const [fixedCampaign, setFixedCampaign] = useState<ICampaignBase | null>(null)
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
@@ -23,16 +21,12 @@ export default function PromoBig() {
   })
 
   useEffect(() => {
-    if (informationsData.fixedCampaign) {
-      const campaign = campaignData[informationsData.fixedCampaign]
-      if (campaign) {
-        setFixedCampaign({
-          ...campaign,
-          id: informationsData.fixedCampaign,
-        })
-      }
+    const campaign = campaignData.find((c) => c.fixed === true)
+
+    if (campaign) {
+      setFixedCampaign(campaign)
     }
-  }, [campaignData, informationsData.fixedCampaign])
+  }, [campaignData])
 
   useEffect(() => {
     if (fixedCampaign?.finishDate) {

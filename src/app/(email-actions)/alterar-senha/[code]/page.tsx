@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { notFound, useRouter } from 'next/navigation'
 import { AuthError, checkActionCode, confirmPasswordReset } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Header from '@/components/ui/Header'
@@ -50,17 +50,7 @@ export default function ChangePassword({
   function onSubmit(data: IFormData) {
     confirmPasswordReset(auth, code, data.password)
       .then(() => {
-        toast.success('A sua palavra-passe foi alterada com sucesso', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.success('A sua palavra-passe foi alterada com sucesso')
 
         setTimeout(() => {
           router.replace('/')
@@ -83,17 +73,7 @@ export default function ChangePassword({
           errorMessage = 'Houve algum erro ao tentar alterar a sua senha'
         }
 
-        toast.error(errorMessage, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.error(errorMessage)
       })
   }
 

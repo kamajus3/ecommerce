@@ -18,7 +18,7 @@ export default function ProductPhoto(product: IProduct) {
   return (
     <div>
       {product.campaign &&
-        campaignValidator(product.campaign) === 'campaign-with-promotion' && (
+        campaignValidator(product.campaign) === 'promotional-campaign' && (
           <Link
             href={`/campanha/${product.campaign?.id}`}
             className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"

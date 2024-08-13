@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { notFound, useParams, useRouter } from 'next/navigation'
 import FileSaver from 'file-saver'
@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button'
 import Device from '@/components/ui/Device'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
-import { getOrder } from '@/services/firebase/database'
+import { OrderRepository } from '@/repositories/order.repository'
 import useUserStore from '@/store/UserStore'
 import { pdf } from '@react-pdf/renderer'
 
@@ -25,6 +25,8 @@ const PDFViewer = dynamic(
 )
 
 export default function Invoice() {
+  const orderRepository = useMemo(() => new OrderRepository(), [])
+
   const userDB = useUserStore((state) => state.data)
   const [orderData, setOrderData] = useState<IOrder>()
   const { initialized } = useAuth()
@@ -37,34 +39,32 @@ export default function Invoice() {
         return router.replace('/login')
       }
 
-      const orderDataDB = await getOrder(id)
+      const order = await orderRepository.findById(id)
 
-      if (!orderDataDB && initialized) {
+      if (!order && initialized) {
         notFound()
       }
 
       if (
-        orderDataDB &&
+        order &&
         userDB &&
         initialized &&
-        userDB.id !== orderDataDB.userId &&
+        userDB.id !== order.userId &&
         userDB.role === 'client'
       ) {
         return router.replace('/login')
       }
 
-      if (initialized) {
-        setOrderData(orderDataDB)
+      if (initialized && order) {
+        setOrderData(order)
       }
     }
     fetchOrderData()
-  }, [id, initialized, router, userDB])
+  }, [id, initialized, orderRepository, router, userDB])
 
   function downloadInvoice() {
     if (orderData) {
-      const invoice = pdf(
-        <InvoiceStructure orderData={{ ...orderData, id }} />,
-      ).toBlob()
+      const invoice = pdf(<InvoiceStructure orderData={orderData} />).toBlob()
 
       invoice.then((blob) => {
         FileSaver.saveAs(blob, `factura-${id}.pdf`)

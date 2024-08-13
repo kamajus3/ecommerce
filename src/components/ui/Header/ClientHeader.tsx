@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -9,7 +9,6 @@ import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { getProduct } from '@/services/firebase/database'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -38,26 +37,12 @@ export default function ClientHeader(props: IClientHeader) {
   const userDB = useUserStore((state) => state.data)
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
   const cartProducts = useCartStore((state) => state.products)
-  const removeFromCart = useCartStore((state) => state.removeProduct)
   const [isSearchOn, setSearchOn] = useState(false)
   const router = useRouter()
 
   function onSubmit(data: IFormData) {
     router.replace(`/pesquisa/${data.searchValue}`)
   }
-
-  useEffect(() => {
-    function unsubscribed() {
-      cartProducts.map(async (p) => {
-        const data = await getProduct(p.id)
-        if (!data) {
-          removeFromCart(p.id)
-        }
-      })
-    }
-
-    unsubscribed()
-  }, [cartProducts, removeFromCart])
 
   return (
     <header className="bg-white border-b w-full shadow-sm sticky top-0 left-0 z-20">
@@ -66,7 +51,7 @@ export default function ClientHeader(props: IClientHeader) {
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
-            alt="Logotipo da Racius Care"
+            alt="Logotipo da Poubelle"
             width={90}
             height={90}
             priority

@@ -30,14 +30,14 @@ export default function Footer({ disableBackButton = false }: IFooter) {
             <Link href="/">
               <Image
                 src="/logo-white.png"
-                alt="Logotipo da Racius Care"
+                alt="Logotipo da Poubelle"
                 width={140}
                 height={140}
                 draggable={false}
                 className="select-none"
               />
             </Link>
-            <p className="text-white text-xs">© 2024 Racius Care.</p>
+            <p className="text-white text-xs">© 2024 Poubelle.</p>
           </div>
           <div className="grid grid-cols-2 gap-12 sm:gap-6 sm:grid-cols-3">
             <div>

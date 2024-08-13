@@ -1,15 +1,14 @@
 'use client'
 
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { updateProfile } from 'firebase/auth'
-import { ref, update } from 'firebase/database'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
 import Field from '@/components/ui/Field'
-import { database } from '@/services/firebase/config'
+import { UserRepository } from '@/repositories/user.repository'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -51,6 +50,8 @@ export default function PerfilUpdate() {
     resolver: zodResolver(schema),
   })
 
+  const userRepository = useMemo(() => new UserRepository(), [])
+
   const onSubmit = (data: IFormData) => {
     if (user && userDB) {
       if (
@@ -58,54 +59,28 @@ export default function PerfilUpdate() {
         dirtyFields.lastName ||
         dirtyFields.address
       ) {
-        update(ref(database, `users/${user.uid}`), {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          address: data.address,
-        })
+        userRepository
+          .update(
+            {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              address: data.address,
+            },
+            user.uid,
+          )
           .then(async () => {
             await updateProfile(user, {
               displayName: `${data.firstName} ${data.lastName}`,
             })
             updateFieldAsDefault(data)
 
-            toast.success('A tua conta foi atualizada com sucesso', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+            toast.success('A tua conta foi atualizada com sucesso')
           })
           .catch(() => {
-            toast.error('Houve algum erro ao tentar atualizar a seus dados', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+            toast.error('Houve algum erro ao tentar atualizar a seus dados')
           })
       } else {
-        toast.warn('Você não atualizou nenhum campo', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.warn('Você não atualizou nenhum campo')
       }
     }
   }

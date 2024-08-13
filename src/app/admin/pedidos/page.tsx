@@ -1,20 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import {
-  equalTo,
-  onValue,
-  orderByChild,
-  orderByKey,
-  query,
-  ref,
-  remove,
-  update,
-} from 'firebase/database'
 import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { IOrder, IProduct } from '@/@types'
@@ -26,8 +16,8 @@ import Table from '@/components/ui/Table'
 import contants from '@/constants'
 import { publishedSince } from '@/functions'
 import { formatMoney, formatPhoneNumber } from '@/functions/format'
-import { database } from '@/services/firebase/config'
-import { getProduct } from '@/services/firebase/database'
+import { OrderRepository } from '@/repositories/order.repository'
+import { ProductRepository } from '@/repositories/product.repository'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFilterData {
@@ -140,15 +130,6 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-function reverseData(obj: Record<string, IOrder>) {
-  const newObj: Record<string, IOrder> = {}
-  const revObj = Object.keys(obj).reverse()
-  revObj.forEach(function (i) {
-    newObj[i] = obj[i]
-  })
-  return newObj
-}
-
 export default function OrderPage() {
   const { register, watch } = useForm<IFilterData>({
     defaultValues: {
@@ -157,32 +138,38 @@ export default function OrderPage() {
     resolver: zodResolver(schema),
   })
 
-  const [orderData, setOrderData] = useState<Record<string, IOrder>>({})
+  const [orderData, setOrderData] = useState<IOrder[]>([])
   const [loading, setLoading] = useState(true)
   const code = watch('code')
 
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const orderRepository = useMemo(() => new OrderRepository(), [])
+
   useEffect(() => {
     const fetchProducts = async () => {
-      const reference = ref(database, 'orders/')
-      const orderQuery = code
-        ? query(reference, orderByKey(), equalTo(code))
-        : query(reference, orderByChild('createdAt'))
+      let orders: Promise<IOrder[]>
 
-      onValue(orderQuery, (snapshot) => {
-        const results: Record<string, IOrder> = {}
-        if (snapshot.exists()) {
-          snapshot.forEach(function (child) {
-            results[child.key] = child.val()
-          })
-        }
+      if (code) {
+        orders = orderRepository.find({
+          filterById: code,
+        })
+      } else {
+        orders = orderRepository.find({
+          orderBy: 'createdAt',
+        })
+      }
 
-        setOrderData(reverseData(results))
-        setLoading(false)
-      })
+      return orders
     }
 
     fetchProducts()
-  }, [setOrderData, code])
+      .then((data) => {
+        setOrderData(data)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [setOrderData, code, orderRepository])
 
   async function updateOrderState(order: IOrder, state: 'sold' | 'not-sold') {
     let errorMessage = 'Erro ao alterar o estado do pedido'
@@ -191,7 +178,7 @@ export default function OrderPage() {
     try {
       if (state === 'sold') {
         for (const p of order.products) {
-          const product = await getProduct(p.id)
+          const product = await productRepository.findById(p.id)
 
           if (product) {
             soldProducts.push({
@@ -220,75 +207,38 @@ export default function OrderPage() {
         }
       }
 
-      await update(ref(database, `orders/${order.id}`), {
-        updatedAt: new Date().toISOString(),
-        state,
-      })
+      await orderRepository.update(
+        {
+          state,
+        },
+        order.id,
+      )
 
       for (const p of soldProducts) {
         const orderProduct = order.products.find((op) => op.id === p.id)
 
         if (orderProduct) {
-          await update(ref(database, `products/${p.id}`), {
-            quantity: p.quantity - orderProduct.quantity,
-          })
+          await productRepository.update(
+            {
+              quantity: p.quantity - orderProduct.quantity,
+            },
+            p.id,
+          )
         }
       }
 
-      toast.success('O estado do pedido foi alterado com sucesso', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.success('O estado do pedido foi alterado com sucesso')
     } catch {
-      toast.error(errorMessage, {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.error(errorMessage)
     }
   }
 
   async function deleteOrder(orderId: string) {
     try {
-      const databaseReference = ref(database, `orders/${orderId}`)
-      await remove(databaseReference)
-
-      toast.success('Pedido cancelado com sucesso', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      await orderRepository.deleteById(orderId)
+      toast.success('Pedido cancelado com sucesso')
     } catch {
-      toast.error('Erro a apagar o pedido', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.error('Erro a apagar o pedido')
     }
   }
 

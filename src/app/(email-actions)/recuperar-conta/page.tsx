@@ -2,7 +2,7 @@
 
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
@@ -23,44 +23,18 @@ export default function RecoverAccount() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<IFormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: IFormData) {
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        reset({
-          email: '',
-        })
-
         toast.success(
           'Uma mensagem mensagem nesse email foi enviada para recuperar a sua conta',
-          {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          },
         )
       })
       .catch(() => {
-        toast.error('Houve algum erro ao resetar a tua conta', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.error('Houve algum erro ao resetar a tua conta')
       })
   }
 

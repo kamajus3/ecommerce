@@ -1,5 +1,5 @@
 {
-  "name": "racius-care",
+  "name": "poubelle",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
-    "deploy": "firebase deploy"
+    "storage:cors": "gsutil cors set storage.cors.json gs://poubelle-ae830.appspot.com",
+    "deploy:rules": "firebase deploy --only database && firebase deploy --only storage"
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",

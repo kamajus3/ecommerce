@@ -3,18 +3,19 @@ import {
   Fragment,
   SetStateAction,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { ICampaign, IProductInput } from '@/@types'
 import { URLtoFile } from '@/functions'
-import { useInformation } from '@/hooks/useInformation'
-import { getProducts } from '@/services/firebase/database'
+import { useCampaign } from '@/hooks/useCampaign'
+import { ProductRepository } from '@/repositories/product.repository'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -53,6 +54,10 @@ export default function CampaignModal(props: ICampaignModal) {
   const [isDefaultState, setDefaultState] = useState(
     !!(props.defaultData && props.defaultData.default),
   )
+  const { campaignData } = useCampaign()
+
+  const defaultCampaign = campaignData.find((c) => c.default === true)
+  const fixedCampaign = campaignData.find((c) => c.fixed === true)
 
   const schema = z
     .object({
@@ -212,9 +217,9 @@ export default function CampaignModal(props: ICampaignModal) {
       products: [],
     },
   })
+  const productRepository = useMemo(() => new ProductRepository(), [])
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
-  const { informationsData } = useInformation()
 
   const campaignProducts = watch('products')
   const isDefault = watch('default')
@@ -246,14 +251,16 @@ export default function CampaignModal(props: ICampaignModal) {
   useEffect(() => {
     async function unsubscribed() {
       if (props.defaultData) {
-        const products = await getProducts({
-          campaign: props.defaultData.id,
+        const products = await productRepository.find({
+          filterBy: {
+            campaign: props.defaultData.id,
+          },
         })
 
         const finalProducts: IProductInput[] = []
 
-        Object.entries(products).forEach(([id, product]) => {
-          const newProduct = { id, name: product.name }
+        products.forEach((product) => {
+          const newProduct = { id: product.id, name: product.name }
           finalProducts.push(newProduct)
         })
 
@@ -276,7 +283,7 @@ export default function CampaignModal(props: ICampaignModal) {
     }
 
     unsubscribed()
-  }, [reset, props.defaultData])
+  }, [reset, props.defaultData, productRepository])
 
   function closeModal() {
     props.setOpen(false)
@@ -286,17 +293,7 @@ export default function CampaignModal(props: ICampaignModal) {
 
   async function onSubmit(data: IFormData) {
     if (!isDirty) {
-      toast.warn('Nenhum campo foi alterado', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.warn('Nenhum campo foi alterado')
 
       return
     }
@@ -381,13 +378,11 @@ export default function CampaignModal(props: ICampaignModal) {
                       >
                         {props.title}
                       </Dialog.Title>
-                      {informationsData.defaultCampaign &&
+                      {defaultCampaign &&
                         isDefault &&
                         ((props.defaultData &&
-                          props.defaultData.id !==
-                            informationsData.defaultCampaign) ||
-                          (!props.defaultData &&
-                            informationsData.defaultCampaign)) && (
+                          props.defaultData.id !== defaultCampaign.id) ||
+                          (!props.defaultData && defaultCampaign)) && (
                           <div className="bg-red-300 p-2 rounded text-red-500 font-medium mb-4 flex items-center gap-x-2">
                             A campanha selecionada anteriormente como padrão
                             será apagada
@@ -409,9 +404,8 @@ export default function CampaignModal(props: ICampaignModal) {
                           id="default"
                           disabled={isFixed === true}
                           defaultChecked={
-                            props.defaultData
-                              ? informationsData.defaultCampaign ===
-                                props.defaultData.id
+                            props.defaultData && defaultCampaign
+                              ? defaultCampaign?.id === props.defaultData.id
                               : false
                           }
                           {...register('default')}
@@ -428,9 +422,8 @@ export default function CampaignModal(props: ICampaignModal) {
                           id="fixed"
                           disabled={isDefault === true}
                           defaultChecked={
-                            props.defaultData
-                              ? informationsData.fixedCampaign ===
-                                props.defaultData.id
+                            props.defaultData && fixedCampaign
+                              ? fixedCampaign.id === props.defaultData.id
                               : false
                           }
                           {...register('fixed')}

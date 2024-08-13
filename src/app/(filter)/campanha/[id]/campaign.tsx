@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 
 import { ICampaign, IProduct } from '@/@types'
@@ -9,10 +9,11 @@ import Footer from '@/components/ui/Footer'
 import Header from '@/components/ui/Header'
 import ProductCard from '@/components/ui/ProductCard'
 import { calculateTimeRemaining, campaignValidator } from '@/functions'
-import { getProducts } from '@/services/firebase/database'
+import { ProductRepository } from '@/repositories/product.repository'
 
 export function CampaingPage(campaign: ICampaign) {
-  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const [productData, setProductData] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
@@ -23,16 +24,18 @@ export function CampaingPage(campaign: ICampaign) {
 
   useEffect(() => {
     async function unsubscribed() {
-      await getProducts({
-        campaign: campaign.id,
-      }).then((products) => {
-        setProductData(products)
-      })
+      await productRepository
+        .find({
+          filterBy: { 'campaign/id': campaign.id },
+        })
+        .then((products) => {
+          setProductData(products)
+        })
       setLoading(false)
     }
 
     unsubscribed()
-  }, [campaign.id])
+  }, [campaign.id, productRepository])
 
   useEffect(() => {
     if (campaign.finishDate) {
@@ -53,7 +56,7 @@ export function CampaingPage(campaign: ICampaign) {
 
       <article className="p-4 mx-auto mt-9">
         {campaign.finishDate &&
-          campaignValidator(campaign) === 'campaign-with-promotion' && (
+          campaignValidator(campaign) === 'promotional-campaign' && (
             <span className="text-black font-medium text-sm uppercase">
               A promoção termina em {timeRemaining.days} dias,{' '}
               {timeRemaining.hours} horas, {timeRemaining.minutes} minutos e{' '}

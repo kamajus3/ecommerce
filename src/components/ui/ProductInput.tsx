@@ -1,16 +1,16 @@
-import { HTMLAttributes, useEffect, useRef, useState } from 'react'
+import { HTMLAttributes, useEffect, useMemo, useRef, useState } from 'react'
 import { Check, Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { IProduct, IProductInput as ProductInputObject } from '@/@types'
-import { getProducts } from '@/services/firebase/database'
+import { IProduct, IProductInput as IProductInputObject } from '@/@types'
+import { ProductRepository } from '@/repositories/product.repository'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IProductInput {
-  products: ProductInputObject[] | undefined | null
+  products: IProductInputObject[] | undefined | null
   campaignId?: string
-  appendProduct: (product: ProductInputObject) => void
+  appendProduct: (product: IProductInputObject) => void
   removeProduct: (id: string) => void
   error?: boolean
   inputProps?: HTMLAttributes<HTMLInputElement>
@@ -29,27 +29,28 @@ export default function ProductInput(props: IProductInput) {
     resolver: zodResolver(schema),
   })
 
-  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const [productData, setProductData] = useState<IProduct[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const productRepository = useMemo(() => new ProductRepository(), [])
 
-  function handleClick(product: IProduct, id: string) {
+  function handleClick(product: IProduct) {
     if (props.products) {
       reset({
         searchValue: '',
       })
       setIsOpen(false)
 
-      const isInProducts = props.products.find((p) => p.id === id)
+      const isInProducts = props.products.find((p) => p.id === product.id)
 
       if (!isInProducts) {
         props.appendProduct({
-          id,
+          id: product.id,
           name: product.name,
         })
       } else {
-        props.removeProduct(id)
+        props.removeProduct(product.id)
       }
     }
   }
@@ -76,24 +77,26 @@ export default function ProductInput(props: IProductInput) {
   useEffect(() => {
     function fetchData() {
       if (searchValue && searchValue.length > 0) {
-        getProducts({
-          search: searchValue,
-          limit: 5,
-        }).then((products) => {
-          if (Object.entries(products).length > 0) {
-            setIsOpen(true)
-          } else {
-            setIsOpen(false)
-          }
-          setProductData(products)
-        })
+        productRepository
+          .findByName({
+            search: searchValue,
+            limit: 5,
+          })
+          .then((products) => {
+            if (Object.entries(products).length > 0) {
+              setIsOpen(true)
+            } else {
+              setIsOpen(false)
+            }
+            setProductData(products)
+          })
       } else {
-        setProductData({})
+        setProductData([])
       }
     }
 
     fetchData()
-  }, [searchValue, props?.campaignId])
+  }, [searchValue, props.campaignId, productRepository])
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -115,26 +118,28 @@ export default function ProductInput(props: IProductInput) {
 
       {isOpen && (
         <div className="absolute top-14 w-full bg-white border rounded-md shadow-lg z-10 flex flex-col">
-          {Object.entries(productData).map(([id, product]) => (
-            <button
-              key={id}
-              disabled={
-                product.campaign?.id !== undefined &&
-                product.campaign?.id !== props.campaignId
-              }
-              className="bg-white text-gray-800 enabled:hover:bg-gray-200 disabled:text-gray-400"
-              onClick={() => {
-                handleClick(product, id)
-              }}
-            >
-              <span className="flex items-center justify-between relative p-3 text-sm select-none">
-                {product.name}
-                {props.products && props.products.find((p) => p.id === id) && (
-                  <Check className="left-4" color="#000" size={15} />
-                )}
-              </span>
-            </button>
-          ))}
+          {productData.length > 0 &&
+            productData.map((product) => (
+              <button
+                key={product.id}
+                disabled={
+                  product.campaign?.id !== undefined &&
+                  product.campaign?.id !== props.campaignId
+                }
+                className="bg-white text-gray-800 enabled:hover:bg-gray-200 disabled:text-gray-400"
+                onClick={() => {
+                  handleClick(product)
+                }}
+              >
+                <span className="flex items-center justify-between relative p-3 text-sm select-none">
+                  {product.name}
+                  {props.products &&
+                    props.products.find((p) => p.id === product.id) && (
+                      <Check className="left-4" color="#000" size={15} />
+                    )}
+                </span>
+              </button>
+            ))}
         </div>
       )}
     </div>

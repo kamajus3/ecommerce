@@ -32,8 +32,10 @@ export default function ProductAction(product: IProduct) {
   }
 
   useEffect(() => {
-    viewProduct(product.id)
-  }, [viewProduct, product.id])
+    if (userDB?.role === 'client') {
+      viewProduct(product.id, userDB.id)
+    }
+  }, [viewProduct, product.id, userDB])
 
   return (
     <div>

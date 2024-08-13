@@ -1,41 +1,44 @@
-import { child, get, ref, set as firebaseSet } from 'firebase/database'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { database } from '@/services/firebase/config'
+import { ProductRepository } from '@/repositories/product.repository'
+import { ProductViewRepository } from '@/repositories/product.view.repository'
+
+const productViewRepository = new ProductViewRepository()
+const productRepository = new ProductRepository()
 
 interface IViewStore {
-  productVieweds: string[]
-  viewProduct: (id: string) => void
+  vieweds: string[]
+  viewProduct: (productId: string, userId: string) => void
 }
 
 const useViewStore = create<IViewStore>()(
   persist(
-    (set) => ({
-      productVieweds: [],
-      viewProduct: (productId) => {
-        set((state) => {
-          if (!state.productVieweds.find((id) => id === productId)) {
-            const dbRef = ref(database)
+    (set, get) => ({
+      vieweds: [],
+      viewProduct: async (productId: string, userId: string) => {
+        const state = get()
+        if (!state.vieweds.includes(productId)) {
+          const productView = await productViewRepository.find({
+            filterBy: {
+              userId,
+              productId,
+            },
+          })
 
-            get(child(dbRef, `views/${productId}`)).then((snapshot) => {
-              if (snapshot.exists()) {
-                firebaseSet(ref(database, `views/${productId}`), {
-                  view: snapshot.val().view + 1,
-                })
-              } else {
-                firebaseSet(ref(database, `views/${productId}`), {
-                  view: 1,
-                })
-              }
+          if (productView.length === 0) {
+            await productViewRepository.create({
+              userId,
+              productId,
             })
-
-            return {
-              productVieweds: [...state.productVieweds, productId],
-            }
           }
-          return state
-        })
+
+          await productRepository.updateViews(productId)
+
+          set({
+            vieweds: [...state.vieweds, productId],
+          })
+        }
       },
     }),
     {

@@ -16,7 +16,7 @@ export default function AdminHeader() {
         <Link href="/">
           <Image
             src="/logo.png"
-            alt="Logotipo da Racius Care"
+            alt="Logotipo da Poubelle"
             width={90}
             height={90}
             priority

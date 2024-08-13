@@ -5,7 +5,6 @@ import { Bounce, ToastContainer } from 'react-toastify'
 import contants from '@/constants'
 import AuthProvider from '@/contexts/AuthContext'
 import CampaignProvider from '@/contexts/CampaignContext'
-import InformationProvider from '@/contexts/InformationContext'
 
 import './globals.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -25,16 +24,16 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://raciuscare.com'),
   title: {
-    template: '%s | Racius Care',
-    default: 'Racius Care',
+    template: '%s | Poubelle',
+    default: 'Poubelle',
   },
   description:
-    'Bem-vindo à Racius Care - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
+    'Bem-vindo à Poubelle - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
   generator: 'Next.js',
-  applicationName: 'Racius Care',
+  applicationName: 'Poubelle',
   referrer: 'origin-when-cross-origin',
-  authors: [{ name: 'Racius Care', url: 'https://raciuscare.com' }],
-  creator: 'Racius Care Developers',
+  authors: [{ name: 'Poubelle', url: 'https://raciuscare.com' }],
+  creator: 'Poubelle Developers',
   formatDetection: {
     email: true,
     address: true,
@@ -48,15 +47,15 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Racius Care',
+    title: 'Poubelle',
     description:
-      'Bem-vindo à Racius Care - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
+      'Bem-vindo à Poubelle - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
     images: ['https://raciuscare.com/logo.png'],
   },
   twitter: {
-    title: 'Racius Care',
+    title: 'Poubelle',
     description:
-      'Bem-vindo à Racius Care - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
+      'Bem-vindo à Poubelle - sua loja online para cuidados pessoais, saúde, e produtos para casa em Angola. Encontre tudo o que você precisa para cuidar de si mesmo, sua família e sua casa, com apenas alguns cliques.',
     images: ['https://raciuscare.com/logo.png'],
   },
   icons: {
@@ -75,9 +74,7 @@ export default function RootLayout({
     <html lang="pt">
       <body className={`${inter.className}`}>
         <AuthProvider>
-          <CampaignProvider>
-            <InformationProvider>{children}</InformationProvider>
-          </CampaignProvider>
+          <CampaignProvider>{children}</CampaignProvider>
         </AuthProvider>
         <ToastContainer
           position="top-center"

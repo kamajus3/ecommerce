@@ -1,12 +1,11 @@
 'use client'
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ref, set } from 'firebase/database'
 import { nanoid } from 'nanoid'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { IOrder, IProduct, IProductOrder } from '@/@types'
 import Button from '@/components/ui/Button'
@@ -19,9 +18,9 @@ import contants from '@/constants'
 import { calculateDiscountedPrice, campaignValidator } from '@/functions'
 import { formatMoney, formatPhotoUrl } from '@/functions/format'
 import { useAuth } from '@/hooks/useAuth'
+import { OrderRepository } from '@/repositories/order.repository'
+import { ProductRepository } from '@/repositories/product.repository'
 import sendOrder from '@/services/email/send'
-import { database } from '@/services/firebase/config'
-import { getProduct } from '@/services/firebase/database'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
@@ -43,18 +42,7 @@ function TableRow({
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
-  const notifyDelete = () =>
-    toast.success('Produto removido com sucesso', {
-      position: 'top-center',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      progress: undefined,
-      theme: 'light',
-      transition: Bounce,
-    })
+  const notifyDelete = () => toast.success('Produto removido com sucesso')
 
   return (
     <Table.R inside="body">
@@ -97,7 +85,7 @@ function TableRow({
       <Table.D>{formatMoney(product.price)}</Table.D>
       <Table.D>
         {product.campaign &&
-        campaignValidator(product.campaign) === 'campaign-with-promotion'
+        campaignValidator(product.campaign) === 'promotional-campaign'
           ? `${product.campaign?.reduction} %`
           : '-'}
       </Table.D>
@@ -147,7 +135,8 @@ export default function CartPage() {
     [boolean, string | undefined]
   >([false, undefined])
 
-  const [orderData, setOrderData] = useState<IOrder>()
+  const [orderData, setOrderData] =
+    useState<Omit<IOrder, 'id' | 'createdAt' | 'updatedAt'>>()
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
@@ -157,13 +146,16 @@ export default function CartPage() {
   const ICartProducts = useCartStore((state) => state.products)
   const [selectedProducts, setSelectedProduct] = useState<string[]>([])
 
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const orderRepository = useMemo(() => new OrderRepository(), [])
+
   useEffect(() => {
     const fetchProducts = async () => {
       const fetchedProducts: ICartProduct[] = []
 
       if (ICartProducts.length > 0) {
         for (const p of ICartProducts) {
-          await getProduct(p.id).then((product) => {
+          await productRepository.findById(p.id).then((product) => {
             if (product) {
               fetchedProducts.push({
                 ...product,
@@ -182,7 +174,7 @@ export default function CartPage() {
 
     setLoading(false)
     fetchProducts()
-  }, [ICartProducts])
+  }, [ICartProducts, productRepository])
 
   useEffect(() => {
     const selectedTotalPrice = productData.reduce((total, product) => {
@@ -212,13 +204,13 @@ export default function CartPage() {
   async function createOrder() {
     const orderId = nanoid(10)
 
-    if (user) {
-      await set(ref(database, `orders/${orderId}`), orderData)
-        .then(() => {
-          if (orderData && user.email) {
+    if (user && orderData) {
+      await orderRepository
+        .create(orderData, orderId)
+        .then((data) => {
+          if (user.email) {
             sendOrder({
-              ...orderData,
-              id: orderId,
+              ...data,
               email: user.email,
               totalPrice,
             })
@@ -229,17 +221,7 @@ export default function CartPage() {
           setOrderConfirmedModal([true, orderId])
         })
         .catch(() => {
-          toast.error('Erro ao tentar fazer o teu pedido', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+          toast.error('Erro ao tentar fazer o teu pedido')
         })
     }
   }
@@ -248,7 +230,7 @@ export default function CartPage() {
     const productsList: IProductOrder[] = []
 
     for (const id of selectedProducts) {
-      const product = await getProduct(id)
+      const product = await productRepository.findById(id)
       const ICartProduct = ICartProducts.find((p) => p.id === id)
 
       if (product && ICartProduct) {
@@ -259,36 +241,24 @@ export default function CartPage() {
           price: product.price,
           promotion: product.campaign?.reduction
             ? Number(product.campaign?.reduction)
-            : null,
+            : undefined,
         })
       }
     }
 
     if (user && productsList.length > 0) {
       setOrderData({
-        id: '',
         firstName: data.firstName,
         lastName: data.lastName,
         address: data.address,
         phone: data.phone,
         userId: user.uid,
         state: 'not-sold',
-        createdAt: new Date().toISOString(),
         products: productsList,
       })
       setConfirmOrderModal(true)
     } else {
-      toast.error('Erro ao tentar fazer o teu pedido', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-        theme: 'light',
-        transition: Bounce,
-      })
+      toast.error('Erro ao tentar fazer o teu pedido')
     }
   }
 

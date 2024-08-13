@@ -1,16 +1,15 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { sendEmailVerification, verifyBeforeUpdateEmail } from 'firebase/auth'
-import { ref, update } from 'firebase/database'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
 import Field from '@/components/ui/Field'
 import Modal from '@/components/ui/Modal'
-import { database } from '@/services/firebase/config'
+import { UserRepository } from '@/repositories/user.repository'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -44,12 +43,18 @@ export default function ContactUpdate() {
   const [openPasswordModal, setPasswordModal] = useState(false)
   const [newEmail, setNewEmail] = useState('')
 
+  const userReposiyory = useMemo(() => new UserRepository(), [])
+
   const onSubmit = (data: IFormData) => {
     if (user && userDB) {
       if (dirtyFields.email || dirtyFields.phone) {
-        update(ref(database, `users/${user.uid}`), {
-          phone: data.phone,
-        })
+        userReposiyory
+          .update(
+            {
+              phone: data.phone,
+            },
+            user.uid,
+          )
           .then(async () => {
             if (user.email !== data.email) {
               setNewEmail(data.email)
@@ -58,43 +63,13 @@ export default function ContactUpdate() {
 
             updateFieldAsDefault(data)
 
-            toast.success('Os seus dados foram atualizados', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+            toast.success('Os seus dados foram atualizados')
           })
           .catch(() => {
-            toast.error('Erro ao atualizar os seus dados', {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            })
+            toast.error('Erro ao atualizar os seus dados')
           })
       } else {
-        toast.warn('Você não atualizou nenhum campo', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.warn('Você não atualizou nenhum campo')
       }
     }
   }
@@ -105,33 +80,11 @@ export default function ContactUpdate() {
         .then(() => {
           toast.success(
             `Foi enviado um código de verificação no email ${newUserEmail}`,
-            {
-              position: 'top-right',
-              autoClose: 7000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            },
           )
         })
         .catch(() => {
           toast.error(
             'Houve algum erro ao tentar enviar um código de verificação no seu email',
-            {
-              position: 'top-right',
-              autoClose: 7000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            },
           )
         })
     }
@@ -164,32 +117,11 @@ export default function ContactUpdate() {
     if (user) {
       sendEmailVerification(user)
         .then(() => {
-          toast.success('Foi enviado um código de verificação no seu email', {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-            transition: Bounce,
-          })
+          toast.success('Foi enviado um código de verificação no seu email')
         })
         .catch(() => {
           toast.error(
             'Erro ao enviar código de verificação, tente novamente mais tarde',
-            {
-              position: 'top-right',
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-              theme: 'light',
-              transition: Bounce,
-            },
           )
         })
     }

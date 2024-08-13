@@ -1,18 +1,17 @@
 'use client'
 
-import { createContext, ReactNode, useEffect, useState } from 'react'
-import { child, get, ref } from 'firebase/database'
+import { createContext, ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { ICampaignBase } from '@/@types'
 import { campaignValidator } from '@/functions'
-import { database } from '@/services/firebase/config'
+import { CampaignRepository } from '@/repositories/campaign.repository'
 
 interface ICampaignContext {
-  campaignData: Record<string, ICampaignBase>
+  campaignData: ICampaignBase[]
 }
 
 export const CampaignContext = createContext<ICampaignContext>({
-  campaignData: {},
+  campaignData: [],
 })
 
 export default function CampaignProvider({
@@ -20,40 +19,26 @@ export default function CampaignProvider({
 }: {
   children: ReactNode
 }) {
-  const [campaignData, setCampaignData] = useState<
-    Record<string, ICampaignBase>
-  >({})
+  const [campaignData, setCampaignData] = useState<ICampaignBase[]>([])
+  const campaignRepository = useMemo(() => new CampaignRepository(), [])
 
   useEffect(() => {
     async function unsubscribed() {
-      get(child(ref(database), 'campaigns/')).then((snapshot) => {
-        if (snapshot.exists()) {
-          const newObj: Record<string, ICampaignBase> = {}
-          const obj = snapshot.val()
-          let campaignDefaultId
+      let campaignData = await campaignRepository.findAll()
 
-          const revObj = Object.keys(obj).reverse()
-          revObj.forEach(function (i) {
-            if (campaignValidator(obj[i]) || obj[i].default === true) {
-              if (obj[i].default) {
-                campaignDefaultId = i
-              }
-
-              newObj[i] = obj[i]
-            }
-          })
-
-          if (Object.entries(revObj).length >= 3 && campaignDefaultId) {
-            delete newObj[campaignDefaultId]
+      for (const campaign of campaignData) {
+        if (campaignValidator(campaign)) {
+          if (campaignData.length >= 3 && campaign.default) {
+            campaignData = campaignData.filter((c) => c.id !== campaign.id)
           }
-
-          setCampaignData(newObj)
         }
-      })
+      }
+
+      setCampaignData(campaignData)
     }
 
     unsubscribed()
-  }, [])
+  }, [campaignRepository])
 
   return (
     <CampaignContext.Provider value={{ campaignData }}>

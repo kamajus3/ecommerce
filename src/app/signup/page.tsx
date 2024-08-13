@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import Button from '@/components/ui/Button'
@@ -58,31 +58,11 @@ export default function SignUp() {
   function onSubmit(data: IFormData) {
     signUpWithEmail(data.name, data.email, data.password)
       .then(() => {
-        toast.success('A conta foi criada com sucesso', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.success('A conta foi criada com sucesso')
         router.push('/')
       })
       .catch((e: Error) => {
-        toast.error(e.message, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-          transition: Bounce,
-        })
+        toast.error(e.message)
       })
   }
 

@@ -9,14 +9,22 @@ export interface IProductCampaign {
 export type IProduct = {
   id: string
   name: string
+  nameLowerCase: string
   quantity: number
   price: number
+  views: number
   category: string
   photo: string
   description: string
+  campaign?: IProductCampaign
   createdAt: string
   updatedAt: string
-  campaign?: IProductCampaign
+}
+
+export type IProductView = {
+  userId: string
+  productId: string
+  createdAt: string
 }
 
 export interface IProductCart {
@@ -24,12 +32,20 @@ export interface IProductCart {
   quantity: number
 }
 
+export interface IQuery {
+  orderBy?: string
+  limit?: number
+  filterBy?: { [key: string]: string | number | boolean }
+  filterById?: string
+  exceptionId?: string
+}
+
 export interface IProductInput {
   id: string
   name: string
 }
 
-export interface ICampaignBase {
+export type ICampaignBase = {
   id: string
   title: string
   description: string
@@ -43,7 +59,7 @@ export interface ICampaignBase {
   updatedAt: string
 }
 
-export interface ICampaign extends ICampaignBase {
+export type ICampaign = ICampaignBase & {
   products?: string[]
 }
 
@@ -53,16 +69,6 @@ export type CategoryLabel =
   | 'Saúde'
   | 'Inseticidas'
   | 'Alimentação'
-
-export interface IProductQuery {
-  search?: string
-  limit?: number
-  category?: CategoryLabel | string
-  campaign?: string
-  exceptProductId?: string
-  exceptOthersProduct?: boolean
-  orderBy?: 'updatedAt' | 'mostViews' | 'bestSellers'
-}
 
 export interface ICategory {
   label: CategoryLabel
@@ -74,28 +80,31 @@ export interface IProductOrder {
   name: string
   quantity: number
   price: number
-  promotion?: number | null
+  promotion?: number
 }
 
-export interface IOrder {
+export type IOrder = {
   id: string
   userId: string
   firstName: string
   lastName: string
   address: string
   phone: string
-  createdAt: string
   state: 'not-sold' | 'sold'
   products: IProductOrder[]
+  createdAt: string
+  updatedAt: string
 }
 
-export type UserRole = 'client' | 'admin'
+export type EnumUserRole = 'client' | 'admin'
 
-export interface IUser {
+export type IUser = {
   id: string
   firstName: string
   lastName?: string
   address?: string
   phone?: string
-  role: UserRole
+  role: EnumUserRole
+  createdAt: string
+  updatedAt: string
 }

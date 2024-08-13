@@ -7,11 +7,11 @@ import Header from '@/components/ui/Header'
 
 export const metadata: Metadata = {
   title: 'Termos e condições',
-  description: 'Termos e condições de uso da Racius Care',
+  description: 'Termos e condições de uso da Poubelle',
   openGraph: {
     type: 'website',
     title: 'Sobre Nós',
-    description: 'Termos e condições de uso da Racius Care',
+    description: 'Termos e condições de uso da Poubelle',
     images: ['https://raciuscare.com/logo.png'],
   },
 }
@@ -26,13 +26,13 @@ export default function TermsAndContions() {
           Prezado(a) Cliente,
         </p>
         <p className="text-zinc-800 text-base mt-6">
-          A Racius Care é uma loja virtual que oferece produtos de saúde e
-          higiene. A Empresa se dedica a fornecer aos seus clientes uma
-          experiência de compra segura e agradável.
+          A Poubelle é uma loja virtual que oferece produtos de saúde e higiene.
+          A Empresa se dedica a fornecer aos seus clientes uma experiência de
+          compra segura e agradável.
         </p>
 
         <p className="text-zinc-800 mt-4">
-          Ao utilizar a plataforma da Racius Care ou realizar uma compra, você
+          Ao utilizar a plataforma da Poubelle ou realizar uma compra, você
           concorda com os seguintes Termos e Condições.
         </p>
 

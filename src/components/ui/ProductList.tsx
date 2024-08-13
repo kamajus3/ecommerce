@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import clsx from 'clsx'
 import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { IProduct, IProductQuery } from '@/@types'
-import { getProducts } from '@/services/firebase/database'
+import { IProduct, IQuery } from '@/@types'
+import { ProductRepository } from '@/repositories/product.repository'
 
 import ProductCardSkeleton from './Skeleton/ProductCardSkeleton'
 import ProductCard from './ProductCard'
@@ -20,24 +20,25 @@ import 'swiper/css/scrollbar'
 
 interface ProductListProps {
   title: string
-  query: IProductQuery
+  query: IQuery
 }
 
 export default function ProductList(props: ProductListProps) {
-  const [productData, setProductData] = useState<Record<string, IProduct>>({})
+  const productRepository = useMemo(() => new ProductRepository(), [])
+  const [productData, setProductData] = useState<IProduct[]>([])
 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function unsubscribed() {
-      await getProducts(props.query).then((products) => {
+      await productRepository.find(props.query).then((products) => {
         setProductData(products)
         setLoading(false)
       })
     }
 
     unsubscribed()
-  }, [props.query])
+  }, [productRepository, props.query])
 
   return (
     <div
@@ -65,11 +66,12 @@ export default function ProductList(props: ProductListProps) {
           },
         }}
       >
-        {Object.entries(productData).map(([id, product]) => (
-          <SwiperSlide key={id}>
-            <ProductCard {...product} id={id} />
-          </SwiperSlide>
-        ))}
+        {productData.length > 0 &&
+          productData.map((product) => (
+            <SwiperSlide key={product.id}>
+              <ProductCard {...product} />
+            </SwiperSlide>
+          ))}
 
         {loading &&
           [1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => (
