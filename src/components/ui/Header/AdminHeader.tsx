@@ -1,14 +1,15 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
 import Avatar from '@/components/ui/Avatar'
+import { Link, usePathname } from '@/navigation'
 
 export default function AdminHeader() {
   const pathname = usePathname()
+  const t = useTranslations('structure')
 
   return (
     <header className="bg-white border-b w-full shadow-sm">
@@ -25,39 +26,40 @@ export default function AdminHeader() {
 
         <div className="flex gap-4 items-center mr-4">
           <Link
-            href="/admin/dashboard"
+            href={`/admin/dashboard`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-main border-b border-b-main':
-                pathname === '/admin/dashboard',
+              'text-primary border-b border-b-main':
+                pathname.includes('/admin/dashboard'),
             })}
           >
-            Dashboard
+            {t('header.admin.dashboard')}
           </Link>
           <Link
-            href="/admin/productos"
+            href={`/admin/products`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-main border-b border-b-main':
-                pathname === '/admin/productos',
+              'text-primary border-b border-b-main':
+                pathname.includes('/admin/products'),
             })}
           >
-            Productos
+            {t('header.admin.products')}
           </Link>
           <Link
-            href="/admin/pedidos"
+            href={`/admin/orders`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-main border-b border-b-main': pathname === '/admin/pedidos',
+              'text-primary border-b border-b-main':
+                pathname.includes('/admin/orders'),
             })}
           >
-            Pedidos
+            {t('header.admin.orders')}
           </Link>
           <Link
-            href="/admin/campanhas"
+            href={`/admin/campaigns`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-main border-b border-b-main':
-                pathname === '/admin/campanhas',
+              'text-primary border-b border-b-main':
+                pathname.includes('/admin/campaigns'),
             })}
           >
-            Campanhas
+            {t('header.admin.campaigns')}
           </Link>
           <div className="h-11 flex gap-4 items-center justify-between">
             <Avatar.Root>

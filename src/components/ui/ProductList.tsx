@@ -43,7 +43,7 @@ export default function ProductList(props: ProductListProps) {
   return (
     <div
       className={clsx('p-6 mt-6', {
-        hidden: !loading && Object.entries(productData).length === 0,
+        hidden: !loading && productData.length === 0,
       })}
     >
       <h2 className="text-black font-semibold text-3xl">{props.title}</h2>

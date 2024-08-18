@@ -1,0 +1,25 @@
+{
+  "cards": {
+    "activeProducts": "Active products",
+    "activeOrders": "Active orders",
+    "remainingProducts": "Remaining products",
+    "activeCampaigns": "Active campaigns",
+    "activeCustomers": "Active customers"
+  },
+  "salesSummary": "Sales summary",
+  "salesLabel": "Sales for",
+  "months": {
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug",
+    "sep": "Sep",
+    "oct": "Oct",
+    "nov": "Nov",
+    "dec": "Dec"
+  }
+}

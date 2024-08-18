@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import {
   A11y,
   Autoplay,
@@ -12,10 +11,11 @@ import {
 } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import contants from '@/constants'
+import constants from '@/constants'
 import { formatPhotoUrl } from '@/functions/format'
 import { useCampaign } from '@/hooks/useCampaign'
 import useDimensions from '@/hooks/useDimensions'
+import { Link } from '@/navigation'
 
 import CarouselSkeleton from './Skeleton/CarouselSkeleton'
 import Button from './Button'
@@ -45,8 +45,8 @@ export default function Carousel() {
       }}
       className="mySwiper"
     >
-      {Object.entries(campaignData).map(([id, campaign]) => (
-        <SwiperSlide key={id}>
+      {campaignData.map((campaign) => (
+        <SwiperSlide key={campaign.id}>
           <article className="w-1/2 flex-shrink-0 flex-grow-0 max-sm:w-full sm:h-full flex items-center justify-center">
             <div className="static left-24 z-50 flex w-[480px] select-none flex-col items-center justify-end gap-4 lg:absolute lg:items-start">
               <h3 className="text-center text-3xl font-semibold text-white lg:text-left">
@@ -56,12 +56,12 @@ export default function Carousel() {
                 {campaign.description}
               </p>
               {campaign.reduction && (
-                <Link href={`/campanha/${id}`}>
+                <Link href={`/campaign/${campaign.id}`}>
                   <Button
                     style={{
                       width: '100%',
                       padding: '13px 18px 13px 18px',
-                      backgroundColor: contants.colors.secondary,
+                      backgroundColor: constants.colors.secondary,
                     }}
                   >
                     Ver productos
@@ -83,7 +83,7 @@ export default function Carousel() {
         </SwiperSlide>
       ))}
 
-      {Object.entries(campaignData).length === 0 &&
+      {campaignData.length === 0 &&
         [1, 2, 3, 4, 5, 6, 7, 8, 9].map((id) => (
           <SwiperSlide key={id}>
             <CarouselSkeleton />

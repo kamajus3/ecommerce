@@ -1,25 +1,23 @@
-'use client'
-
 import Image from 'next/image'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { ChevronUp, MoveUpRight } from 'lucide-react'
 
 import { env } from '@/env'
-import { formatPhoneNumber } from '@/functions/format'
+import { Link } from '@/navigation'
 
 interface IFooter {
   disableBackButton?: boolean
 }
 
 export default function Footer({ disableBackButton = false }: IFooter) {
+  const t = useTranslations('structure')
+
   return (
-    <footer className="bg-main relative footer">
+    <footer className="bg-primary relative footer">
       {!disableBackButton && (
         <button
-          onClick={() => {
-            window.scrollTo(0, 0)
-          }}
-          className="animate-bounce absolute -top-7 right-8 flex justify-center items-center w-14 h-14 border shadow-sm p-2 rounded-full bg-secondary text-sm font-medium text-gray-700 hover:brightness-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          onClick={() => window.scrollTo(0, 0)}
+          className="animate-bounce absolute top-[-1.75rem] right-8 flex items-center justify-center w-14 h-14 border rounded-full bg-secondary text-sm font-medium text-gray-700 shadow-sm hover:brightness-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
         >
           <ChevronUp color="#fff" size={26} />
         </button>
@@ -30,18 +28,20 @@ export default function Footer({ disableBackButton = false }: IFooter) {
             <Link href="/">
               <Image
                 src="/logo-white.png"
-                alt="Logotipo da Poubelle"
+                alt="Poubelle"
                 width={140}
                 height={140}
                 draggable={false}
                 className="select-none"
               />
             </Link>
-            <p className="text-white text-xs">© 2024 Poubelle.</p>
+            <p className="text-white text-xs">© 2024 Poubelle</p>
           </div>
           <div className="grid grid-cols-2 gap-12 sm:gap-6 sm:grid-cols-3">
             <div>
-              <h2 className="mb-6 text-lg font-semibold text-white">Suporte</h2>
+              <h2 className="mb-6 text-lg font-semibold text-white">
+                {t('footer.support.title')}
+              </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
                   <Link href={`mailto:${env.NEXT_PUBLIC_EMAIL_ADDRESS}`}>
@@ -49,31 +49,31 @@ export default function Footer({ disableBackButton = false }: IFooter) {
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="tel:+244926437705">
-                    {formatPhoneNumber('935420498')}
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h2 className="mb-6 text-lg font-semibold text-white">Úteis</h2>
-              <ul className="text-gray-200 font-medium">
-                <li className="mb-4">
-                  <Link href="/sobre">Quem somos nós?</Link>
-                </li>
-                <li className="mb-4">
-                  <Link href="/termos-gerais">Termos e condições</Link>
+                  <Link href="tel:+3317018XXXX">+33 1 70 18 XX XX</Link>
                 </li>
               </ul>
             </div>
             <div>
               <h2 className="mb-6 text-lg font-semibold text-white">
-                Redes socias
+                {t('footer.useFulLinks.title')}
+              </h2>
+              <ul className="text-gray-200 font-medium">
+                <li className="mb-4">
+                  <Link href="/about">{t('footer.aboutUs.title')}</Link>
+                </li>
+                <li className="mb-4">
+                  <Link href="/terms">{t('footer.useFulLinks.terms')}</Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="mb-6 text-lg font-semibold text-white">
+                {t('footer.useFulLinks.socialMedia')}
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
                   <Link
-                    href="https://www.facebook.com/profile.php?id=61556945094289"
+                    href="#"
                     target="_blank"
                     className="flex items-center gap-2"
                   >
@@ -83,11 +83,11 @@ export default function Footer({ disableBackButton = false }: IFooter) {
                 </li>
                 <li className="mb-4">
                   <Link
-                    href="https://wa.me/message/7GFNTDQN5W25O1"
+                    href="#"
                     target="_blank"
                     className="flex items-center gap-2"
                   >
-                    Whatsapp
+                    WhatsApp
                     <MoveUpRight size={13} color="#f5f4ef80" />
                   </Link>
                 </li>

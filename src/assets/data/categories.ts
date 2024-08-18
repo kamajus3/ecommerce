@@ -1,25 +1,33 @@
 import { ICategory } from '@/@types'
 
+const CATEGORY_IMAGES = {
+  hygiene: '/categories/hygiene.jpg',
+  baby: '/categories/baby.jpg',
+  health: '/categories/health.jpg',
+  insecticide: '/categories/insecticide.jpg',
+  food: '/categories/food.jpg',
+}
+
 const CATEGORIES: ICategory[] = [
   {
-    label: 'Higiene Pessoal',
-    img: '/categories/hygiene.jpg',
+    label: 'hygiene',
+    img: CATEGORY_IMAGES.hygiene,
   },
   {
-    label: 'Bebê',
-    img: '/categories/baby.jpg',
+    label: 'baby',
+    img: CATEGORY_IMAGES.baby,
   },
   {
-    label: 'Saúde',
-    img: '/categories/health.jpg',
+    label: 'health',
+    img: CATEGORY_IMAGES.health,
   },
   {
-    label: 'Inseticidas',
-    img: '/categories/insecticide.jpg',
+    label: 'insecticides',
+    img: CATEGORY_IMAGES.insecticide,
   },
   {
-    label: 'Alimentação',
-    img: '/categories/food.jpg',
+    label: 'food',
+    img: CATEGORY_IMAGES.food,
   },
 ]
 

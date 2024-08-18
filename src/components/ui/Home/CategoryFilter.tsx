@@ -1,12 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { ICategory } from '@/@types'
 import CATEGORIES from '@/assets/data/categories'
+import { Link } from '@/navigation'
 
 import '@/assets/swiper.css'
 
@@ -16,34 +17,38 @@ interface ICategoryFilter {
   title: string
 }
 
-function CategoryCard(props: ICategory) {
+interface ICategoryCard {
+  category: ICategory
+}
+
+function CategoryCard({ category }: ICategoryCard) {
+  const t = useTranslations('categories')
+
   return (
-    <Link className="inline-block w-48" href={`/categoria/${props.label}`}>
-      <div className="w-48 h-48 relative">
+    <Link className="inline-block w-48" href={`/category/${category.label}`}>
+      <div className="w-48 h-48 mb-8 relative">
         <Image
-          src={props.img}
-          alt={props.label}
+          src={category.img}
+          alt={t(`labels.${category.label}`)}
           draggable={false}
           className="select-none rounded-full border object-cover object-center"
           fill
         />
       </div>
-      <span className="text-black font-medium mt-5 text-center">
-        {props.label}
+      <span className="text-black font-medium text-center">
+        {t(`labels.${category.label}`)}
       </span>
     </Link>
   )
 }
 
-export default function CategoryFilter(props: ICategoryFilter) {
+export default function CategoryFilter({ title }: ICategoryFilter) {
   return (
     <div className="p-6 mt-6">
-      <h2 className="text-black font-semibold text-3xl">{props.title}</h2>
+      <h2 className="text-black font-semibold text-3xl">{title}</h2>
       <Swiper
         modules={[Scrollbar]}
-        scrollbar={{
-          enabled: true,
-        }}
+        scrollbar={{ enabled: true }}
         className="swiperCard"
         breakpoints={{
           0: {
@@ -68,9 +73,9 @@ export default function CategoryFilter(props: ICategoryFilter) {
           },
         }}
       >
-        {CATEGORIES.map((product) => (
-          <SwiperSlide key={product.label}>
-            <CategoryCard {...product} />
+        {CATEGORIES.map((category) => (
+          <SwiperSlide key={category.label}>
+            <CategoryCard category={category} />
           </SwiperSlide>
         ))}
       </Swiper>

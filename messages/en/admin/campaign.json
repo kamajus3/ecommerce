@@ -1,0 +1,49 @@
+{
+  "title": "My campaigns",
+  "add-new": "Add new",
+  "action-new": "Publish",
+  "successful": "Campaign published successfully",
+  "error": "Error publishing the campaign",
+  "orderBy": {
+    "updatedAt": "Order by updated date",
+    "createdAt": "Order by creation date",
+    "title": "Order by title"
+  },
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "title": "Title",
+      "description": "Description",
+      "quantity": "Quantity",
+      "reduction": "Discount rate",
+      "products": "Products",
+      "default": "Default",
+      "fixed": "Pinned",
+      "markAsDefault": "Set as default",
+      "markAsFixed": "Pin campaign",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "createdDate": "Creation date",
+      "updatedDate": "Updated date"
+    },
+    "content": {
+      "delete": {
+        "action": "Delete",
+        "title": "Delete campaign",
+        "description": "Are you sure you want to permanently delete this campaign?",
+        "error": "Error deleting the campaign",
+        "successful": "Campaign deleted successfully"
+      },
+      "edit": {
+        "action": "Edit",
+        "title": "Edit campaign",
+        "error": "Error editing the campaign",
+        "successful": "Campaign edited successfully"
+      },
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "previousWarn": "The previously selected default campaign will be removed.",
+  "noDataMessage": "Customer campaigns will appear here"
+}

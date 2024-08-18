@@ -34,12 +34,12 @@ interface IConfirmOrder {
 const schema = z.object({
   firstName: z
     .string()
-    .min(3, 'O nome deve ter no minimo 3 caracteres')
+    .min(2, 'O nome deve ter no minimo 2 caracteres')
     .max(40, 'O nome deve ter no máximo 40 carácteres')
     .trim(),
   lastName: z
     .string()
-    .min(6, 'O sobrenome deve ter no minimo 6 caracteres')
+    .min(2, 'O sobrenome deve ter no minimo 2 caracteres')
     .max(40, 'O sobrenome deve ter no máximo 40 carácteres')
     .trim(),
   address: z

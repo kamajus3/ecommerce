@@ -1,0 +1,33 @@
+{
+  "header": {
+    "logout": "Déconnexion",
+    "logged-in": "Connecté",
+    "client": {
+      "login": "Connexion",
+      "settings": "Paramètres",
+      "orders": "Commandes",
+      "search": "Que cherchez-vous ?",
+      "back-to-admin": "Retour à l'Admin"
+    },
+    "admin": {
+      "dashboard": "Tableau de bord",
+      "products": "Produits",
+      "orders": "Commandes",
+      "campaigns": "Campagnes",
+      "back-to-client": "Retour au Client"
+    }
+  },
+  "footer": {
+    "support": {
+      "title": "Support"
+    },
+    "aboutUs": {
+      "title": "À propos de nous"
+    },
+    "useFulLinks": {
+      "title": "Liens utiles",
+      "terms": "Termes et conditions",
+      "socialMedia": "Réseaux sociaux"
+    }
+  }
+}

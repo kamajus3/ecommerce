@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 
 import { ICampaignBase } from '@/@types'
 import Button from '@/components/ui/Button'
 import { calculateTimeRemaining, campaignValidator } from '@/functions'
 import { formatPhotoUrl } from '@/functions/format'
 import { useCampaign } from '@/hooks/useCampaign'
+import { Link } from '@/navigation'
 
 export default function PromoBig() {
   const { campaignData } = useCampaign()
@@ -29,10 +29,10 @@ export default function PromoBig() {
   }, [campaignData])
 
   useEffect(() => {
-    if (fixedCampaign?.finishDate) {
-      const finishDate = new Date(fixedCampaign.finishDate)
+    if (fixedCampaign?.endDate) {
+      const endDate = new Date(fixedCampaign.endDate)
       const timer = setInterval(() => {
-        setTimeRemaining(calculateTimeRemaining(finishDate))
+        setTimeRemaining(calculateTimeRemaining(endDate))
       }, 1000)
 
       return () => clearInterval(timer)
@@ -42,7 +42,7 @@ export default function PromoBig() {
   return (
     fixedCampaign &&
     campaignValidator(fixedCampaign) && (
-      <article className="w-full px-9 py-12 bg-main flex flex-col lg:flex-row justify-between items-center">
+      <article className="w-full px-9 py-12 bg-primary flex flex-col lg:flex-row justify-between items-center">
         <div className="w-full lg:w-2/5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left">
           <h4 className="text-white font-medium mb-3">
             {fixedCampaign.reduction && Number(fixedCampaign.reduction) > 0
@@ -75,7 +75,7 @@ export default function PromoBig() {
             </div>
           </div>
 
-          <Link href={`/campanha/${fixedCampaign.id}`}>
+          <Link href={`/campaign/${fixedCampaign.id}`}>
             <Button className="mt-6 bg-secondary border border-white py-4 px-9 active:scale-95 hover:brightness-75">
               Ver produtos
             </Button>

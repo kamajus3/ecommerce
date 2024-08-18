@@ -3,7 +3,7 @@ export interface IProductCampaign {
   title: string
   reduction?: string
   startDate?: string
-  finishDate?: string
+  endDate?: string
 }
 
 export type IProduct = {
@@ -53,7 +53,7 @@ export type ICampaignBase = {
   fixed: boolean
   reduction?: string
   startDate?: string
-  finishDate?: string
+  endDate?: string
   photo: string
   createdAt: string
   updatedAt: string
@@ -64,11 +64,11 @@ export type ICampaign = ICampaignBase & {
 }
 
 export type CategoryLabel =
-  | 'Bebê'
-  | 'Higiene Pessoal'
-  | 'Saúde'
-  | 'Inseticidas'
-  | 'Alimentação'
+  | 'baby'
+  | 'hygiene'
+  | 'health'
+  | 'insecticides'
+  | 'food'
 
 export interface ICategory {
   label: CategoryLabel

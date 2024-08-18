@@ -1,0 +1,10 @@
+{
+  "stock": {
+    "inStock": "Only {quantity} left in stock",
+    "outOfStock": "Out of Stock"
+  },
+  "relatedProduct": "Related Product",
+  "button-add-product": "Add to cart",
+  "button-remove-product": "Remove from cart",
+  "notFound": "Product not found"
+}

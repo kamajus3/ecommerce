@@ -1,0 +1,11 @@
+{
+  "notFound": "Aucun résultat trouvé",
+  "foundCount": "{resultsCount} résultat(s) trouvé(s).",
+  "foundMoreThanCount": "Plus de {resultsCount} résultats trouvés",
+  "products": {
+    "label": "Rechercher {search}"
+  },
+  "category": {
+    "label": "Produits dans la catégorie {search}"
+  }
+}

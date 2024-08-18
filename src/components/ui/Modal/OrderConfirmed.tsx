@@ -1,6 +1,6 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
-import Link from 'next/link'
 
+import { Link } from '@/navigation'
 import { Dialog, Transition } from '@headlessui/react'
 
 import Button from '../Button'
@@ -65,7 +65,7 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Link href={`/factura/${props.orderData[1]}`}>
+                  <Link href={`/invoice/${props.orderData[1]}`}>
                     <Button
                       type="button"
                       onClick={() => {

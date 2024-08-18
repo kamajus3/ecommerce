@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
@@ -45,54 +46,121 @@ const ALLOWED_IMAGE_DIMENSION = [700, 700]
 export default function ProductModal(props: IProductModal) {
   const [imageDimension, setImageDimension] = useState([0, 0])
 
+  const t = useTranslations()
+
   const schema = z.object({
     name: z
       .string()
-      .min(6, 'O nome deve ter no minimo 6 caracteres')
-      .max(120, 'O nome deve ter no máximo 120 carácteres')
+      .min(
+        6,
+        t('form.errors.minLength', {
+          field: `${t('admin.product.table.header.name').toLowerCase()}`,
+          length: 6,
+        }),
+      )
+      .max(
+        120,
+        t('form.errors.maxLength', {
+          field: `${t('admin.product.table.header.name').toLowerCase()}`,
+          length: 120,
+        }),
+      )
       .trim(),
     description: z
       .string()
-      .min(6, 'A descrição deve ter no minimo 6 carácteres')
-      .max(180, 'A descrição deve ter no máximo 180 carácteres')
+      .min(
+        6,
+        t('form.errors.minLength', {
+          field: `${t('admin.product.table.header.description').toLowerCase()}`,
+          length: 6,
+        }),
+      )
+      .max(
+        180,
+        t('form.errors.maxLength', {
+          field: `${t('admin.product.table.header.description').toLowerCase()}`,
+          length: 180,
+        }),
+      )
       .trim(),
     quantity: z
       .number({
-        required_error: 'Digite a quantidade do producto',
-        invalid_type_error: 'A quantidade do producto está invalida',
+        required_error: t('form.errors.invalid', {
+          field: `${t('admin.product.table.header.quantity').toLowerCase()}`,
+        }),
+        invalid_type_error: t('form.errors.invalid', {
+          field: `${t('admin.product.table.header.quantity').toLowerCase()}`,
+        }),
       })
-      .positive('A quantidade deve ser um número positivo')
-      .max(10000, 'A quantidade máxima permitida é 10.000'),
+      .positive(
+        t('form.errors.positive', {
+          field: `${t('admin.product.table.header.quantity').toLowerCase()}`,
+        }),
+      )
+      .max(
+        10000,
+        t('form.errors.maxLength', {
+          field: `${t('admin.product.table.header.quantity').toLowerCase()}`,
+          length: 10000,
+        }),
+      ),
     price: z
       .number({
-        required_error: 'Digite o preço do producto',
-        invalid_type_error: 'A preço do producto está invalido',
+        required_error: t('form.errors.required', {
+          field: `${t('admin.product.table.header.price').toLowerCase()}`,
+        }),
+        invalid_type_error: t('form.errors.invalid', {
+          field: `${t('admin.product.table.header.category').toLowerCase()}`,
+        }),
       })
-      .max(100000000, 'O preço máximo é 100.000.000')
-      .positive('O preço deve ser um número positivo'),
+      .max(
+        100000000,
+        t('form.errors.maxLength', {
+          field: `${t('admin.product.table.header.price').toLowerCase()}`,
+          length: 100000000,
+        }),
+      )
+      .positive(
+        t('form.errors.positive', {
+          field: `${t('admin.product.table.header.quantity').toLowerCase()}`,
+        }),
+      ),
     category: z
       .string({
-        invalid_type_error: 'Digite uma categória válida',
-        required_error: 'A categória é obrigatória',
+        invalid_type_error: t('form.errors.invalid', {
+          field: `${t('admin.product.table.header.category').toLowerCase()}`,
+        }),
+        required_error: t('form.errors.required', {
+          field: `${t('admin.product.table.header.category').toLowerCase()}`,
+        }),
       })
       .trim(),
     photo: z
       .instanceof(Blob, {
-        message: 'A fotografia é obrigatória',
+        message: t('form.errors.required', {
+          field: `${t('admin.product.table.header.photo').toLowerCase()}`,
+        }),
       })
       .refine(
         (file) => file!.size <= 3 * 1024 * 1024,
-        'A fotografia deve ter no máximo 3mb',
+        t('form.errors.maxSize', {
+          field: `${t('admin.product.table.header.photo').toLowerCase()}`,
+          size: '3MB',
+        }),
       )
       .refine(
         () =>
           imageDimension[0] === ALLOWED_IMAGE_DIMENSION[0] &&
           imageDimension[1] === ALLOWED_IMAGE_DIMENSION[1],
-        `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
+        t('form.errors.resolution', {
+          field: `${t('admin.product.table.header.photo').toLowerCase()}`,
+          x: ALLOWED_IMAGE_DIMENSION[0],
+          y: ALLOWED_IMAGE_DIMENSION[1],
+        }),
       )
       .refine(
         (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-        'Apenas esses tipos são permitidos .jpg, .jpeg, .png',
+        t('form.errors.allowedTypes'),
       ),
   })
 
@@ -156,7 +224,7 @@ export default function ProductModal(props: IProductModal) {
       }
       closeModal()
     } else {
-      toast.warn('Nenhum campo foi alterado')
+      toast.warn(t('form.noFieldChanged'))
     }
   }
 
@@ -205,7 +273,9 @@ export default function ProductModal(props: IProductModal) {
                         {props.title}
                       </Dialog.Title>
                       <div className="mb-4">
-                        <Field.Label htmlFor="name">Nome</Field.Label>
+                        <Field.Label htmlFor="name">
+                          {t('admin.product.table.header.name')}
+                        </Field.Label>
                         <Field.Input
                           type="text"
                           {...register('name')}
@@ -214,7 +284,9 @@ export default function ProductModal(props: IProductModal) {
                         <Field.Error error={errors.name} />
                       </div>
                       <div className="mb-4">
-                        <Field.Label htmlFor="quantity">Quantidade</Field.Label>
+                        <Field.Label htmlFor="quantity">
+                          {t('admin.product.table.header.quantity')}
+                        </Field.Label>
                         <Field.Input
                           type="number"
                           id="quantity"
@@ -224,7 +296,9 @@ export default function ProductModal(props: IProductModal) {
                         <Field.Error error={errors.quantity} />
                       </div>
                       <div className="mb-4">
-                        <Field.Label htmlFor="price">Preço</Field.Label>
+                        <Field.Label htmlFor="price">
+                          {t('admin.product.table.header.price')}
+                        </Field.Label>
                         <Field.Input
                           type="number"
                           {...register('price', { valueAsNumber: true })}
@@ -233,12 +307,14 @@ export default function ProductModal(props: IProductModal) {
                         <Field.Error error={errors.price} />
                       </div>
                       <div className="mb-4">
-                        <Field.Label htmlFor="category">Categória</Field.Label>
+                        <Field.Label htmlFor="category">
+                          {t('admin.product.table.header.category')}
+                        </Field.Label>
                         <Field.Select
                           {...register('category')}
                           options={CATEGORIES.map((c) => ({
                             value: c.label,
-                            label: c.label,
+                            label: t(`categories.labels.${c.label}`),
                           }))}
                           error={errors.category}
                           className="w-full"
@@ -247,7 +323,7 @@ export default function ProductModal(props: IProductModal) {
                       </div>
                       <div className="mb-4">
                         <Field.Label htmlFor="description">
-                          Descrição
+                          {t('admin.product.table.header.description')}
                         </Field.Label>
                         <Field.TextArea
                           {...register('description')}
@@ -292,7 +368,7 @@ export default function ProductModal(props: IProductModal) {
                     onClick={closeModal}
                     ref={cancelButtonRef}
                   >
-                    Cancelar
+                    {t('form.cancel')}
                   </button>
                 </div>
               </Dialog.Panel>

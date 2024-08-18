@@ -1,4 +1,7 @@
+'use client'
+
 import { HTMLAttributes, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { Check, Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -34,6 +37,8 @@ export default function ProductInput(props: IProductInput) {
 
   const dropdownRef = useRef<HTMLDivElement>(null)
   const productRepository = useMemo(() => new ProductRepository(), [])
+
+  const t = useTranslations('structure')
 
   function handleClick(product: IProduct) {
     if (props.products) {
@@ -83,7 +88,7 @@ export default function ProductInput(props: IProductInput) {
             limit: 5,
           })
           .then((products) => {
-            if (Object.entries(products).length > 0) {
+            if (products.length > 0) {
               setIsOpen(true)
             } else {
               setIsOpen(false)
@@ -109,7 +114,7 @@ export default function ProductInput(props: IProductInput) {
 
         <input
           type="text"
-          placeholder="Pesquisar producto"
+          placeholder={t('structure.client.search')}
           {...props.inputProps}
           {...register('searchValue')}
           className="w-[90%] placeholder:text-sm text-gray-500 bg-transparent outline-none"

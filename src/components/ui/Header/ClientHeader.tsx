@@ -2,19 +2,18 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import { MoveLeft, Search, ShoppingCart } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
+import Avatar from '@/components/ui/Avatar'
+import Button from '@/components/ui/Button'
+import { Link, useRouter } from '@/navigation'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-import Avatar from '../Avatar'
-import Button from '../Button'
 
 import FixedCampaign from './FixedCampaign'
 
@@ -30,7 +29,7 @@ interface IFormData {
   searchValue: string
 }
 
-export default function ClientHeader(props: IClientHeader) {
+export default function ClientHeader({ searchDefault }: IClientHeader) {
   const { register, handleSubmit } = useForm<IFormData>({
     resolver: zodResolver(schema),
   })
@@ -40,8 +39,10 @@ export default function ClientHeader(props: IClientHeader) {
   const [isSearchOn, setSearchOn] = useState(false)
   const router = useRouter()
 
+  const t = useTranslations('structure')
+
   function onSubmit(data: IFormData) {
-    router.replace(`/pesquisa/${data.searchValue}`)
+    router.replace(`/search/${data.searchValue}`)
   }
 
   return (
@@ -51,7 +52,7 @@ export default function ClientHeader(props: IClientHeader) {
         <Link href="/" style={{ display: isSearchOn ? 'none' : 'inline' }}>
           <Image
             src="/logo.png"
-            alt="Logotipo da Poubelle"
+            alt="Poubelle Logo"
             width={90}
             height={90}
             priority
@@ -82,13 +83,13 @@ export default function ClientHeader(props: IClientHeader) {
           >
             <input
               type="text"
-              placeholder="Oque é que você precisa?"
-              defaultValue={props.searchDefault || ''}
+              placeholder={t('header.client.search')}
+              defaultValue={searchDefault || ''}
               {...register('searchValue')}
-              className="pl-4 h-full w-[85%] rounded-l-md bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-main"
-            ></input>
+              className="pl-4 h-full w-[85%] rounded-l-md bg-transparent outline-none border-l border-t border-b border-transparent text-black placeholder:text-sm placeholder:text-[#303030] focus:border-primary"
+            />
             <button
-              className="bg-main h-full w-[15%] flex items-center justify-center border-main rounded-r-md"
+              className="bg-secondary h-full w-[15%] flex items-center justify-center border-primary rounded-r-md"
               type="submit"
             >
               <Search color="#fff" size={18} />
@@ -108,7 +109,7 @@ export default function ClientHeader(props: IClientHeader) {
             </button>
 
             <Link
-              href="/carrinho"
+              href="/cart"
               className={clsx(
                 'inline-flex relative justify-center w-11 h-11 border border-gray-300 shadow-sm p-2 rounded-full bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
                 {
@@ -118,7 +119,7 @@ export default function ClientHeader(props: IClientHeader) {
             >
               <ShoppingCart color="#000" size={27} />
 
-              {/* Products count in the cart indicator */}
+              {/* Cart products count indicator */}
               <div
                 className={clsx(
                   'absolute bottom-7 left-7 bg-secondary rounded-full flex justify-center items-center w-6 h-6',
@@ -142,7 +143,9 @@ export default function ClientHeader(props: IClientHeader) {
             {userIsAdmin && (
               <div>
                 <Link href="/admin">
-                  <Button className="h-11">Voltar ao back-office</Button>
+                  <Button className="h-11">
+                    {t('header.client.back-to-admin')}
+                  </Button>
                 </Link>
               </div>
             )}

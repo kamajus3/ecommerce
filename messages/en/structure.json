@@ -1,0 +1,33 @@
+{
+  "header": {
+    "logout": "Logout",
+    "logged-in": "Logged in",
+    "client": {
+      "login": "Login",
+      "settings": "Settings",
+      "orders": "Orders",
+      "search": "What are you looking for?",
+      "back-to-admin": "Back to Admin"
+    },
+    "admin": {
+      "dashboard": "Dashboard",
+      "products": "Products",
+      "orders": "Orders",
+      "campaigns": "Campaigns",
+      "back-to-client": "Back to Client"
+    }
+  },
+  "footer": {
+    "support": {
+      "title": "Support"
+    },
+    "aboutUs": {
+      "title": "About Us"
+    },
+    "useFulLinks": {
+      "title": "Useful Links",
+      "terms": "Terms and Conditions",
+      "socialMedia": "Social Media"
+    }
+  }
+}

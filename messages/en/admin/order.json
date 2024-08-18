@@ -1,0 +1,43 @@
+{
+  "title": "Orders",
+  "table": {
+    "header": {
+      "reference": "Reference",
+      "entities": "Entities",
+      "name": "Name",
+      "phone": "Phone",
+      "destination": "Destination",
+      "state": "State",
+      "date": "Creation date",
+      "toPay": "Amount to pay"
+    },
+    "content": {
+      "states": {
+        "not-sold": "Not Sold",
+        "sold": "Sold"
+      },
+      "cancel": {
+        "button": "Cancel",
+        "title": "Cancel order",
+        "action": "Confirm",
+        "description": "Are you sure you want to cancel this order?",
+        "error": "Error canceling the order",
+        "successful": "Order successfully canceled"
+      },
+      "sell": {
+        "button": "Sell",
+        "title": "Mark as sold",
+        "action": "Confirm",
+        "description": "Are you sure you want to mark this order as sold?",
+        "error": "Error processing the sale",
+        "successful": "Order successfully marked as sold"
+      },
+      "viewInvoice": {
+        "button": "View"
+      }
+    }
+  },
+  "stateUpdated": "State successfully updated",
+  "noDataMessage": "Customer orders will appear here",
+  "notFound": "No order with this reference was found"
+}

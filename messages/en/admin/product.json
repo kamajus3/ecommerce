@@ -1,0 +1,40 @@
+{
+  "title": "My products",
+  "add-new": "Add new",
+  "action-new": "Post",
+  "successful": "Product posted successfully",
+  "error": "Error posting the product",
+  "orderBy": {
+    "updatedAt": "Order by updated date",
+    "createdAt": "Order by creation date",
+    "name": "Order by name"
+  },
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "name": "Name",
+      "description": "Description",
+      "category": "Category",
+      "price": "Price",
+      "quantity": "Quantity",
+      "createdDate": "Creation date",
+      "updatedDate": "Updated date"
+    },
+    "content": {
+      "delete": {
+        "action": "Delete",
+        "title": "Delete product",
+        "description": "Are you sure you want to delete this product permanently?",
+        "error": "Error deleting the product",
+        "successful": "Product deleted successfully"
+      },
+      "edit": {
+        "action": "Edit",
+        "title": "Edit product",
+        "error": "Error editing the product",
+        "successful": "Product edited successfully"
+      }
+    }
+  },
+  "noDataMessage": "Customer products will appear here"
+}

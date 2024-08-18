@@ -7,19 +7,19 @@ interface IAdvantageCard {
   icon: keyof typeof dynamicIconImports
 }
 
-function AdvantageCard(props: IAdvantageCard) {
-  const LucideIcon = dynamic(dynamicIconImports[props.icon])
+function AdvantageCard({ title, description, icon }: IAdvantageCard) {
+  const LucideIcon = dynamic(dynamicIconImports[icon])
 
   return (
-    <div className="mt-8 mb-16 w-[490px] max-sm:w-[80%] flex flex-col items-center justify-center gap-y-2 p-6">
-      <div className="bg-main h-20 w-20 rounded-full flex items-center justify-center border-8 border-[#8B6CEF]">
-        <LucideIcon color="#fff" size={40} />
+    <div className="mt-8 mb-16 w-[490px] max-sm:w-[80%] flex flex-col items-center justify-center gap-y-4 p-6">
+      <div className="bg-primary h-20 w-20 rounded-full flex items-center justify-center border-8 border-secondary">
+        <LucideIcon color="#fff" size={40} aria-hidden="true" />
       </div>
-      <span className="font-semibold text-xl text-main text-center">
-        {props.title}
+      <span className="font-semibold text-xl text-primary text-center">
+        {title}
       </span>
       <p className="text-black font-medium text-base text-center">
-        {props.description}
+        {description}
       </p>
     </div>
   )
@@ -29,18 +29,18 @@ export default function Advantages() {
   return (
     <article className="p-6 mt-6 flex flex-wrap justify-center items-center">
       <AdvantageCard
-        title="ENTREGA GRATUITA E RÁPIDA"
-        description="Entrega gratuita para todos os pedidos acima de 50.000,00 kz na cidade de Luanda"
+        title="Free and Fast Delivery"
+        description="Free delivery for orders over 50,000 Kz in Luanda."
         icon="truck"
       />
       <AdvantageCard
-        title="ATENDIMENTO 24/7"
-        description="Suporte ao cliente amigável 24 horas por dia, 7 dias por semana"
+        title="24/7 Customer Support"
+        description="Friendly customer support available 24/7."
         icon="headset"
       />
       <AdvantageCard
-        title="GARANTIA DE DEVOLUÇÃO DE DINHEIRO"
-        description="Devolvemos o dinheiro em caso de mau estado de conservação do producto"
+        title="Money-Back Guarantee"
+        description="Refunds provided in case of product damage."
         icon="shield-check"
       />
     </article>

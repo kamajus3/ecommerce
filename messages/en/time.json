@@ -1,0 +1,4 @@
+{
+  "fromNow": "in {publishedSince}",
+  "ago": "{publishedSince} ago"
+}

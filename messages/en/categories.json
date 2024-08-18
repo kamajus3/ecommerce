@@ -1,0 +1,17 @@
+{
+  "trending": "Trending",
+  "weekly": "This Week's New Arrivals",
+  "health": "Take Care of Your Health",
+  "filter": "Filter by Category",
+  "baby": "Baby Essentials",
+  "care": "Personal Care",
+  "insecticides": "Pest Control",
+  "food": "Healthy Foods",
+  "labels": {
+    "baby": "Baby",
+    "hygiene": "Personal Hygiene",
+    "health": "Health",
+    "insecticides": "Insecticides",
+    "food": "Food"
+  }
+}

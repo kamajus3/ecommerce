@@ -2,8 +2,8 @@ import type { Config } from 'tailwindcss'
 
 export const tailwindTheme = {
   colors: {
-    main: '#212121',
-    secondary: '#8B6CEF',
+    primary: '#212121',
+    secondary: '#4E888F',
     error: '#DC2626',
     disabledText: '#ADADAD',
   },

@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -27,15 +28,22 @@ export async function URLtoFile(url: string) {
 }
 
 export function publishedSince(date: string): string {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const t = useTranslations('time')
+
   try {
     const publishedSince = formatDistanceToNowStrict(parseISO(date), {
       locale: ptBR,
     })
 
     if (parseISO(date) > new Date()) {
-      return `daqui à ${publishedSince}`
+      return t('fromNow', {
+        publishedSince,
+      })
     }
-    return `${publishedSince} atrás`
+    return t('ago', {
+      publishedSince,
+    })
   } catch (e) {
     return ''
   }
@@ -47,14 +55,14 @@ export function campaignValidator(
   if (
     campaign &&
     campaign.startDate &&
-    campaign.finishDate &&
+    campaign.endDate &&
     campaign.reduction
   ) {
     const startDate = parseISO(campaign.startDate)
-    const finishDate = parseISO(campaign.finishDate)
+    const endDate = parseISO(campaign.endDate)
     const currentDate = new Date()
 
-    if (currentDate >= startDate && currentDate <= finishDate) {
+    if (currentDate >= startDate && currentDate <= endDate) {
       if (Number(campaign.reduction) === 0) {
         return 'campaign'
       }
@@ -76,9 +84,9 @@ export function hexToRGBA(hex: string, alpha: number): string {
   return rgba
 }
 
-export function calculateTimeRemaining(finishDate: Date) {
+export function calculateTimeRemaining(endDate: Date) {
   const currentTime = new Date().getTime()
-  const finishTime = new Date(finishDate).getTime()
+  const finishTime = new Date(endDate).getTime()
 
   if (finishTime < currentTime) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 }

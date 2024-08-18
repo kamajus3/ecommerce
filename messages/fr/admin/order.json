@@ -1,0 +1,43 @@
+{
+  "title": "Commandes",
+  "table": {
+    "header": {
+      "reference": "Référence",
+      "entities": "Entités",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "destination": "Destination",
+      "state": "État",
+      "date": "Date de création",
+      "toPay": "Montant à payer"
+    },
+    "content": {
+      "states": {
+        "not-sold": "Non vendu",
+        "sold": "Vendu"
+      },
+      "cancel": {
+        "button": "Annuler",
+        "title": "Annuler la commande",
+        "action": "Confirmer",
+        "description": "Êtes-vous sûr de vouloir annuler cette commande ?",
+        "error": "Erreur lors de l'annulation de la commande",
+        "successful": "Commande annulée avec succès"
+      },
+      "sell": {
+        "button": "Vendre",
+        "title": "Marquer comme vendu",
+        "action": "Confirmer",
+        "description": "Êtes-vous sûr de vouloir marquer cette commande comme vendue ?",
+        "error": "Erreur lors du traitement de la vente",
+        "successful": "Commande marquée comme vendue avec succès"
+      },
+      "viewInvoice": {
+        "button": "Voir"
+      }
+    }
+  },
+  "stateUpdated": "État mis à jour avec succès",
+  "noDataMessage": "Les commandes des clients apparaîtront ici",
+  "notFound": "Aucune commande avec cette référence n'a été trouvée"
+}

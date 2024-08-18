@@ -1,0 +1,21 @@
+{
+  "title": "Facture",
+  "customerDetails": "Détails du Client",
+  "action": "Télécharger",
+  "table": {
+    "header": {
+      "phone": "Téléphone",
+      "email": "Email",
+      "name": "Nom",
+      "address": "Adresse",
+      "product": "Produit",
+      "quantity": "Quantité",
+      "unitPrice": "Prix Unitaire",
+      "discount": "Remise",
+      "totalPrice": "Prix Total",
+      "reference": "Référence",
+      "date": "Date",
+      "totalAmountDue": "Montant Total dû {price}"
+    }
+  }
+}

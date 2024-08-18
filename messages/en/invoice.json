@@ -1,0 +1,21 @@
+{
+  "title": "Invoice",
+  "customerDetails": "Customer Details",
+  "action": "Download",
+  "table": {
+    "header": {
+      "phone": "Phone",
+      "email": "Email",
+      "name": "Name",
+      "address": "Address",
+      "product": "Product",
+      "quantity": "Quantity",
+      "unitPrice": "Unit Price",
+      "discount": "Discount",
+      "totalPrice": "Total Price",
+      "reference": "Reference",
+      "date": "Date",
+      "totalAmountDue": "Total Amount due {price}"
+    }
+  }
+}

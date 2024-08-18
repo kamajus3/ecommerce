@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useTranslations } from 'next-intl'
 import { X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -30,7 +31,7 @@ interface IFormData {
   description: string
   reduction?: string
   startDate?: string
-  finishDate?: string
+  endDate?: string
   products?: IProductInput[]
   photo: Blob
 }
@@ -59,37 +60,72 @@ export default function CampaignModal(props: ICampaignModal) {
   const defaultCampaign = campaignData.find((c) => c.default === true)
   const fixedCampaign = campaignData.find((c) => c.fixed === true)
 
+  const t = useTranslations()
+
   const schema = z
     .object({
       title: z
         .string()
-        .min(6, 'O título deve ter no mínimo 6 caracteres')
-        .max(120, 'O título deve ter no máximo 120 caracteres')
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('admin.campaign.table.header.title').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          120,
+          t('form.errors.maxLength', {
+            field: `${t('admin.campaign.table.header.title').toLowerCase()}`,
+            length: 6,
+          }),
+        )
         .trim(),
       default: z.boolean(),
       fixed: z.boolean(),
       description: z
         .string()
-        .min(6, 'A descrição deve ter no mínimo 6 caracteres')
-        .max(100, 'A descrição deve ter no máximo 100 caracteres')
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('admin.campaign.table.header.description').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          100,
+          t('form.errors.maxLength', {
+            field: `${t('admin.campaign.table.header.title').toLowerCase()}`,
+            length: 100,
+          }),
+        )
         .trim(),
       photo: z
         .instanceof(Blob, {
-          message: 'A fotografia é obrigatória',
+          message: t('form.errors.required', {
+            field: `${t('admin.campaign.table.header.photo').toLowerCase()}`,
+          }),
         })
         .refine(
           (file) => file.size <= 5 * 1024 * 1024,
-          'A fotografia deve ter no máximo 5MB',
+          t('form.errors.maxSize', {
+            field: `${t('admin.product.table.header.photo').toLowerCase()}`,
+            size: '5MB',
+          }),
         )
         .refine(
           () =>
             imageDimension[0] === ALLOWED_IMAGE_DIMENSION[0] &&
             imageDimension[1] === ALLOWED_IMAGE_DIMENSION[1],
-          `A fotografia precisa ter a resolução (${ALLOWED_IMAGE_DIMENSION[0]} x ${ALLOWED_IMAGE_DIMENSION[1]})`,
+          t('form.errors.resolution', {
+            field: `${t('admin.product.table.header.photo').toLowerCase()}`,
+            x: ALLOWED_IMAGE_DIMENSION[0],
+            y: ALLOWED_IMAGE_DIMENSION[1],
+          }),
         )
         .refine(
           (file) => ACCEPTED_IMAGE_TYPES.includes(file.type),
-          'Apenas esses tipos são permitidos: .jpg, .jpeg, .png',
+          t('form.errors.allowedTypes'),
         ),
       reduction: z
         .string()
@@ -107,7 +143,9 @@ export default function CampaignModal(props: ICampaignModal) {
             return false
           },
           {
-            message: 'A taxa de redução deve ficar entre 0% à 100%',
+            message: t('form.errors.invalid', {
+              field: `${t('admin.campaign.table.header.reduction').toLowerCase()}`,
+            }),
           },
         ),
       startDate: z
@@ -126,10 +164,12 @@ export default function CampaignModal(props: ICampaignModal) {
             return false
           },
           {
-            message: 'A data de início está inválida',
+            message: t('form.errors.invalid', {
+              field: `${t('admin.campaign.table.header.startDate').toLowerCase()}`,
+            }),
           },
         ),
-      finishDate: z
+      endDate: z
         .string()
         .optional()
         .refine(
@@ -145,7 +185,9 @@ export default function CampaignModal(props: ICampaignModal) {
             return false
           },
           {
-            message: 'A data de término está inválida',
+            message: t('form.errors.invalid', {
+              field: `${t('admin.campaign.table.header.endDate').toLowerCase()}`,
+            }),
           },
         ),
       products: z
@@ -155,23 +197,33 @@ export default function CampaignModal(props: ICampaignModal) {
             name: z.string(),
           }),
           {
-            required_error: 'Escolha os produtos desta campanha',
+            required_error: t('form.errors.required', {
+              field: `${t('admin.campaign.table.header.products').toLowerCase()}`,
+            }),
           },
         )
         .min(
           !isDefaultState ? 1 : 0,
-          'Selecione os produtos que queres promover',
+          t('form.errors.required', {
+            field: `${t('admin.campaign.table.header.products').toLowerCase()}`,
+          }),
         )
-        .max(40, 'O máximo de produtos por campanha é 40'),
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('admin.campaign.table.header.products').toLowerCase()}`,
+            length: 40,
+          }),
+        ),
     })
     .refine(
       (data) => {
         if (!isDefaultState) {
-          if (data.startDate && data.finishDate) {
+          if (data.startDate && data.endDate) {
             const startDate = new Date(data.startDate)
-            const finishDate = new Date(data.startDate)
+            const endDate = new Date(data.startDate)
 
-            if (startDate > finishDate) {
+            if (startDate > endDate) {
               return false
             }
           }
@@ -179,24 +231,30 @@ export default function CampaignModal(props: ICampaignModal) {
         return true
       },
       {
-        message: 'A data de início não pode ser depois da data de termino',
+        message: t('form.errors.dateAfterDate', {
+          field1: `${t('admin.campaign.table.header.startDate').toLowerCase()}`,
+          field2: `${t('admin.campaign.table.header.endDate').toLowerCase()}`,
+        }),
         path: ['startDate'],
       },
     )
     .refine(
       (data) => {
-        if (!isDefaultState && data.startDate && data.finishDate) {
+        if (!isDefaultState && data.startDate && data.endDate) {
           const startDate = new Date(data.startDate)
-          const finishDate = new Date(data.finishDate)
+          const endDate = new Date(data.endDate)
 
-          return finishDate >= startDate
+          return endDate >= startDate
         }
 
         return true
       },
       {
-        message: 'A data de término não pode ser antes data de início',
-        path: ['finishDate'],
+        message: t('form.errors.dateBeforeDate', {
+          field1: `${t('admin.campaign.table.header.endDate').toLowerCase()}`,
+          field2: `${t('admin.campaign.table.header.startDate').toLowerCase()}`,
+        }),
+        path: ['endDate'],
       },
     )
 
@@ -229,7 +287,7 @@ export default function CampaignModal(props: ICampaignModal) {
     if (isDefault) {
       setValue('reduction', '')
       setValue('startDate', '')
-      setValue('finishDate', '')
+      setValue('endDate', '')
       setValue('products', [])
     }
 
@@ -293,16 +351,14 @@ export default function CampaignModal(props: ICampaignModal) {
 
   async function onSubmit(data: IFormData) {
     if (!isDirty) {
-      toast.warn('Nenhum campo foi alterado')
+      toast.warn(t('form.noFieldChanged'))
 
       return
     }
 
     const restData = isDefault
       ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        (({ reduction, startDate, finishDate, products, ...rest }) => rest)(
-          data,
-        )
+        (({ reduction, startDate, endDate, products, ...rest }) => rest)(data)
       : data
 
     if (props.defaultData) {
@@ -384,12 +440,13 @@ export default function CampaignModal(props: ICampaignModal) {
                           props.defaultData.id !== defaultCampaign.id) ||
                           (!props.defaultData && defaultCampaign)) && (
                           <div className="bg-red-300 p-2 rounded text-red-500 font-medium mb-4 flex items-center gap-x-2">
-                            A campanha selecionada anteriormente como padrão
-                            será apagada
+                            {t('admin.campaign.previousWarn')}
                           </div>
                         )}
                       <div className="mb-4">
-                        <Field.Label htmlFor="title">Título</Field.Label>
+                        <Field.Label htmlFor="title">
+                          {t('admin.campaign.table.header.title')}
+                        </Field.Label>
                         <Field.Input
                           type="text"
                           {...register('title')}
@@ -412,7 +469,7 @@ export default function CampaignModal(props: ICampaignModal) {
                         />
 
                         <Field.Label htmlFor="default">
-                          Definir como padrão
+                          {t('admin.campaign.table.header.markAsDefault')}
                         </Field.Label>
                       </div>
 
@@ -430,14 +487,14 @@ export default function CampaignModal(props: ICampaignModal) {
                         />
 
                         <Field.Label htmlFor="fixed">
-                          Fixar campanha
+                          {t('admin.campaign.table.header.markAsFixed')}
                         </Field.Label>
                       </div>
 
                       {!isDefault && (
                         <div className="mb-4">
                           <Field.Label htmlFor="reduction">
-                            Taxa de redução
+                            {t('admin.campaign.table.header.reduction')}
                           </Field.Label>
                           <Field.Input
                             {...register('reduction')}
@@ -451,7 +508,7 @@ export default function CampaignModal(props: ICampaignModal) {
                         <div>
                           <div className="mb-4">
                             <Field.Label htmlFor="startDate">
-                              Início da campanha
+                              {t('admin.campaign.table.header.startDate')}
                             </Field.Label>
                             <Field.Input
                               type="datetime-local"
@@ -461,21 +518,21 @@ export default function CampaignModal(props: ICampaignModal) {
                             <Field.Error error={errors.startDate} />
                           </div>
                           <div className="mb-4">
-                            <Field.Label htmlFor="finishDate">
-                              Fim da campanha
+                            <Field.Label htmlFor="endDate">
+                              {t('admin.campaign.table.header.endDate')}
                             </Field.Label>
                             <Field.Input
                               type="datetime-local"
-                              {...register('finishDate')}
-                              error={errors.finishDate}
+                              {...register('endDate')}
+                              error={errors.endDate}
                             />
-                            <Field.Error error={errors.finishDate} />
+                            <Field.Error error={errors.endDate} />
                           </div>
                         </div>
                       )}
                       <div className="mb-4">
                         <Field.Label htmlFor="description">
-                          Descrição
+                          {t('admin.campaign.table.header.description')}
                         </Field.Label>
                         <Field.TextArea
                           {...register('description')}
@@ -486,7 +543,7 @@ export default function CampaignModal(props: ICampaignModal) {
                       {!isDefault && (
                         <div className="mb-4">
                           <Field.Label htmlFor="products">
-                            Productos
+                            {t('admin.campaign.table.header.products')}
                           </Field.Label>
                           <ProductInput
                             products={campaignProducts}
@@ -560,7 +617,7 @@ export default function CampaignModal(props: ICampaignModal) {
                     onClick={closeModal}
                     ref={cancelButtonRef}
                   >
-                    Cancelar
+                    {t('form.cancel')}
                   </button>
                 </div>
               </Dialog.Panel>

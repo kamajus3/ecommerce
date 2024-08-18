@@ -1,0 +1,49 @@
+{
+  "title": "Mes campagnes",
+  "add-new": "Ajouter nouveau",
+  "action-new": "Publier",
+  "successful": "Campagne publiée avec succès",
+  "error": "Erreur lors de la publication de la campagne",
+  "orderBy": {
+    "updatedAt": "Trier par date de mise à jour",
+    "createdAt": "Trier par date de création",
+    "title": "Trier par titre"
+  },
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "title": "Titre",
+      "description": "Description",
+      "quantity": "Quantité",
+      "reduction": "Taux de réduction",
+      "products": "Produits",
+      "default": "Par défaut",
+      "fixed": "Épinglé",
+      "markAsDefault": "Définir comme par défaut",
+      "markAsFixed": "Épingler la campagne",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "createdDate": "Date de création",
+      "updatedDate": "Date de mise à jour"
+    },
+    "content": {
+      "delete": {
+        "action": "Supprimer",
+        "title": "Supprimer la campagne",
+        "description": "Êtes-vous sûr de vouloir supprimer cette campagne de façon permanente ?",
+        "error": "Erreur lors de la suppression de la campagne",
+        "successful": "Campagne supprimée avec succès"
+      },
+      "edit": {
+        "action": "Modifier",
+        "title": "Modifier la campagne",
+        "error": "Erreur lors de la modification de la campagne",
+        "successful": "Campagne modifiée avec succès"
+      },
+      "yes": "Oui",
+      "no": "Non"
+    }
+  },
+  "previousWarn": "La campagne précédemment sélectionnée par défaut sera supprimée.",
+  "noDataMessage": "Les campagnes des clients apparaîtront ici"
+}

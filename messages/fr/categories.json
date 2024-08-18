@@ -1,0 +1,17 @@
+{
+  "trending": "Tendances",
+  "weekly": "Nouveautés de la Semaine",
+  "health": "Prenez Soin de Votre Santé",
+  "filter": "Filtrer par Catégorie",
+  "baby": "Essentiels pour Bébé",
+  "care": "Soins Personnels",
+  "insecticides": "Contrôle des Insectes",
+  "food": "Aliments Sains",
+  "labels": {
+    "baby": "Bébé",
+    "hygiene": "Hygiène Personnelle",
+    "health": "Santé",
+    "insecticides": "Insecticides",
+    "food": "Nourriture"
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslations } from 'next-intl'
 import {
   Bar,
   BarChart,
@@ -17,19 +18,21 @@ interface IDashGraphic {
 }
 
 export default function DashGraphic(props: IDashGraphic) {
+  const t = useTranslations('admin.dashboard')
+
   const data = [
-    { name: 'Jan', qtd: props.sales[0] },
-    { name: 'Fev', qtd: props.sales[1] },
-    { name: 'Mar', qtd: props.sales[2] },
-    { name: 'Abr', qtd: props.sales[3] },
-    { name: 'Mai', qtd: props.sales[4] },
-    { name: 'Jun', qtd: props.sales[5] },
-    { name: 'Jul', qtd: props.sales[6] },
-    { name: 'Ago', qtd: props.sales[7] },
-    { name: 'Set', qtd: props.sales[8] },
-    { name: 'Out', qtd: props.sales[9] },
-    { name: 'Nov', qtd: props.sales[10] },
-    { name: 'Dez', qtd: props.sales[11] },
+    { name: t('months.jan'), qtd: props.sales[0] },
+    { name: t('months.feb'), qtd: props.sales[1] },
+    { name: t('months.mar'), qtd: props.sales[2] },
+    { name: t('months.apr'), qtd: props.sales[3] },
+    { name: t('months.may'), qtd: props.sales[4] },
+    { name: t('months.jun'), qtd: props.sales[5] },
+    { name: t('months.jul'), qtd: props.sales[6] },
+    { name: t('months.aug'), qtd: props.sales[7] },
+    { name: t('months.sep'), qtd: props.sales[8] },
+    { name: t('months.oct'), qtd: props.sales[9] },
+    { name: t('months.nov'), qtd: props.sales[10] },
+    { name: t('months.dec'), qtd: props.sales[11] },
   ]
 
   return (
@@ -50,7 +53,7 @@ export default function DashGraphic(props: IDashGraphic) {
           }}
         />
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-        <Bar dataKey="qtd" fill={constants.colors.main} barSize={30} />
+        <Bar dataKey="qtd" fill={constants.colors.primary} barSize={30} />
       </BarChart>
     </ResponsiveContainer>
   )

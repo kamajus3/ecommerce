@@ -73,6 +73,6 @@ div.swiper-button-prev::after {
 }
 
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: #ef4444;
+  background-color: #4E888F;
   border: 2px solid #fff;
 }

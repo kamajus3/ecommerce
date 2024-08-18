@@ -26,7 +26,7 @@ function PrimaryButton({
     <button
       className={twMerge(
         clsx(
-          `flex justify-center items-center gap-2 bg-main rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-default disabled:brightness-50`,
+          `flex justify-center items-center gap-2 bg-primary rounded-md px-3 py-2 text-sm font-semibold text-white disabled:cursor-default disabled:brightness-50`,
           {
             'transition-all hover:brightness-75 active:scale-90': !disabled,
           },

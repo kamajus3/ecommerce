@@ -1,24 +1,14 @@
 'use client'
 
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import clsx from 'clsx'
 import { User } from 'lucide-react'
 
-import useUserStore from '@/store/UserStore'
-
 export default function Avatar({ children }: { children: ReactNode }) {
-  const user = useUserStore((state) => state.metadata)
   const [isOpen, setIsOpen] = useState(false)
-  const router = useRouter()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = () => {
-    if (user) {
-      setIsOpen(!isOpen)
-    } else {
-      router.push('/login')
-    }
+    setIsOpen(!isOpen)
   }
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -41,18 +31,13 @@ export default function Avatar({ children }: { children: ReactNode }) {
   return (
     <div className="relative bg-white" ref={dropdownRef}>
       <button
-        className={clsx(
-          'inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-main text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100',
-          {
-            'bg-red-500': !user,
-          },
-        )}
+        className="inline-flex justify-center w-full border shadow-sm p-2 rounded-full bg-primary text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
         id="options-menu"
         aria-haspopup="true"
         aria-expanded="true"
         onClick={toggleMenu}
       >
-        <User color="#fff" size={27} />
+        <User color="#ffffff" size={27} />
       </button>
 
       {isOpen && (

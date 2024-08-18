@@ -1,7 +1,8 @@
 import { tailwindTheme } from '../../tailwind.config'
 
-const contants = {
+const constants = {
   colors: tailwindTheme.colors,
+  locales: ['en', 'fr'],
 }
 
-export default contants
+export default constants

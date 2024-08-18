@@ -1,7 +1,8 @@
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 import { AlertTriangle } from 'lucide-react'
 
-import contants from '@/constants'
+import constants from '@/constants'
 import { hexToRGBA } from '@/functions'
 import { Dialog, Transition } from '@headlessui/react'
 
@@ -18,9 +19,10 @@ interface IDialogModal {
 }
 
 export default function DialogModal({
-  themeColor = contants.colors.main,
+  themeColor = constants.colors.primary,
   ...props
 }: IDialogModal) {
+  const t = useTranslations('form')
   const cancelButtonRef = useRef(null)
 
   return (
@@ -102,7 +104,7 @@ export default function DialogModal({
                     onClick={() => props.setOpen(false)}
                     ref={cancelButtonRef}
                   >
-                    Cancelar
+                    {t('cancel')}
                   </button>
                 </div>
               </Dialog.Panel>

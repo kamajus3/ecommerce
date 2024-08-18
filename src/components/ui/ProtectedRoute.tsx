@@ -1,25 +1,25 @@
 'use client'
 
 import { ReactNode, useEffect } from 'react'
-import { usePathname, useRouter } from 'next/navigation'
 
 import { EnumUserRole } from '@/@types'
 import Loading from '@/components/ui/Loading'
 import { useAuth } from '@/hooks/useAuth'
+import { usePathname, useRouter } from '@/navigation'
 import useUserStore from '@/store/UserStore'
 
 interface IProtectedRoute {
   children: ReactNode
   role?: EnumUserRole
-  pathWhenAuthorizated?: string
-  pathWhenNotAuthorizated?: string
+  pathWhenAuthorizated: string
+  pathWhenNotAuthorizated: string
 }
 
 export default function ProtectedRoute({
   children,
   role = 'admin',
-  pathWhenAuthorizated = '/admin/dashboard',
-  pathWhenNotAuthorizated = '/admin/login',
+  pathWhenNotAuthorizated,
+  pathWhenAuthorizated,
 }: IProtectedRoute) {
   const user = useUserStore((state) => state.metadata)
   const userDB = useUserStore((state) => state.data)

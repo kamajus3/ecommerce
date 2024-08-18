@@ -1,0 +1,40 @@
+{
+  "title": "Mes produits",
+  "add-new": "Ajouter nouveau",
+  "action-new": "Publier",
+  "successful": "Produit publié avec succès",
+  "error": "Erreur lors de la publication du produit",
+  "orderBy": {
+    "updatedAt": "Trier par date de mise à jour",
+    "createdAt": "Trier par date de création",
+    "name": "Trier par nom"
+  },
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "name": "Nom",
+      "description": "Description",
+      "category": "Catégorie",
+      "price": "Prix",
+      "quantity": "Quantité",
+      "createdDate": "Date de création",
+      "updatedDate": "Date de mise à jour"
+    },
+    "content": {
+      "delete": {
+        "action": "Supprimer",
+        "title": "Supprimer le produit",
+        "description": "Êtes-vous sûr de vouloir supprimer ce produit définitivement?",
+        "error": "Erreur lors de la suppression du produit",
+        "successful": "Produit supprimé avec succès"
+      },
+      "edit": {
+        "action": "Modifier",
+        "title": "Modifier le produit",
+        "error": "Erreur lors de la modification du produit",
+        "successful": "Produit modifié avec succès"
+      }
+    }
+  },
+  "noDataMessage": "Les produits des clients apparaîtront ici"
+}

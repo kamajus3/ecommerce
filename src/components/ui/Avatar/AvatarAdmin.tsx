@@ -1,76 +1,81 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
+import { Link, usePathname } from '@/navigation'
 import useUserStore from '@/store/UserStore'
 
 export default function Avatar() {
   const pathname = usePathname()
   const user = useUserStore((state) => state.metadata)
+  const t = useTranslations('header')
 
   return (
     <div>
       <p className="text-sm px-4 py-2 text-gray-800 border-b">
-        Logado em <strong>{user?.email}</strong>
+        {t('logged-in')} <strong>{user?.email}</strong>
       </p>
       <Link
-        href="/admin/dashboard"
+        href={`/admin/dashboard`}
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/dashboard',
+            'bg-primary text-white hover:bg-primary':
+              pathname.includes('/admin/dashboard'),
           },
         )}
       >
-        Dashboard
+        {t('admin.dashboard')}
       </Link>
       <Link
-        href="/admin/productos"
+        href={`/admin/products`}
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/productos',
+            'bg-primary text-white hover:bg-primary':
+              pathname.includes('/admin/products'),
           },
         )}
       >
-        Produtos
+        {t('admin.products')}
       </Link>
       <Link
-        href="/admin/pedidos"
+        href={`/admin/orders`}
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/pedidos',
+            'bg-primary text-white hover:bg-primary':
+              pathname.includes('/admin/orders'),
           },
         )}
       >
-        Pedidos
+        {t('admin.orders')}
       </Link>
       <Link
-        href="/admin/campanhas"
+        href={`/admin/campaigns`}
         className={clsx(
           'hidden text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 max-sm:block',
           {
-            'bg-main text-white hover:bg-main': pathname === '/admin/campanhas',
+            'bg-primary text-white hover:bg-primary':
+              pathname.includes('/admin/campaigns'),
           },
         )}
       >
-        Campanhas
+        {t('admin.campaigns')}
       </Link>
       <Link
         href="/"
         className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
       >
-        Voltar ao front-office
+        {t('admin.back-to-client')}
       </Link>
       <Link
-        href="/logout"
+        href={`/logout`}
         className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
       >
-        Terminar sessão
+        {t('logout')}
       </Link>
     </div>
   )

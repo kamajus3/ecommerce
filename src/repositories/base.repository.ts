@@ -35,6 +35,8 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     const collectionRef = this.getCollectionRef()
     const constraints: QueryConstraint[] = []
 
+    constraints.push(orderByChild('createdAt'))
+
     return new Promise((resolve, reject) => {
       get(query(collectionRef, ...constraints))
         .then((snapshot) => {
@@ -57,10 +59,6 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     const collectionRef = this.getCollectionRef()
     const constraints: QueryConstraint[] = []
 
-    if (params?.orderBy) {
-      constraints.push(orderByChild(params?.orderBy))
-    }
-
     if (params?.limit) {
       constraints.push(limitToLast(params.limit))
     }
@@ -80,6 +78,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
       get(query(collectionRef, ...constraints))
         .then((snapshot) => {
           const data = snapshot.val()
+
           if (data) {
             if (params?.exceptionId) {
               delete data[params.exceptionId]
@@ -89,6 +88,20 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               ...data[key],
               id: key,
             }))
+
+            if (params?.orderBy) {
+              const orderByField = params.orderBy as keyof T
+              resultArray.sort((a, b) => {
+                if (a[orderByField] < b[orderByField]) {
+                  return -1
+                }
+                if (a[orderByField] > b[orderByField]) {
+                  return 1
+                }
+                return 0
+              })
+            }
+
             resolve(resultArray)
           } else {
             resolve([])
@@ -98,20 +111,22 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     })
   }
 
-  async findById(id: number | string): Promise<T> {
+  async findById(id: number | string): Promise<T | null> {
     const docRef = child(this.getCollectionRef(), id.toString())
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       get(docRef)
         .then((snapshot) => {
           const data = snapshot.val()
           if (data) {
             resolve({ ...data, id: id.toString() } as T)
           } else {
-            throw Error('Not found error!')
+            resolve(null)
           }
         })
-        .catch(reject)
+        .catch(() => {
+          resolve(null)
+        })
     })
   }
 
@@ -136,7 +151,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     })
   }
 
-  async update(updates: Partial<T>, id: number | string): Promise<T> {
+  async update(updates: Partial<T>, id: number | string): Promise<T | null> {
     const docRef = child(this.getCollectionRef(), id.toString())
     const updatedAt = new Date().toISOString()
 
@@ -149,7 +164,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
           if (data) {
             resolve({ ...data, id: id.toString(), updatedAt } as T)
           } else {
-            throw Error('Not found error!')
+            resolve(null)
           }
         })
         .catch(reject)

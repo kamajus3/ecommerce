@@ -1,48 +1,58 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
+import { Link, usePathname } from '@/navigation'
 import useUserStore from '@/store/UserStore'
 
 export default function Avatar() {
   const pathname = usePathname()
   const user = useUserStore((state) => state.metadata)
+  const t = useTranslations('structure')
 
   return (
-    <div>
-      <p className="text-sm px-4 py-2 text-gray-800 border-b">
-        Logado em <strong>{user?.email}</strong>
+    <div className="text-[15px] font-medium text-gray-800">
+      <p
+        className={clsx('px-4 py-2 border-b', {
+          hidden: !user,
+        })}
+      >
+        {t('header.logged-in')} <strong>{user?.email}</strong>
       </p>
       <Link
-        href="/perfil"
-        className={clsx(
-          'text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 block',
-          {
-            'bg-main text-white hover:bg-main': pathname === '/perfil',
-          },
-        )}
+        href="/login"
+        className={clsx('px-4 py-2 hover:bg-gray-200 block', {
+          'bg-primary text-white hover:bg-primary': pathname === '/perfil',
+          hidden: user,
+        })}
       >
-        Configurações
+        {t('header.client.login')}
       </Link>
       <Link
-        href="/pedidos"
-        className={clsx(
-          'text-sm px-4 py-2 text-gray-800 hover:bg-gray-200 block',
-          {
-            'bg-main text-white hover:bg-main': pathname === '/pedidos',
-          },
-        )}
+        href="/perfil"
+        className={clsx('px-4 py-2 hover:bg-gray-200 block', {
+          'bg-primary text-white hover:bg-primary': pathname === '/perfil',
+        })}
       >
-        Meus pedidos
+        {t('header.client.settings')}
+      </Link>
+      <Link
+        href="/orders"
+        className={clsx('px-4 py-2 hover:bg-gray-200 block', {
+          'bg-primary text-white hover:bg-primary': pathname === '/orders',
+        })}
+      >
+        {t('header.client.orders')}
       </Link>
       <Link
         href="/logout"
-        className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
+        className={clsx('block px-4 py-2 hover:bg-gray-200', {
+          hidden: !user,
+        })}
       >
-        Terminar sessão
+        {t('header.logout')}
       </Link>
     </div>
   )

@@ -1,0 +1,21 @@
+{
+  "cancel": "Cancel",
+  "noFieldChanged": "No field was changed",
+  "photo": {
+    "label1": "Click to upload",
+    "label2": "or drag and drop"
+  },
+  "errors": {
+    "minLength": "The {field} must have at least {length} characters",
+    "maxLength": "The {field} must have at most {length} characters",
+    "invalid": "The {field} of the product is invalid",
+    "required": "Enter the {field}",
+    "positive": "The {field} must be positive",
+    "maxSize": "The photo must be at most {x} MB",
+    "resolution": "The photo must have a resolution of {x} x {y} pixels",
+    "allowedTypes": "Only the following file types are allowed: .jpg, .jpeg, .png",
+    "dateAfterDate": "The {field1} cannot be after the {field2}",
+    "dateBeforeDate": "The {field1} cannot be before the {field2}"
+  }
+}
+

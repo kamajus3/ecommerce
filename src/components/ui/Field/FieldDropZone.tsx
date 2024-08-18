@@ -5,6 +5,7 @@ import {
   InputHTMLAttributes,
   SetStateAction,
 } from 'react'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import { FieldError } from 'react-hook-form'
 
@@ -19,6 +20,7 @@ function CustomFileInput(
   props: IFieldDropZone,
   ref: ForwardedRef<HTMLInputElement>,
 ) {
+  const t = useTranslations('form')
   const img = new Image()
   img.src = props.photoPreview || ''
 
@@ -63,7 +65,7 @@ function CustomFileInput(
           />
         </svg>
         <p className="mb-2 text-sm text-gray-500 text-center">
-          <span className="font-semibold">Clique para fazer upload</span>
+          <span className="font-semibold">{t('photo.label1')}</span>
           {props.supportedImageResolution && (
             <div className="font-medium">
               <br />({props.supportedImageResolution[0]}
@@ -72,7 +74,7 @@ function CustomFileInput(
             </div>
           )}
           <br />
-          ou arrasta e larga
+          {t('photo.label2')}
         </p>
       </div>
       <input
