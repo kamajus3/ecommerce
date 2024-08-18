@@ -1,9 +1,10 @@
 'use client'
 
 import { Suspense, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 import Loading from '@/components/ui/Loading'
-import { useRouter, useSearchParams } from '@/navigation'
+import { useRouter } from '@/navigation'
 
 function EmailActions() {
   const searchParams = useSearchParams()

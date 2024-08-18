@@ -1,0 +1,47 @@
+[debug] [2024-08-18T21:49:14.145Z] ----------------------------------------------------------------------
+[debug] [2024-08-18T21:49:14.165Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\carlo_uiubyf9\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2024-08-18T21:49:14.168Z] CLI Version:   13.15.1
+[debug] [2024-08-18T21:49:14.169Z] Platform:      win32
+[debug] [2024-08-18T21:49:14.171Z] Node Version:  v20.14.0
+[debug] [2024-08-18T21:49:14.172Z] Time:          Sun Aug 18 2024 23:49:14 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2024-08-18T21:49:14.174Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-08-18T21:49:14.644Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-08-18T21:49:14.646Z] > authorizing via signed-in user (carlosmatateumateus@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\carlo_uiubyf9\Documents\stuff\poubelle
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2024-08-18T21:49:41.368Z] Using project from CLI flag: poubelle-ae830
+[debug] [2024-08-18T21:49:41.384Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 [none]
+[debug] [2024-08-18T21:49:41.991Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 200
+[debug] [2024-08-18T21:49:41.992Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 {"projectId":"poubelle-ae830","projectNumber":"1026076185689","displayName":"poubelle","name":"projects/poubelle-ae830","resources":{"hostingSite":"poubelle-ae830","realtimeDatabaseInstance":"poubelle-ae830-default-rtdb","storageBucket":"poubelle-ae830.appspot.com","locationId":"europe-west"},"state":"ACTIVE","etag":"1_749b57c5-86b1-473e-a9e6-baa8f00a24a3"}
+[info] i  Using project poubelle-ae830 (poubelle) 
+[info] 
+=== Hosting Setup
+[debug] [2024-08-18T21:49:42.021Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 [none]
+[debug] [2024-08-18T21:49:42.209Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 200
+[debug] [2024-08-18T21:49:42.210Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/poubelle-ae830 {"projectId":"poubelle-ae830","projectNumber":"1026076185689","displayName":"poubelle","name":"projects/poubelle-ae830","resources":{"hostingSite":"poubelle-ae830","realtimeDatabaseInstance":"poubelle-ae830-default-rtdb","storageBucket":"poubelle-ae830.appspot.com","locationId":"europe-west"},"state":"ACTIVE","etag":"1_749b57c5-86b1-473e-a9e6-baa8f00a24a3"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
