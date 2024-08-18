@@ -4,7 +4,9 @@
     "outOfStock": "Rupture de stock"
   },
   "relatedProduct": "Produit associé",
-  "button-add-product": "Ajouter au panier",
-  "button-remove-product": "Retirer du panier",
-  "notFound": "Produit non trouvé"
+  "buttonAdd": "Ajouter au panier",
+  "buttonRemove": "Retirer du panier",
+  "notFound": "Produit non trouvé",
+  "promo": "Promotion",
+  "onCampaign": "En campagne"
 }

@@ -82,7 +82,7 @@ export default function ProductAction(product: IProduct) {
           className="h-12 mt-4 bg-red-500"
           disabled={userIsAdmin || product.quantity === 0}
         >
-          {t('product.button-remove-product')}
+          {t('product.buttonRemove')}
         </Button>
       ) : (
         <Button
@@ -97,7 +97,7 @@ export default function ProductAction(product: IProduct) {
           className="h-12 mt-4 bg-secondary"
           disabled={userIsAdmin || product.quantity === 0}
         >
-          {t('product.button-add-product')}
+          {t('product.buttonAdd')}
         </Button>
       )}
     </div>

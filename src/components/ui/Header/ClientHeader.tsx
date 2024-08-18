@@ -144,7 +144,7 @@ export default function ClientHeader({ searchDefault }: IClientHeader) {
               <div>
                 <Link href="/admin">
                   <Button className="h-11">
-                    {t('header.client.back-to-admin')}
+                    {t('header.client.backToAdmin')}
                   </Button>
                 </Link>
               </div>

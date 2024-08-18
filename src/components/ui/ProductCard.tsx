@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
@@ -9,18 +10,15 @@ import { Link } from '@/navigation'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
-export default function ProductCard(product: IProduct) {
+export default async function ProductCard(product: IProduct) {
+  const t = await getTranslations('product')
+
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const userDB = useUserStore((state) => state.data)
   const userIsAdmin = userDB ? userDB.role === 'admin' : false
 
   const isProductInCart = cartProducts.some((p) => p.id === product.id)
-  const isPromotionalCampaign =
-    product.campaign &&
-    campaignValidator(product.campaign) === 'promotional-campaign'
-  const isCampaign =
-    product.campaign && campaignValidator(product.campaign) === 'campaign'
 
   return (
     <div className="flex-shrink-0 grow-0 overflow-hidden mx-auto">
@@ -35,23 +33,25 @@ export default function ProductCard(product: IProduct) {
             </button>
           )}
 
-          {isPromotionalCampaign && (
-            <Link
-              href={`/campaign/${product.campaign?.id}`}
-              className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
-            >
-              Promo: {product.campaign.reduction}% Off
-            </Link>
-          )}
+          {product?.campaign &&
+            campaignValidator(product.campaign) === 'promotional-campaign' && (
+              <Link
+                href={`/campaign/${product.campaign?.id}`}
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
+              >
+                {t('promo')}: {product.campaign.reduction}% Off
+              </Link>
+            )}
 
-          {isCampaign && (
-            <Link
-              href={`/campaign/${product.campaign?.id}`}
-              className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
-            >
-              On Campaign
-            </Link>
-          )}
+          {product.campaign &&
+            campaignValidator(product.campaign) === 'campaign' && (
+              <Link
+                href={`/campaign/${product.campaign?.id}`}
+                className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
+              >
+                {t('onCampaign')}
+              </Link>
+            )}
 
           <Link href={`/product/${product.id}`}>
             <Image
@@ -67,7 +67,8 @@ export default function ProductCard(product: IProduct) {
       <div className="w-full mt-4 flex flex-col">
         <div className="w-full flex items-center gap-x-2">
           <p className="text-lg font-semibold text-gray-900">
-            {isPromotionalCampaign
+            {product?.campaign &&
+            campaignValidator(product.campaign) === 'promotional-campaign'
               ? formatMoney(
                   product.price -
                     product.price * (Number(product.campaign.reduction) / 100),
@@ -75,11 +76,12 @@ export default function ProductCard(product: IProduct) {
               : formatMoney(product.price)}
           </p>
 
-          {isPromotionalCampaign && (
-            <p className="font-medium line-through text-gray-500 text-sm">
-              {formatMoney(product.price)}
-            </p>
-          )}
+          {product?.campaign &&
+            campaignValidator(product.campaign) === 'promotional-campaign' && (
+              <p className="font-medium line-through text-gray-500 text-sm">
+                {formatMoney(product.price)}
+              </p>
+            )}
         </div>
         <span className="w-72 text-left text-base text-gray-700 font-medium">
           {product.name}
@@ -97,15 +99,17 @@ export default function ProductCard(product: IProduct) {
               'inline-block p-2 rounded-md text-xs font-semibold',
               {
                 'bg-gray-500': product.quantity === 0,
-                'bg-red-500': product.quantity > 0,
                 'text-white': product.quantity === 0,
+                'bg-red-500': product.quantity > 0,
                 'text-gray-100': product.quantity > 0,
               },
             )}
           >
             {product.quantity > 0
-              ? `Only ${product.quantity} left in stock`
-              : 'Out of Stock'}
+              ? t('stock.inStock', {
+                  quantity: product.quantity,
+                })
+              : t('stock.outOfStock')}
           </span>
         </div>
       </div>

@@ -7,14 +7,14 @@
       "settings": "Settings",
       "orders": "Orders",
       "search": "What are you looking for?",
-      "back-to-admin": "Back to Admin"
+      "backToAdmin": "Back to Admin"
     },
     "admin": {
       "dashboard": "Dashboard",
       "products": "Products",
       "orders": "Orders",
       "campaigns": "Campaigns",
-      "back-to-client": "Back to Client"
+      "backToClient": "Back to Client"
     }
   },
   "footer": {

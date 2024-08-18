@@ -69,7 +69,7 @@ export default function Avatar() {
         href="/"
         className="block text-sm px-4 py-2 text-gray-800 hover:bg-gray-200"
       >
-        {t('admin.back-to-client')}
+        {t('admin.backToClient')}
       </Link>
       <Link
         href={`/logout`}
