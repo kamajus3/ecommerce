@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
@@ -11,31 +12,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { Link, useRouter } from '@/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const schema = z
-  .object({
-    name: z
-      .string()
-      .min(2, 'O nome deve ter no minimo 2 caracteres')
-      .max(40, 'O nome deve ter no máximo 40 carácteres')
-      .trim(),
-    email: z.string().email('Preencha com um e-mail válido'),
-    password: z
-      .string()
-      .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
-      .max(40, 'A palavra-passe não pode exceder de 40 carácteres'),
-    confirmPassword: z
-      .string()
-      .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
-      .max(40, 'A palavra-passe não pode exceder de 40 carácteres'),
-    consent: z.boolean().refine((val) => val === true, {
-      message: 'Por favor aceite os termos e condições antes de continuar',
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As palavras-passe não são semelhantes',
-    path: ['confirmPassword'],
-  })
-
 interface IFormData {
   name: string
   email: string
@@ -45,6 +21,73 @@ interface IFormData {
 }
 
 export default function SignUp() {
+  const t = useTranslations()
+
+  const schema = z
+    .object({
+      name: z
+        .string()
+        .min(
+          2,
+          t('form.errors.minLength', {
+            field: `${t('auth.signUp.fields.name').toLowerCase()}`,
+            length: 2,
+          }),
+        )
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('auth.signUp.fields.name').toLowerCase()}`,
+            length: 40,
+          }),
+        )
+        .trim(),
+      email: z.string().email(
+        t('form.errors.invalid', {
+          field: `${t('auth.sharedFields.email').toLowerCase()}`,
+        }),
+      ),
+      password: z
+        .string()
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 40,
+          }),
+        ),
+      confirmPassword: z
+        .string()
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 40,
+          }),
+        ),
+      consent: z.boolean().refine((val) => val === true, {
+        message: t('form.errors.acceptTerms'),
+      }),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('form.errors.passwordsNotSimilar'),
+      path: ['confirmPassword'],
+    })
+
   const {
     register,
     handleSubmit,
@@ -57,7 +100,7 @@ export default function SignUp() {
   function onSubmit(data: IFormData) {
     signUpWithEmail(data.name, data.email, data.password)
       .then(() => {
-        toast.success('A conta foi criada com sucesso')
+        toast.success(t('auth.signUp.successful'))
         router.push('/')
       })
       .catch((e: Error) => {
@@ -72,11 +115,13 @@ export default function SignUp() {
       <article className="flex justify-center items-center py-32">
         <div className="space-y-6 text-gray-600 max-w-md lg:min-w-96 max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
-            Criar conta
+            {t('auth.signUp.title')}
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <Field.Label htmlFor="email">Nome</Field.Label>
+              <Field.Label htmlFor="email">
+                {t('auth.signUp.fields.name')}
+              </Field.Label>
               <Field.Input
                 type="text"
                 {...register('name')}
@@ -85,7 +130,9 @@ export default function SignUp() {
               <Field.Error error={errors.name} />
             </div>
             <div>
-              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Label htmlFor="email">
+                {t('auth.sharedFields.email')}
+              </Field.Label>
               <Field.Input
                 type="text"
                 {...register('email')}
@@ -94,7 +141,9 @@ export default function SignUp() {
               <Field.Error error={errors.email} />
             </div>
             <div>
-              <Field.Label htmlFor="password">Palavra-passe</Field.Label>
+              <Field.Label htmlFor="password">
+                {t('auth.sharedFields.password')}
+              </Field.Label>
               <Field.Input
                 type="password"
                 {...register('password')}
@@ -105,7 +154,7 @@ export default function SignUp() {
 
             <div>
               <Field.Label htmlFor="confirmPassword">
-                Confirmar palavra-passe
+                {t('auth.signUp.fields.confirmPassword')}
               </Field.Label>
               <Field.Input
                 type="password"
@@ -124,9 +173,9 @@ export default function SignUp() {
                   className="w-[90%] text-gray-500 bg-white outline-none"
                 ></input>
                 <label htmlFor="consent" className="font-medium">
-                  Concordo com os{' '}
+                  {t('auth.signUp.termsPartOne')}{' '}
                   <Link href="/terms" className="text-primary underline">
-                    termos e condições
+                    {t('auth.signUp.termsPartTwo')}
                   </Link>
                 </label>
               </div>
@@ -138,13 +187,13 @@ export default function SignUp() {
               type="submit"
               loading={isSubmitting}
             >
-              Continuar
+              {t('auth.signUp.action')}
             </Button>
           </form>
           <p className="text-center font-medium">
-            Você já tem uma conta?{' '}
+            {t('auth.signUp.haveAccount')}{' '}
             <Link href="/login" className="text-primary">
-              Iniciar sessão
+              {t('auth.signUp.signIn')}
             </Link>
           </p>
         </div>

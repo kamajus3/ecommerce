@@ -8,12 +8,14 @@
   "errors": {
     "minLength": "Le champ {field} doit comporter au moins {length} caractères",
     "maxLength": "Le champ {field} doit comporter au maximum {length} caractères",
-    "invalid": "Le champ {field} du produit est invalide",
+    "invalid": "Le champ {field} est invalide",
     "required": "Veuillez saisir le champ {field}",
     "positive": "Le champ {field} doit être positif",
     "maxSize": "La photo doit avoir une taille maximale de {x} Mo",
     "resolution": "La photo doit avoir une résolution de {x} x {y} pixels",
     "allowedTypes": "Seuls les types de fichiers suivants sont autorisés : .jpg, .jpeg, .png",
+    "acceptTerms": "Veuillez accepter les termes et conditions avant de continuer",
+    "passwordsNotSimilar": "Les mots de passe ne sont pas similaires",
     "dateAfterDate": "Le {field1} ne peut pas être après le {field2}",
     "dateBeforeDate": "Le {field1} ne peut pas être avant le {field2}"
   }

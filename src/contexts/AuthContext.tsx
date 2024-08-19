@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { getTranslations } from 'next-intl/server'
 import {
   AuthError,
   createUserWithEmailAndPassword,
@@ -51,6 +52,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     userRole: EnumUserRole,
   ) {
+    const t = await getTranslations('auth')
+
     setUserDBRole(userRole)
     const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
@@ -67,7 +70,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           }
           await auth.signOut()
         }
-        throw new Error('Acounteceu algum erro ao tentar inciar sessão')
+        throw new Error(t('auth.signIn.error'))
       })
       .catch((error: AuthError) => {
         if (
@@ -75,9 +78,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           error.code === 'auth/wrong-password' ||
           error.code === 'auth/invalid-credential'
         ) {
-          throw new Error('Acounteceu algum erro ao tentar inciar sessão')
+          throw new Error(t('auth.signIn.error'))
         }
-        throw new Error('Acounteceu algum erro ao tentar inciar sessão')
+        throw new Error(t('auth.signIn.error'))
       })
 
     return userData
@@ -88,6 +91,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
   ) {
+    const t = await getTranslations('auth')
+
     const userData = await createUserWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
         const data = await userRepository
@@ -99,7 +104,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             user.uid,
           )
           .catch(() => {
-            throw new Error('Aconteceu algum erro ao tentar criar a conta')
+            throw new Error(t('auth.signUp.error'))
           })
 
         updateUser({
@@ -110,7 +115,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         return data
       })
       .catch(() => {
-        throw new Error('Aconteceu algum erro ao tentar criar a conta')
+        throw new Error(t('auth.signUp.error'))
       })
 
     return userData
