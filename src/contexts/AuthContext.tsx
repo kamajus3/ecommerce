@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
 import {
   AuthError,
   createUserWithEmailAndPassword,
@@ -42,6 +42,8 @@ export const AuthContext = createContext<IAuthContext>({
 })
 
 export default function AuthProvider({ children }: { children: ReactNode }) {
+  const t = useTranslations()
+
   const userRepository = useMemo(() => new UserRepository(), [])
   const [initialized, setInitialized] = useState<boolean>(false)
   const [userDBRole, setUserDBRole] = useState<EnumUserRole | undefined>()
@@ -52,8 +54,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     password: string,
     userRole: EnumUserRole,
   ) {
-    const t = await getTranslations('auth')
-
     setUserDBRole(userRole)
     const userData = await signInWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
@@ -91,8 +91,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     email: string,
     password: string,
   ) {
-    const t = await getTranslations('auth')
-
     const userData = await createUserWithEmailAndPassword(auth, email, password)
       .then(async ({ user }) => {
         const data = await userRepository
