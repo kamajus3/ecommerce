@@ -21,6 +21,7 @@ interface IFormData {
 
 export default function ContactUpdate() {
   const t = useTranslations()
+
   const user = useUserStore((state) => state.metadata)
   const userDB = useUserStore((state) => state.data)
 
@@ -28,16 +29,20 @@ export default function ContactUpdate() {
     phone: z
       .string({
         required_error: t('form.errors.required', {
-          field: `${t('settings.perfilUpdate.fields.phone').toLowerCase()}`,
+          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
         }),
       })
       .regex(
         /^(?:\+244)?\d{9}$/,
         t('form.errors.invalid', {
-          field: `${t('settings.perfilUpdate.fields.phone').toLowerCase()}`,
+          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
         }),
       ),
-    email: z.string().email('Email inválido'),
+    email: z.string().email(
+      t('form.errors.invalid', {
+        field: `${t('settings.contactUpdate.fields.email').toLowerCase()}`,
+      }),
+    ),
   })
 
   const {
