@@ -6,11 +6,11 @@ import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { IOrder, IProduct, IProductOrder } from '@/@types'
-import Button from '@/components/ui/Button'
-import DataState from '@/components/ui/DataState'
-import Header from '@/components/ui/Header'
-import Modal from '@/components/ui/Modal'
-import Table from '@/components/ui/Table'
+import Button from '@/components/Button'
+import DataState from '@/components/DataState'
+import Header from '@/components/Header'
+import Modal from '@/components/Modal'
+import Table from '@/components/Table'
 import constants from '@/constants'
 import { calculateDiscountedPrice, campaignValidator } from '@/functions'
 import { formatMoney, formatPhotoUrl } from '@/functions/format'
@@ -131,7 +131,7 @@ export default function CartPage() {
 
   const [isModalOpened, setModalOpen] = useState(false)
   const [openLoginModal, setOpenLoginModal] = useState(false)
-  const [confirmOrderModal, setConfirmOrderModal] = useState(false)
+  const [confirmOrderModal, setOrderModal] = useState(false)
   const [orderConfirmedModal, setOrderConfirmedModal] = useState<
     [boolean, string | undefined]
   >([false, undefined])
@@ -255,7 +255,7 @@ export default function CartPage() {
         state: 'not-sold',
         products: productsList,
       })
-      setConfirmOrderModal(true)
+      setOrderModal(true)
     } else {
       toast.error(t('error'))
     }
@@ -363,10 +363,11 @@ export default function CartPage() {
         actionTitle={t('modals.order.title')}
         action={createOrder}
         isOpen={confirmOrderModal}
-        setOpen={setConfirmOrderModal}
+        setOpen={setOrderModal}
       />
 
-      <Modal.ConfirmOrder
+      <Modal.Order
+        title={t('modals.order.title')}
         action={confirmOrder}
         isOpen={isModalOpened}
         setOpen={setModalOpen}

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { applyActionCode } from 'firebase/auth'
 import { toast } from 'react-toastify'
 
-import Loading from '@/components/ui/Loading'
+import Loading from '@/components/Loading'
 import { useRouter } from '@/navigation'
 import { auth } from '@/services/firebase/config'
 

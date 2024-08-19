@@ -1,0 +1,57 @@
+{
+  "title": "Mon Profil",
+  "description": "Ces informations seront utilisées pour vous contacter ; rien ne sera partagé avec des tiers.",
+  "buttonSave": "Enregistrer",
+  "buttonContinue": "Continuer",
+  "perfilUpdate": {
+    "title": "Informations Personnelles",
+    "successful": "Votre compte a été mis à jour avec succès",
+    "error": "Une erreur s'est produite lors de la mise à jour de vos informations",
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "address": "Adresse"
+    }
+  },
+  "contactUpdate": {
+    "title": "Contacts",
+    "warn": "Utilisez un email actif pour pouvoir recevoir des messages.",
+    "successful": "Les informations de vos contacts ont été mises à jour avec succès",
+    "error": "Une erreur s'est produite lors de la mise à jour de vos informations de contact",
+    "buttonVerificateEmail": "Vérifiez votre email",
+    "updateEmail": {
+      "successful": "Un code de vérification a été envoyé à votre nouvelle adresse email",
+      "error": "Une erreur s'est produite lors de l'envoi du code de vérification à votre email"
+    },
+    "verificateEmail": {
+      "successful": "Un code de vérification a été envoyé à votre email",
+      "error": "Une erreur s'est produite lors de l'envoi du code de vérification à votre email"
+    },
+    "fields": {
+      "email": "Email",
+      "phone": "Téléphone mobile"
+    }
+  },
+  "updatePassword": {
+    "title": "Changer le mot de passe",
+    "actualPassword": "Mot de passe actuel",
+    "successful": "Mot de passe mis à jour avec succès",
+    "error": "Erreur lors de la mise à jour du mot de passe",
+    "fields": {
+      "actualPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe"
+    }
+  },
+  "deleteAccount": {
+    "title": "Supprimer le compte",
+    "warn": "Supprimez définitivement votre compte personnel et tout son contenu de Poubelle. Cette action est irréversible, alors procédez avec prudence. (Vos commandes ne seront pas annulées)",
+    "buttonDeleteAccount": "Continuer",
+    "error": "Erreur lors de la tentative de suppression de votre compte",
+    "modal": {
+      "title": "Supprimer le compte (action irréversible)",
+      "action": "Supprimer",
+      "description": "Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Remarque : Vos commandes ne seront pas annulées en supprimant votre compte."
+    }
+  }
+}

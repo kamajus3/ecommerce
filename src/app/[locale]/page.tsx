@@ -1,14 +1,14 @@
 import dynamic from 'next/dynamic'
 import { useTranslations } from 'next-intl'
 
-import Carousel from '@/components/ui/Carousel'
-import Footer from '@/components/ui/Footer'
-import Header from '@/components/ui/Header'
-import Advantages from '@/components/ui/Home/Advantages'
-import CategoryFilter from '@/components/ui/Home/CategoryFilter'
-import ProductList from '@/components/ui/ProductList'
+import Carousel from '@/components/Carousel'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import Advantages from '@/components/Home/Advantages'
+import CategoryFilter from '@/components/Home/CategoryFilter'
+import ProductList from '@/components/ProductList'
 
-const BigCampaign = dynamic(() => import('@/components/ui/Home/BigCampaign'), {
+const BigCampaign = dynamic(() => import('@/components/Home/BigCampaign'), {
   ssr: false,
 })
 

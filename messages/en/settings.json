@@ -1,0 +1,57 @@
+{
+  "title": "My Profile",
+  "description": "This information will be used to contact you; nothing will be shared with third parties.",
+  "buttonSave": "Save",
+  "buttonContinue": "Continue",
+  "perfilUpdate": {
+    "title": "Personal Information",
+    "successful": "Your account has been successfully updated",
+    "error": "There was an error trying to update your details",
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "address": "Address"
+    }
+  },
+  "contactUpdate": {
+    "title": "Contacts",
+    "warn": "Use an active email to receive messages.",
+    "successful": "Your contact information has been successfully updated",
+    "error": "There was an error trying to update your contact information",
+    "buttonVerificateEmail": "Verify your email",
+    "updateEmail": {
+      "successful": "A verification code has been sent to your new email",
+      "error": "There was an error trying to send a verification code to your email"
+    },
+    "verificateEmail": {
+      "successful": "A verification code has been sent to your email",
+      "error": "There was an error trying to send a verification code to your email"
+    },
+    "fields": {
+      "email": "Email",
+      "phone": "Mobile Phone"
+    }
+  },
+  "updatePassword": {
+    "title": "Change Password",
+    "actualPassword": "Current Password",
+    "successful": "Password successfully updated",
+    "error": "Error updating password",
+    "fields": {
+      "actualPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password"
+    }
+  },
+  "deleteAccount": {
+    "title": "Delete Account",
+    "warn": "Permanently delete your personal account and all its content from Poubelle. This action is irreversible, so proceed with caution. (Your orders will not be canceled)",
+    "buttonDeleteAccount": "Continue",
+    "error": "Error trying to delete your account",
+    "modal": {
+      "title": "Delete Account (irreversible action)",
+      "action": "Delete",
+      "description": "Are you sure you want to permanently delete your account? Note: Your orders will not be canceled by deleting your account."
+    }
+  }
+}

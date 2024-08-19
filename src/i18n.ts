@@ -20,6 +20,8 @@ export default getRequestConfig(async ({ locale }) => {
       search: (await import(`../messages/${locale}/search.json`)).default,
       cart: (await import(`../messages/${locale}/cart.json`)).default,
       auth: (await import(`../messages/${locale}/auth.json`)).default,
+      settings: (await import(`../messages/${locale}/settings.json`)).default,
+      order: (await import(`../messages/${locale}/order.json`)).default,
       admin: {
         dashboard: (await import(`../messages/${locale}/admin/dashboard.json`))
           .default,

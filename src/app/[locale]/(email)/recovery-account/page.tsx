@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
-import Button from '@/components/ui/Button'
-import Field from '@/components/ui/Field'
-import Header from '@/components/ui/Header'
+import Button from '@/components/Button'
+import Field from '@/components/Field'
+import Header from '@/components/Header'
 import { auth } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 

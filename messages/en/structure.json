@@ -1,7 +1,7 @@
 {
   "header": {
     "logout": "Logout",
-    "logged-in": "Logged in",
+    "loggedIn": "Logged in",
     "client": {
       "login": "Login",
       "settings": "Settings",

@@ -16,6 +16,7 @@
     "allowedTypes": "Seuls les types de fichiers suivants sont autorisés : .jpg, .jpeg, .png",
     "acceptTerms": "Veuillez accepter les termes et conditions avant de continuer",
     "passwordsNotSimilar": "Les mots de passe ne sont pas similaires",
+    "incorrectPassword": "Le mot de passe n'est pas correct",
     "dateAfterDate": "Le {field1} ne peut pas être après le {field2}",
     "dateBeforeDate": "Le {field1} ne peut pas être avant le {field2}"
   }

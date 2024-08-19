@@ -1,7 +1,7 @@
 {
   "header": {
     "logout": "Se déconnecter",
-    "logged-in": "Connecté",
+    "loggedIn": "Connecté",
     "client": {
       "login": "Connexion",
       "settings": "Paramètres",

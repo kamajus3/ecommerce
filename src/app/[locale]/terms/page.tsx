@@ -1,8 +1,8 @@
 import React from 'react'
 import { Metadata } from 'next'
 
-import Footer from '@/components/ui/Footer'
-import Header from '@/components/ui/Header'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
 import { env } from '@/env'
 import { Link } from '@/navigation'
 

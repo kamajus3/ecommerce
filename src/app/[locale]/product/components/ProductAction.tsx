@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 
 import { IProduct } from '@/@types'
-import Button from '@/components/ui/Button'
+import Button from '@/components/Button'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 import useViewStore from '@/store/ViewStore'

@@ -6,10 +6,10 @@ import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 
 import { IProduct } from '@/@types'
-import DataState from '@/components/ui/DataState'
-import Footer from '@/components/ui/Footer'
-import Header from '@/components/ui/Header'
-import ProductCard from '@/components/ui/ProductCard'
+import DataState from '@/components/DataState'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import ProductCard from '@/components/ProductCard'
 import { ProductRepository } from '@/repositories/product.repository'
 
 export default function SearchPage() {

@@ -5,7 +5,7 @@ import { ShareIcon } from 'lucide-react'
 import { RWebShare } from 'react-web-share'
 
 import { IProduct } from '@/@types'
-import Button from '@/components/ui/Button'
+import Button from '@/components/Button'
 import { env } from '@/env'
 import { campaignValidator } from '@/functions'
 import { formatPhotoUrl } from '@/functions/format'

@@ -3,9 +3,9 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 
 import AboutHeroe from '@/assets/images/about-us-heroe.png'
-import Footer from '@/components/ui/Footer'
-import Header from '@/components/ui/Header'
-import Advantages from '@/components/ui/Home/Advantages'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import Advantages from '@/components/Home/Advantages'
 
 export const metadata: Metadata = {
   title: 'About Us',

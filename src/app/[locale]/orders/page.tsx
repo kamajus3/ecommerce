@@ -1,13 +1,14 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 import { IOrder } from '@/@types'
-import Button from '@/components/ui/Button'
-import DataState from '@/components/ui/DataState'
-import Header from '@/components/ui/Header'
-import ProtectedRoute from '@/components/ui/ProtectedRoute'
-import Table from '@/components/ui/Table'
+import Button from '@/components/Button'
+import DataState from '@/components/DataState'
+import Header from '@/components/Header'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import Table from '@/components/Table'
 import { publishedSince } from '@/functions'
 import { formatMoney } from '@/functions/format'
 import { Link } from '@/navigation'
@@ -15,6 +16,8 @@ import { OrderRepository } from '@/repositories/order.repository'
 import useUserStore from '@/store/UserStore'
 
 function OrderTableRow(order: IOrder) {
+  const t = useTranslations('admin.order')
+
   const abbrTitle =
     `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replaceAll(
       ',',
@@ -30,9 +33,7 @@ function OrderTableRow(order: IOrder) {
         </abbr>
       </Table.D>
       <Table.D>{order.address}</Table.D>
-      <Table.D>
-        {order.state === 'not-sold' ? 'Em processamento' : 'Já pago'}
-      </Table.D>
+      <Table.D>{t(`table.content.states.${order.state}`)}</Table.D>
       <Table.D>{publishedSince(order.createdAt)}</Table.D>
       <Table.D>
         {formatMoney(
@@ -50,7 +51,7 @@ function OrderTableRow(order: IOrder) {
       <Table.D>
         <Link href={`/invoice/${order.id}`}>
           <Button variant="no-background" className="mx-auto text-secondary">
-            Baixar factura
+            {t('table.content.viewInvoice.button')}
           </Button>
         </Link>
       </Table.D>
@@ -59,6 +60,8 @@ function OrderTableRow(order: IOrder) {
 }
 
 export default function OrderPage() {
+  const t = useTranslations()
+
   const [orderData, setOrderData] = useState<IOrder[]>([])
   const [loading, setLoading] = useState(true)
   const user = useUserStore((state) => state.metadata)
@@ -96,24 +99,24 @@ export default function OrderPage() {
         <Header.Client />
         <article className="mb-2 mt-5">
           <h1 className="text-black font-semibold text-3xl p-9">
-            Os meus pedidos
+            {t('order.title')}
           </h1>
         </article>
         <article className="px-8 mx-auto mb-8 max-sm:p-9">
           <DataState
             dataCount={orderData.length}
             loading={loading}
-            noDataMessage="Os pedidos que fizer aparecerão aqui"
+            noDataMessage={t('order.noDataMessage')}
           >
             <Table.Root>
               <thead>
                 <Table.R inside="head">
-                  <Table.H>Referência</Table.H>
-                  <Table.H>Entidades</Table.H>
-                  <Table.H>Destinação</Table.H>
-                  <Table.H>Estado</Table.H>
-                  <Table.H>Data da realização</Table.H>
-                  <Table.H>Valor a pagar</Table.H>
+                  <Table.H>{t('admin.order.table.header.reference')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.entities')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.entities')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.state')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.date')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.toPay')}</Table.H>
                   <Table.H>-</Table.H>
                 </Table.R>
               </thead>
