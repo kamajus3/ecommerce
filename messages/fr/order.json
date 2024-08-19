@@ -1,4 +1,11 @@
 {
   "title": "Mes Commandes",
-  "noDataMessage": "Les commandes que vous passez apparaîtront ici."
+  "noDataMessage": "Les commandes que vous passez apparaîtront ici.",
+  "modals": {
+    "orderConfirmed": {
+      "title": "Félicitations",
+      "description": "Votre commande a été passée avec succès.",
+      "buttonAction": "Voir la facture"
+    }
+  }
 }

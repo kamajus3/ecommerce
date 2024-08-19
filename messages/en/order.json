@@ -1,4 +1,11 @@
 {
   "title": "My Orders",
-  "noDataMessage": "The orders you make will appear here."
+  "noDataMessage": "The orders you place will appear here.",
+  "modals": {
+    "orderConfirmed": {
+      "title": "Congratulations",
+      "description": "Your order has been successfully placed.",
+      "buttonAction": "View invoice"
+    }
+  }
 }

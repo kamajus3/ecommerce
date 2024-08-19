@@ -1,16 +1,20 @@
+'use client'
+
 import { Dispatch, Fragment, SetStateAction, useRef } from 'react'
+import { useTranslations } from 'next-intl'
 
 import { Link } from '@/navigation'
 import { Dialog, Transition } from '@headlessui/react'
 
 import Button from '../Button'
 
-interface OrderConfirmedProps {
+interface IOrderConfirmed {
   orderData: [boolean, string | undefined]
   setOrderData: Dispatch<SetStateAction<[boolean, string | undefined]>>
 }
 
-export default function OrderConfirmed(props: OrderConfirmedProps) {
+export default function OrderConfirmed(props: IOrderConfirmed) {
+  const t = useTranslations('order')
   const cancelButtonRef = useRef(null)
 
   return (
@@ -54,11 +58,11 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                         as="h3"
                         className="text-3xl font-semibold leading-6 text-black mb-5 my-7"
                       >
-                        Parabéns
+                        {t('modals.orderConfirmed.title')}
                       </Dialog.Title>
                       <div className="mb-2">
                         <p className="text-[#575656]">
-                          O seu pedido foi realizado com sucesso.
+                          {t('modals.orderConfirmed.description')}
                         </p>
                       </div>
                     </article>
@@ -74,7 +78,7 @@ export default function OrderConfirmed(props: OrderConfirmedProps) {
                         }
                       }}
                     >
-                      Baixar a factura
+                      {t('modals.orderConfirmed.buttonAction')}
                     </Button>
                   </Link>
                 </div>

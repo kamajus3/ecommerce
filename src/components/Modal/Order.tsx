@@ -89,13 +89,13 @@ export default function Order(props: IOrder) {
     phone: z
       .string({
         required_error: t('form.errors.required', {
-          field: `${t('settings.perfilUpdate.fields.phone').toLowerCase()}`,
+          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
         }),
       })
       .regex(
         /^(?:\+244)?\d{9}$/,
         t('form.errors.invalid', {
-          field: `${t('settings.perfilUpdate.fields.phone').toLowerCase()}`,
+          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
         }),
       ),
   })
@@ -192,7 +192,7 @@ export default function Order(props: IOrder) {
 
                       <div className="mb-4">
                         <Field.Label htmlFor="phone">
-                          {t('settings.perfilUpdate.fields.phone')}
+                          {t('settings.contactUpdate.fields.phone')}
                         </Field.Label>
                         <Field.Input
                           type="tel"
