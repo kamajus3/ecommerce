@@ -57,20 +57,20 @@ export default function Footer({ disableBackButton = false }: IFooter) {
             </div>
             <div>
               <h2 className="mb-6 text-lg font-semibold text-white">
-                {t('footer.useFulLinks.title')}
+                {t('footer.usefulLinks.title')}
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">
                   <Link href="/about">{t('footer.aboutUs.title')}</Link>
                 </li>
                 <li className="mb-4">
-                  <Link href="/terms">{t('footer.useFulLinks.terms')}</Link>
+                  <Link href="/terms">{t('footer.usefulLinks.terms')}</Link>
                 </li>
               </ul>
             </div>
             <div>
               <h2 className="mb-6 text-lg font-semibold text-white">
-                {t('footer.useFulLinks.socialMedia')}
+                {t('footer.usefulLinks.socialMedia')}
               </h2>
               <ul className="text-gray-200 font-medium">
                 <li className="mb-4">

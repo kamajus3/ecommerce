@@ -17,6 +17,20 @@
       "backToClient": "Back to Client"
     }
   },
+  "advantages": {
+    "qualityProducts": {
+      "title": "Quality Products",
+      "description": "We offer only the best products sourced from trusted suppliers."
+    },
+    "customerSupport": {
+      "title": "Customer Support",
+      "description": "Friendly customer support available 24/7."
+    },
+    "moneyBackGuarantee": {
+      "title": "Money-Back Guarantee",
+      "description": "Refunds provided in case of product damage."
+    }
+  },
   "footer": {
     "support": {
       "title": "Support"
@@ -24,7 +38,7 @@
     "aboutUs": {
       "title": "About Us"
     },
-    "useFulLinks": {
+    "usefulLinks": {
       "title": "Useful Links",
       "terms": "Terms and Conditions",
       "socialMedia": "Social Media"

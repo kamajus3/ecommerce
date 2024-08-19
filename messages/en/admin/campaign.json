@@ -1,6 +1,6 @@
 {
   "title": "My campaigns",
-  "add-new": "Add new",
+  "addNew": "Add new",
   "action-new": "Publish",
   "successful": "Campaign published successfully",
   "error": "Error publishing the campaign",

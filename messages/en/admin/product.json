@@ -1,6 +1,6 @@
 {
   "title": "My products",
-  "add-new": "Add new",
+  "addNew": "Add new",
   "action-new": "Post",
   "successful": "Product posted successfully",
   "error": "Error posting the product",

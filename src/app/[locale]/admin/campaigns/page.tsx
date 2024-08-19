@@ -339,7 +339,7 @@ export default function CampaignP() {
               setNewModal(true)
             }}
           >
-            {t('add-new')}
+            {t('addNew')}
           </Button>
 
           <Field.Select
@@ -403,7 +403,7 @@ export default function CampaignP() {
         </DataState>
       </article>
       <Modal.Campaign
-        title={t('add-new')}
+        title={t('addNew')}
         actionTitle={t('action-new')}
         isOpen={newModal}
         setOpen={setNewModal}

@@ -1,4 +1,7 @@
+'use client'
+
 import dynamic from 'next/dynamic'
+import { useTranslations } from 'next-intl'
 import dynamicIconImports from 'lucide-react/dynamicIconImports'
 
 interface IAdvantageCard {
@@ -26,21 +29,23 @@ function AdvantageCard({ title, description, icon }: IAdvantageCard) {
 }
 
 export default function Advantages() {
+  const t = useTranslations('structure')
+
   return (
     <article className="p-6 mt-6 flex flex-wrap justify-center items-center">
       <AdvantageCard
-        title="Free and Fast Delivery"
-        description="Free delivery for orders over 50,000 Kz in Luanda."
-        icon="truck"
+        title={t('advantages.qualityProducts.title')}
+        description={t('advantages.qualityProducts.description')}
+        icon="sparkles"
       />
       <AdvantageCard
-        title="24/7 Customer Support"
-        description="Friendly customer support available 24/7."
+        title={t('advantages.customerSupport.title')}
+        description={t('advantages.customerSupport.description')}
         icon="headset"
       />
       <AdvantageCard
-        title="Money-Back Guarantee"
-        description="Refunds provided in case of product damage."
+        title={t('advantages.moneyBackGuarantee.title')}
+        description={t('advantages.moneyBackGuarantee.description')}
         icon="shield-check"
       />
     </article>

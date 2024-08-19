@@ -1,0 +1,40 @@
+{
+  "title": "Panier",
+  "action": "Passer la commande",
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "phone": "Téléphone",
+      "email": "Email",
+      "name": "Nom",
+      "address": "Adresse",
+      "product": "Produit",
+      "quantity": "Quantité",
+      "unitPrice": "Prix Unitaire",
+      "discount": "Remise",
+      "totalPrice": "Prix Total",
+      "totalAmountDue": "Total à payer"
+    },
+    "content": {
+      "remove": {
+        "action": "Retirer",
+        "title": "Retirer le Produit",
+        "description": "Êtes-vous sûr de vouloir retirer ce produit du panier ?",
+        "error": "Erreur lors de la suppression du produit",
+        "successful": "Produit retiré avec succès"
+      }
+    }
+  },
+  "modals": {
+    "login": {
+      "title": "Se Connecter",
+      "description": "Vous devez être connecté pour passer une commande."
+    },
+    "order": {
+      "title": "Confirmer la Commande",
+      "description": "Êtes-vous sûr de vouloir passer cette commande ? Cette action est irréversible."
+    }
+  },
+  "noDataMessage": "Les produits que vous ajoutez à votre panier apparaîtront ici.",
+  "error": "Erreur lors du traitement de votre commande"
+}

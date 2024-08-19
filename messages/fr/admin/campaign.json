@@ -1,6 +1,6 @@
 {
   "title": "Mes campagnes",
-  "add-new": "Ajouter nouveau",
+  "addNew": "Ajouter nouveau",
   "action-new": "Publier",
   "successful": "Campagne publiée avec succès",
   "error": "Erreur lors de la publication de la campagne",

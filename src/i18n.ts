@@ -18,6 +18,7 @@ export default getRequestConfig(async ({ locale }) => {
       form: (await import(`../messages/${locale}/form.json`)).default,
       invoice: (await import(`../messages/${locale}/invoice.json`)).default,
       search: (await import(`../messages/${locale}/search.json`)).default,
+      cart: (await import(`../messages/${locale}/cart.json`)).default,
       admin: {
         dashboard: (await import(`../messages/${locale}/admin/dashboard.json`))
           .default,

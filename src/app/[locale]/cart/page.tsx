@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { toast } from 'react-toastify'
 
 import { IOrder, IProduct, IProductOrder } from '@/@types'
@@ -36,6 +37,8 @@ function TableRow({
   selectedProducts,
   setSelectedProduct,
 }: ITableRow) {
+  const t = useTranslations('cart')
+
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
@@ -100,12 +103,12 @@ function TableRow({
           className="mx-auto text-red-500"
           onClick={() => setOpenDeleteModal(true)}
         >
-          Remove
+          {t('table.content.remove.action')}
         </Button>
         <Modal.Dialog
-          title="Remove Product"
-          description="Are you sure you want to remove this product from the cart?"
-          actionTitle="Remove"
+          title={t('table.content.remove.title')}
+          description={t('table.content.remove.description')}
+          actionTitle={t('table.content.remove.action')}
           themeColor={constants.colors.error}
           action={() => {
             removeFromCart(product.id)
@@ -120,6 +123,8 @@ function TableRow({
 }
 
 export default function CartPage() {
+  const t = useTranslations('cart')
+
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [totalPrice, setTotalPrice] = useState(0)
   const [productData, setProductData] = useState<ICartProduct[]>([])
@@ -215,7 +220,7 @@ export default function CartPage() {
         setSelectedProduct([])
         setOrderConfirmedModal([true, data.id])
       } catch {
-        toast.error('Error processing your order')
+        toast.error(t('error'))
       }
     }
   }
@@ -252,7 +257,7 @@ export default function CartPage() {
       })
       setConfirmOrderModal(true)
     } else {
-      toast.error('Error processing your order')
+      toast.error(t('error'))
     }
   }
 
@@ -260,14 +265,14 @@ export default function CartPage() {
     <section className="bg-white min-h-screen overflow-hidden">
       <Header.Client />
       <article className="mb-2 mt-5">
-        <h1 className="text-black font-semibold text-3xl p-9">Shopping Cart</h1>
+        <h1 className="text-black font-semibold text-3xl p-9">{t('title')}</h1>
       </article>
       <article className="px-8 mx-auto mb-8 max-sm:p-9">
         <div className="overflow-x-auto">
           <DataState
             dataCount={ICartProducts.length}
             loading={loading}
-            noDataMessage="Products added to the cart will appear here"
+            noDataMessage={t('noDataMessage')}
           >
             <Table.Root>
               <thead>
@@ -288,12 +293,12 @@ export default function CartPage() {
                       className="w-4 h-4 border-gray-300 rounded bg-gray-700 cursor-pointer"
                     />
                   </Table.H>
-                  <Table.H>Photo</Table.H>
-                  <Table.H>Name</Table.H>
-                  <Table.H>Quantity</Table.H>
-                  <Table.H>Unit Price</Table.H>
-                  <Table.H>Discount</Table.H>
-                  <Table.H>Total Price</Table.H>
+                  <Table.H>{t('table.header.photo')}</Table.H>
+                  <Table.H>{t('table.header.product')}</Table.H>
+                  <Table.H>{t('table.header.quantity')}</Table.H>
+                  <Table.H>{t('table.header.unitPrice')}</Table.H>
+                  <Table.H>{t('table.header.discount')}</Table.H>
+                  <Table.H>{t('table.header.totalPrice')}</Table.H>
                   <Table.H>-</Table.H>
                 </Table.R>
               </thead>
@@ -311,7 +316,9 @@ export default function CartPage() {
 
             <div className="mt-10 mb-10 gap-y-5">
               <div className="text-black font-medium text-lg mb-8 flex flex-col gap-3">
-                <span className="text-gray-500">Total to Pay</span>
+                <span className="text-gray-500">
+                  {t('table.header.totalAmountDue')}
+                </span>
                 <span className="font-bold text-4xl">
                   {formatMoney(totalPrice)}
                 </span>
@@ -332,7 +339,7 @@ export default function CartPage() {
                 }}
                 disabled={selectedProducts.length === 0}
               >
-                Place Order
+                {t('action')}
               </Button>
             </div>
           </DataState>
@@ -340,9 +347,9 @@ export default function CartPage() {
       </article>
 
       <Modal.Dialog
-        title="Log In"
-        description="You need to be logged in to place an order."
-        actionTitle="Log In"
+        title={t('modals.login.title')}
+        description={t('modals.login.description')}
+        actionTitle={t('modals.login.title')}
         action={() => {
           router.push('/login')
         }}
@@ -351,9 +358,9 @@ export default function CartPage() {
       />
 
       <Modal.Dialog
-        title="Confirm Order"
-        description="Are you sure you want to place this order? (irreversible action)"
-        actionTitle="Confirm"
+        title={t('modals.order.title')}
+        description={t('modals.order.description')}
+        actionTitle={t('modals.order.title')}
         action={createOrder}
         isOpen={confirmOrderModal}
         setOpen={setConfirmOrderModal}

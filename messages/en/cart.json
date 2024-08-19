@@ -1,0 +1,40 @@
+{
+  "title": "Shopping Cart",
+  "action": "Place Order",
+  "table": {
+    "header": {
+      "photo": "Photo",
+      "phone": "Phone",
+      "email": "Email",
+      "name": "Name",
+      "address": "Address",
+      "product": "Product",
+      "quantity": "Quantity",
+      "unitPrice": "Unit Price",
+      "discount": "Discount",
+      "totalPrice": "Total Price",
+      "totalAmountDue": "Total to pay"
+    },
+    "content": {
+      "remove": {
+        "action": "Remove",
+        "title": "Remove Product",
+        "description": "Are you sure you want to remove this product from the cart?",
+        "error": "Error removing the product",
+        "successful": "Product removed successfully"
+      }
+    }
+  },
+  "modals": {
+    "login": {
+      "title": "Log In",
+      "description": "You need to be logged in to place an order."
+    },
+    "order": {
+      "title": "Confirm Order",
+      "description": "Are you sure you want to place this order? This action is irreversible."
+    }
+  },
+  "noDataMessage": "The products you add to your cart will appear here.",
+  "error": "Error processing your order"
+}

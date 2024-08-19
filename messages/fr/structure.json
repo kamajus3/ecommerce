@@ -1,6 +1,6 @@
 {
   "header": {
-    "logout": "Déconnexion",
+    "logout": "Se déconnecter",
     "logged-in": "Connecté",
     "client": {
       "login": "Connexion",
@@ -17,6 +17,20 @@
       "backToClient": "Retour au Client"
     }
   },
+  "advantages": {
+    "qualityProducts": {
+      "title": "Produits de qualité",
+      "description": "Nous offrons uniquement les meilleurs produits provenant de fournisseurs de confiance."
+    },
+    "customerSupport": {
+      "title": "Support client",
+      "description": "Un support client amical disponible 24/7."
+    },
+    "moneyBackGuarantee": {
+      "title": "Garantie de remboursement",
+      "description": "Remboursements en cas de dommages sur le produit."
+    }
+  },
   "footer": {
     "support": {
       "title": "Support"
@@ -24,9 +38,9 @@
     "aboutUs": {
       "title": "À propos de nous"
     },
-    "useFulLinks": {
+    "usefulLinks": {
       "title": "Liens utiles",
-      "terms": "Termes et conditions",
+      "terms": "Conditions générales",
       "socialMedia": "Réseaux sociaux"
     }
   }

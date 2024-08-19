@@ -268,7 +268,7 @@ export default function ProductPage() {
               setNewModal(true)
             }}
           >
-            {t('add-new')}
+            {t('addNew')}
           </Button>
 
           <Field.Select
@@ -332,7 +332,7 @@ export default function ProductPage() {
         </DataState>
       </article>
       <Modal.Product
-        title={t('add-new')}
+        title={t('addNew')}
         actionTitle={t('action-new')}
         isOpen={newModal}
         setOpen={setNewModal}
