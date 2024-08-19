@@ -5,8 +5,8 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 
 import AccountDelete from './components/AccountDelete'
 import ContactUpdate from './components/ContactUpdate'
-import { PasswordUpdate } from './components/PasswordUpdate'
-import PerfilUpdate from './components/perfilUpdate'
+import PasswordUpdate from './components/PasswordUpdate'
+import PerfilUpdate from './components/PerfilUpdate'
 
 export default function PerfilPage() {
   return (

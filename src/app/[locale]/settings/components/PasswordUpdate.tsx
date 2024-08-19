@@ -16,7 +16,7 @@ interface IFormData {
   confirmPassword: string
 }
 
-export function PasswordUpdate() {
+export default function PasswordUpdate() {
   const t = useTranslations()
 
   const schema = z
