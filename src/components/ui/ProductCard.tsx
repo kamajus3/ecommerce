@@ -1,5 +1,7 @@
+'use client'
+
 import Image from 'next/image'
-import { getTranslations } from 'next-intl/server'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
@@ -10,8 +12,8 @@ import { Link } from '@/navigation'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
-export default async function ProductCard(product: IProduct) {
-  const t = await getTranslations('product')
+export default function ProductCard(product: IProduct) {
+  const t = useTranslations('product')
 
   const cartProducts = useCartStore((state) => state.products)
   const removeFromCart = useCartStore((state) => state.removeProduct)
