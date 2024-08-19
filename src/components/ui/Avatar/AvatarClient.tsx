@@ -34,6 +34,7 @@ export default function Avatar() {
         href="/perfil"
         className={clsx('px-4 py-2 hover:bg-gray-200 block', {
           'bg-primary text-white hover:bg-primary': pathname === '/perfil',
+          hidden: !user,
         })}
       >
         {t('header.client.settings')}
@@ -42,6 +43,7 @@ export default function Avatar() {
         href="/orders"
         className={clsx('px-4 py-2 hover:bg-gray-200 block', {
           'bg-primary text-white hover:bg-primary': pathname === '/orders',
+          hidden: !user,
         })}
       >
         {t('header.client.orders')}
