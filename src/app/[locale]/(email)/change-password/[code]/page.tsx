@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { AuthError, checkActionCode, confirmPasswordReset } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -13,22 +14,6 @@ import { useRouter } from '@/navigation'
 import { auth } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const schema = z
-  .object({
-    password: z
-      .string()
-      .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
-      .max(40, 'A palavra-passe não pode exceder de 40 carácteres'),
-    confirmPassword: z
-      .string()
-      .min(6, 'A palavras-passe precisa de no minimo 6 caracteres')
-      .max(40, 'A palavra-passe não pode exceder de 40 carácteres'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As palavras-passe não são semelhantes',
-    path: ['confirmPassword'],
-  })
-
 interface IFormData {
   password: string
   confirmPassword: string
@@ -39,6 +24,48 @@ export default function ChangePassword({
 }: {
   params: { code: string }
 }) {
+  const t = useTranslations()
+
+  const schema = z
+    .object({
+      password: z
+        .string()
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 40,
+          }),
+        ),
+      confirmPassword: z
+        .string()
+        .min(
+          6,
+          t('form.errors.minLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 6,
+          }),
+        )
+        .max(
+          40,
+          t('form.errors.maxLength', {
+            field: `${t('auth.sharedFields.password').toLowerCase()}`,
+            length: 40,
+          }),
+        ),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('form.errors.passwordsNotSimilar'),
+      path: ['confirmPassword'],
+    })
+
   const {
     register,
     handleSubmit,
@@ -51,7 +78,7 @@ export default function ChangePassword({
   function onSubmit(data: IFormData) {
     confirmPasswordReset(auth, code, data.password)
       .then(() => {
-        toast.success('A sua palavra-passe foi alterada com sucesso')
+        toast.success(t('auth.changePassword.successful'))
 
         setTimeout(() => {
           router.replace('/')
@@ -60,18 +87,19 @@ export default function ChangePassword({
       .catch((e: AuthError) => {
         let errorMessage = ''
         if (e.code === 'auth/expired-action-code') {
-          errorMessage = 'O seu código para alterar a palavra-passe expirou'
+          errorMessage = t(
+            `auth.changePassword.errors.${e.code.replace('auth/', '')}`,
+          )
         } else if (e.code === 'auth/invalid-action-code') {
-          errorMessage = 'O código para validar a sua conta é invalido'
+          errorMessage = t(
+            `auth.changePassword.errors.${e.code.replace('auth/', '')}`,
+          )
         } else if (e.code === 'auth/user-disabled') {
-          errorMessage = 'Essa conta não está hablitada'
-        } else if (e.code === 'auth/user-disabled') {
-          errorMessage = 'Essa conta não foi encontrada'
-        } else if (e.code === 'auth/user-disabled') {
-          errorMessage =
-            'A nova palavra-passe fornecida não é forte o suficiente'
+          errorMessage = t(
+            `auth.changePassword.errors.${e.code.replace('auth/', '')}`,
+          )
         } else {
-          errorMessage = 'Houve algum erro ao tentar alterar a sua senha'
+          errorMessage = t('auth.changePassword.errors.other-error')
         }
 
         toast.error(errorMessage)
@@ -97,11 +125,13 @@ export default function ChangePassword({
       <article className="flex justify-center items-center py-32">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
-            Alterar a sua palavra-passe
+            {t('auth.changePassword.title')}
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">Palavra-passe</label>
+              <label className="font-medium">
+                {t('auth.sharedFields.password')}
+              </label>
               <input
                 type="password"
                 {...register('password')}
@@ -113,7 +143,9 @@ export default function ChangePassword({
             </div>
 
             <div>
-              <label className="font-medium">Confirmar palavra-passe</label>
+              <label className="font-medium">
+                {t('auth.sharedFields.confirmPassword')}
+              </label>
               <input
                 type="password"
                 {...register('confirmPassword')}
@@ -130,7 +162,7 @@ export default function ChangePassword({
               type="submit"
               className="w-full rounded px-4 py-2 text-white font-medium bg-primary hover:brightness-90 active:brightness-70 duration-150"
             >
-              Continuar
+              {t('auth.sharedFields.action')}
             </button>
           </form>
         </div>

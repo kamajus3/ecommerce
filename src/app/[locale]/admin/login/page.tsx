@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
@@ -12,21 +13,30 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import '@/assets/admin.css'
 
-const schema = z.object({
-  email: z.string().email('Preencha um e-mail válido'),
-  password: z
-    .string()
-    .min(6, 'A palavra-passe precisa de no minimo 6 caracteres'),
-})
-
 interface IFormData {
   email: string
   password: string
 }
 
 export default function SignIn() {
+  const t = useTranslations()
   const router = useRouter()
   const { signInWithEmail } = useAuth()
+
+  const schema = z.object({
+    email: z.string().email(
+      t('form.errors.invalid', {
+        field: `${t('auth.sharedFields.email').toLowerCase()}`,
+      }),
+    ),
+    password: z.string().min(
+      6,
+      t('form.errors.minLength', {
+        field: `${t('auth.sharedFields.password').toLowerCase()}`,
+        length: 6,
+      }),
+    ),
+  })
 
   const {
     register,
@@ -49,12 +59,12 @@ export default function SignIn() {
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-white text-center text-2xl font-bold sm:text-3xl">
-            Bem vindo ao back-office
+            {t('auth.signIn.title')}
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <Field.Label htmlFor="email" className="text-white">
-                E-mail
+                {t('auth.sharedFields.email')}
               </Field.Label>
               <Field.Input
                 type="email"
@@ -67,7 +77,7 @@ export default function SignIn() {
             </div>
             <div>
               <Field.Label htmlFor="password" className="text-white">
-                Palavra-passe
+                {t('auth.sharedFields.password')}
               </Field.Label>
               <Field.Input
                 type="password"
@@ -83,7 +93,7 @@ export default function SignIn() {
               type="submit"
               loading={isSubmitting}
             >
-              Entrar
+              {t('auth.signIn.action')}
             </Button>
           </form>
         </div>

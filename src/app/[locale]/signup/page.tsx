@@ -154,7 +154,7 @@ export default function SignUp() {
 
             <div>
               <Field.Label htmlFor="confirmPassword">
-                {t('auth.signUp.fields.confirmPassword')}
+                {t('auth.sharedFields.confirmPassword')}
               </Field.Label>
               <Field.Input
                 type="password"

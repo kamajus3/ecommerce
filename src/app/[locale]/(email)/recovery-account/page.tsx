@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -11,15 +12,21 @@ import Header from '@/components/ui/Header'
 import { auth } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-const schema = z.object({
-  email: z.string().email('Preencha com um e-mail válido'),
-})
-
 interface IFormData {
   email: string
 }
 
 export default function RecoverAccount() {
+  const t = useTranslations()
+
+  const schema = z.object({
+    email: z.string().email(
+      t('form.errors.invalid', {
+        field: `${t('auth.sharedFields.email').toLowerCase()}`,
+      }),
+    ),
+  })
+
   const {
     register,
     handleSubmit,
@@ -29,12 +36,10 @@ export default function RecoverAccount() {
   function onSubmit(data: IFormData) {
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        toast.success(
-          'Uma mensagem mensagem nesse email foi enviada para recuperar a sua conta',
-        )
+        toast.success(t('auth.recoveryAccount.successful'))
       })
       .catch(() => {
-        toast.error('Houve algum erro ao resetar a tua conta')
+        toast.error(t('auth.recoveryAccount.error'))
       })
   }
 
@@ -44,11 +49,13 @@ export default function RecoverAccount() {
       <article className="flex justify-center items-center h-screen">
         <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
           <h3 className="text-black text-2xl font-bold sm:text-3xl">
-            Recupere a sua conta
+            {t('auth.recoveryAccount.title')}
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <Field.Label htmlFor="email">E-mail</Field.Label>
+              <Field.Label htmlFor="email">
+                {t('auth.sharedFields.email')}
+              </Field.Label>
               <Field.Input
                 type="email"
                 {...register('email')}
@@ -62,7 +69,7 @@ export default function RecoverAccount() {
               type="submit"
               loading={isSubmitting}
             >
-              Continuar
+              {t('auth.recoveryAccount.action')}
             </Button>
           </form>
         </div>

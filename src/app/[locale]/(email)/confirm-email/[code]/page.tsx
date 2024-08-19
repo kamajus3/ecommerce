@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import { notFound } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { applyActionCode } from 'firebase/auth'
 import { toast } from 'react-toastify'
 
@@ -14,13 +15,14 @@ export default function ConfirmEmail({
 }: {
   params: { code: string }
 }) {
+  const t = useTranslations('auth')
   const router = useRouter()
 
   useEffect(() => {
     function handleVerifyEmail() {
       applyActionCode(auth, code)
         .then(() => {
-          toast.success('Email confirmado com sucesso')
+          toast.success(t('confirmEmail.successful'))
 
           setTimeout(() => {
             router.replace('/logout')
@@ -32,7 +34,7 @@ export default function ConfirmEmail({
     }
 
     handleVerifyEmail()
-  }, [router, code])
+  }, [router, code, t])
 
   return <Loading />
 }

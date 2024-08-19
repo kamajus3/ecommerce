@@ -85,7 +85,10 @@ export default function SignIn() {
               <Field.Error error={errors.password} />
             </div>
             <div className="mt-5">
-              <Link href="/recovery" className="hover:text-primary font-medium">
+              <Link
+                href="/recovery-account"
+                className="hover:text-primary font-medium"
+              >
                 {t('auth.signIn.forgotPassword')}
               </Link>
             </div>
