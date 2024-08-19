@@ -6,20 +6,28 @@ import { send } from '@emailjs/browser'
 
 import './config'
 
-interface ISendOrder extends IOrder {
+interface IOrderData extends IOrder {
   totalPrice: number
   email: string
 }
 
+interface ISendOrder {
+  order: IOrderData
+  locale: string
+}
+
 export default function sendOrder({
-  id,
-  firstName,
-  email,
-  phone,
-  lastName,
-  address,
-  products,
-  totalPrice,
+  order: {
+    id,
+    firstName,
+    email,
+    phone,
+    lastName,
+    address,
+    products,
+    totalPrice,
+  },
+  locale,
 }: ISendOrder) {
   const finalProducts = products.map((p) => {
     const price = formatMoney(p.price)
@@ -47,7 +55,7 @@ export default function sendOrder({
       address,
       products: finalProducts,
       totalPrice: formatMoney(totalPrice),
-      invoiceUrl: `${env.NEXT_PUBLIC_WEBSITE_URL}/invoice/${id}`,
+      invoiceUrl: `${env.NEXT_PUBLIC_WEBSITE_URL}/${locale}/invoice/${id}`,
     },
   )
 }

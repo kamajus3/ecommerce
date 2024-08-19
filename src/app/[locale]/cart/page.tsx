@@ -123,7 +123,11 @@ function TableRow({
   )
 }
 
-export default function CartPage() {
+export default function CartPage({
+  params: { locale },
+}: {
+  params: { locale: string }
+}) {
   const t = useTranslations('cart')
 
   const removeFromCart = useCartStore((state) => state.removeProduct)
@@ -211,9 +215,12 @@ export default function CartPage() {
         const data = await orderRepository.create(orderData, nanoid(10))
         if (userMetadata.email) {
           sendOrder({
-            ...data,
-            email: userMetadata.email,
-            totalPrice,
+            order: {
+              ...data,
+              email: userMetadata.email,
+              totalPrice,
+            },
+            locale,
           })
         }
 
