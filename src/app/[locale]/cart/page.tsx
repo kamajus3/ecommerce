@@ -3,6 +3,7 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import { nanoid } from 'nanoid'
 import { toast } from 'react-toastify'
 
 import { IOrder, IProduct, IProductOrder } from '@/@types'
@@ -207,7 +208,7 @@ export default function CartPage() {
   async function createOrder() {
     if (userMetadata && orderData) {
       try {
-        const data = await orderRepository.create(orderData)
+        const data = await orderRepository.create(orderData, nanoid(10))
         if (userMetadata.email) {
           sendOrder({
             ...data,
