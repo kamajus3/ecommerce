@@ -114,7 +114,7 @@ export default function ProductInput(props: IProductInput) {
 
         <input
           type="text"
-          placeholder={t('structure.client.search')}
+          placeholder={t('header.client.search')}
           {...props.inputProps}
           {...register('searchValue')}
           className="w-[90%] placeholder:text-sm text-gray-500 bg-transparent outline-none"
