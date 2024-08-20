@@ -132,16 +132,16 @@ export default function DashBoard() {
       <article>
         <div className="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <Admin.Card
-            title={t('cards.activeProducts')}
+            title={t('cards.activeOrders.title')}
             quantity={activeOrders}
             rate={currentAndPastMonthRate}
             rateMessage={
               activeOrders > 0
                 ? currentAndPastMonthRate > 0
                   ? new Date().getDay() > 20
-                    ? `menos que no mês passado`
+                    ? {t('cards.activeOrders.lessThanLastMonth')}
                     : ''
-                  : `mais que no mês passado`
+                  : {t('cards.activeOrders.moreThanLastMonth')}
                 : ''
             }
           />

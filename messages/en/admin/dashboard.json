@@ -1,12 +1,16 @@
 {
   "cards": {
-    "activeProducts": "Active products",
-    "activeOrders": "Active orders",
-    "remainingProducts": "Remaining products",
-    "activeCampaigns": "Active campaigns",
-    "activeCustomers": "Active customers"
+    "activeProducts": "Active Products",
+    "activeOrders": {
+      "title": "Active Orders",
+      "lessThanLastMonth": "less than last month",
+      "moreThanLastMonth": "more than last month"
+    },
+    "remainingProducts": "Remaining Products",
+    "activeCampaigns": "Active Campaigns",
+    "activeCustomers": "Active Customers"
   },
-  "salesSummary": "Sales summary",
+  "salesSummary": "Sales Summary",
   "salesLabel": "Sales for",
   "months": {
     "jan": "Jan",
