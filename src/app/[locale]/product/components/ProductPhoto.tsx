@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import { ShareIcon } from 'lucide-react'
 import { RWebShare } from 'react-web-share'
 
@@ -12,6 +13,7 @@ import { formatPhotoUrl } from '@/functions/format'
 import { Link, usePathname } from '@/navigation'
 
 export default function ProductPhoto(product: IProduct) {
+  const t = useTranslations('product')
   const pathname = usePathname()
 
   return (
@@ -22,7 +24,7 @@ export default function ProductPhoto(product: IProduct) {
             href={`/campaign/${product.campaign?.id}`}
             className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-50 left-0 top-0"
           >
-            Promoção de {`${product.campaign?.reduction} %`}
+            {t('promo')}: {product.campaign.reduction}%
           </Link>
         )}
 
@@ -32,7 +34,7 @@ export default function ProductPhoto(product: IProduct) {
             href={`/campaign/${product.campaign?.id}`}
             className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-green-500 text-white z-50 left-0 top-0"
           >
-            Em campanha
+            {t('onCampaign')}
           </Link>
         )}
 

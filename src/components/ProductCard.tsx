@@ -41,7 +41,7 @@ export default function ProductCard(product: IProduct) {
                 href={`/campaign/${product.campaign?.id}`}
                 className="absolute h-10 flex items-center rounded-md text-sm font-semibold p-2 bg-red-500 text-white z-10 left-0 -bottom-1 cursor-pointer"
               >
-                {t('promo')}: {product.campaign.reduction}% Off
+                {t('promo')}: {product.campaign.reduction}%
               </Link>
             )}
 
