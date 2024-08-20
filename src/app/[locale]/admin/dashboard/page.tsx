@@ -139,9 +139,9 @@ export default function DashBoard() {
               activeOrders > 0
                 ? currentAndPastMonthRate > 0
                   ? new Date().getDay() > 20
-                    ? {t('cards.activeOrders.lessThanLastMonth')}
+                    ? t('cards.activeOrders.lessThanLastMonth')
                     : ''
-                  : {t('cards.activeOrders.moreThanLastMonth')}
+                  : t('cards.activeOrders.moreThanLastMonth')
                 : ''
             }
           />
