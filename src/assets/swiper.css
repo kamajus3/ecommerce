@@ -49,7 +49,7 @@
 
 .swiper-button-prev,
 .swiper-button-next {
-  color: #fff;
+  color: #fff !important;
   width: 20px !important;
   height: 20px !important;
   padding: 30px;

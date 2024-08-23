@@ -13,7 +13,7 @@ import ProductCard from '@/components/ProductCard'
 import { ProductRepository } from '@/repositories/product.repository'
 
 export default function CategorySearchPage() {
-  const t = useTranslations('search')
+  const t = useTranslations()
 
   const { name: categoryValue } = useParams<{ name: string }>()
   const [productData, setProductData] = useState<IProduct[]>([])
@@ -46,8 +46,8 @@ export default function CategorySearchPage() {
 
       <div className="p-4 mt-8">
         <p className="text-[#363b44] font-semibold text-base max-sm:text-center">
-          {t('category.label', {
-            search: category,
+          {t('search.category.label', {
+            search: t(`categories.labels.${category}`),
           })}
         </p>
 
@@ -60,10 +60,10 @@ export default function CategorySearchPage() {
           )}
         >
           {resultsCount < 100
-            ? t('foundCount', {
+            ? t('search.foundCount', {
                 resultsCount,
               })
-            : t('foundMoreThanCount', {
+            : t('search.foundMoreThanCount', {
                 resultsCount,
               })}
         </p>
@@ -72,7 +72,7 @@ export default function CategorySearchPage() {
       <DataState
         dataCount={resultsCount}
         loading={loading}
-        noDataMessage={t('notFound')}
+        noDataMessage={t('search.notFound')}
       >
         <div
           className={clsx(
