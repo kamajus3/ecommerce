@@ -95,7 +95,7 @@ export default function CampaignModal(props: ICampaignModal) {
         .max(
           100,
           t('form.errors.maxLength', {
-            field: `${t('admin.campaign.table.header.title').toLowerCase()}`,
+            field: `${t('admin.campaign.table.header.description').toLowerCase()}`,
             length: 100,
           }),
         )
