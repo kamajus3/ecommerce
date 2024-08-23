@@ -37,7 +37,7 @@ interface IProductModal {
   isOpen: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   action: (data: IFormData, oldProduct?: IProduct) => void | Promise<void>
-  defaultProduct?: IProduct
+  defaultData?: IProduct
 }
 
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
@@ -179,21 +179,21 @@ export default function ProductModal(props: IProductModal) {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
   useEffect(() => {
-    if (props.defaultProduct?.photo) {
-      setPhotoPreview(props.defaultProduct.photo)
+    if (props.defaultData?.photo) {
+      setPhotoPreview(props.defaultData.photo)
     } else {
       setPhotoPreview(null)
     }
-  }, [props.defaultProduct, getValues])
+  }, [props.defaultData, getValues])
 
   useEffect(() => {
     async function unsubscribed() {
-      if (props.defaultProduct) {
-        const photo = await URLtoFile(props.defaultProduct.photo)
+      if (props.defaultData) {
+        const photo = await URLtoFile(props.defaultData.photo)
 
         reset(
           {
-            ...props.defaultProduct,
+            ...props.defaultData,
             photo,
           },
           {
@@ -207,7 +207,7 @@ export default function ProductModal(props: IProductModal) {
     }
 
     unsubscribed()
-  }, [reset, props.defaultProduct])
+  }, [reset, props.defaultData])
 
   function closeModal() {
     props.setOpen(false)
@@ -217,8 +217,8 @@ export default function ProductModal(props: IProductModal) {
 
   async function onSubmit(data: IFormData) {
     if (isDirty) {
-      if (props.defaultProduct) {
-        await props.action(data, props.defaultProduct)
+      if (props.defaultData) {
+        await props.action(data, props.defaultData)
       } else {
         props.action(data)
       }

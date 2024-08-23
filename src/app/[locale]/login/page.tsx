@@ -44,7 +44,7 @@ export default function SignIn() {
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   function onSubmit(data: FormData) {
-    signInWithEmail(data.email, data.password, 'client')
+    signInWithEmail(data.email, data.password, 'admin')
       .then(async () => {
         router.push('/')
       })

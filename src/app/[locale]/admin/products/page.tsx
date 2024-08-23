@@ -44,12 +44,12 @@ interface IFilterData {
 }
 
 interface ITableRow {
-  product: IProduct
+  data: IProduct
   _delete(): void
   _edit(data: IFormData, oldProduct?: IProduct): Promise<void>
 }
 
-function TableRow({ product, _delete, _edit }: ITableRow) {
+function TableRow({ data, _delete, _edit }: ITableRow) {
   const t = useTranslations()
 
   const [openEditModal, setOpenEditModal] = useState(false)
@@ -61,18 +61,18 @@ function TableRow({ product, _delete, _edit }: ITableRow) {
         <Image
           width={70}
           height={70}
-          src={formatPhotoUrl(product.photo, product.updatedAt)}
-          alt={product.name}
+          src={formatPhotoUrl(data.photo, data.updatedAt)}
+          alt={data.name}
           draggable={false}
           className="select-none"
         />
       </Table.D>
-      <Table.D>{product.name}</Table.D>
-      <Table.D>{t(`categories.labels.${product.category}`)}</Table.D>
-      <Table.D>{formatMoney(product.price)}</Table.D>
-      <Table.D>{product.quantity}</Table.D>
-      <Table.D>{publishedSince(product.createdAt)}</Table.D>
-      <Table.D>{publishedSince(product.updatedAt)}</Table.D>
+      <Table.D>{data.name}</Table.D>
+      <Table.D>{t(`categories.labels.${data.category}`)}</Table.D>
+      <Table.D>{formatMoney(data.price)}</Table.D>
+      <Table.D>{data.quantity}</Table.D>
+      <Table.D>{publishedSince(data.createdAt)}</Table.D>
+      <Table.D>{publishedSince(data.updatedAt)}</Table.D>
       <Table.D>
         <Button
           variant="no-background"
@@ -105,7 +105,7 @@ function TableRow({ product, _delete, _edit }: ITableRow) {
           isOpen={openEditModal}
           setOpen={setOpenEditModal}
           action={_edit}
-          defaultProduct={{ ...product }}
+          defaultData={{ ...data }}
         />
       </Table.D>
     </Table.R>
@@ -320,7 +320,7 @@ export default function ProductPage() {
                 productData.map((product) => (
                   <TableRow
                     key={product.id}
-                    product={product}
+                    data={product}
                     _delete={() => {
                       _delete(product.id, product?.campaign)
                     }}

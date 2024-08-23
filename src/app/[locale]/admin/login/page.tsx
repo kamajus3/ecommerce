@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import '@/assets/admin.css'
 
-interface IFormData {
+interface FormData {
   email: string
   password: string
 }
@@ -42,12 +42,12 @@ export default function SignIn() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<IFormData>({ resolver: zodResolver(schema) })
+  } = useForm<FormData>({ resolver: zodResolver(schema) })
 
-  function onSubmit(data: IFormData) {
+  function onSubmit(data: FormData) {
     signInWithEmail(data.email, data.password, 'admin')
       .then(async () => {
-        router.push('/admin/dashboard')
+        router.push('/')
       })
       .catch((e: Error) => {
         toast.error(e.message)
@@ -57,8 +57,8 @@ export default function SignIn() {
   return (
     <section className="admin-login overflow-hidden">
       <article className="flex justify-center items-center h-screen">
-        <div className="space-y-6 text-gray-600 max-w-md max-sm:w-[80%]">
-          <h3 className="text-white text-center text-2xl font-bold sm:text-3xl">
+        <div className="space-y-6 text-gray-600 max-w-md lg:min-w-96 max-sm:w-[80%]">
+          <h3 className="text-white text-2xl font-bold sm:text-3xl">
             {t('auth.signIn.title')}
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
