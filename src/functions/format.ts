@@ -39,7 +39,7 @@ export function formatMoney(
       negativeSign +
       integerPart +
       (decimalCount ? decimal + decimalPart.slice(0, decimalCount) : '') +
-      ' AKZ'
+      ' €'
     )
   } catch (e) {
     console.log(e)
