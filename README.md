@@ -1,4 +1,6 @@
 # Poubelle - Ecommerce Application
+![Example](https://github.com/user-attachments/assets/1f55c3e8-9487-468d-aaf8-b6ee7af2c8b0)
+
 
 ## Main Technologies
 
