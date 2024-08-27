@@ -2,28 +2,16 @@
 
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { ChevronUp, MoveUpRight } from 'lucide-react'
+import { MoveUpRight } from 'lucide-react'
 
 import { env } from '@/env'
 import { Link } from '@/navigation'
 
-interface IFooter {
-  disableBackButton?: boolean
-}
-
-export default function Footer({ disableBackButton = false }: IFooter) {
+export default function Footer() {
   const t = useTranslations('structure')
 
   return (
-    <footer className="bg-primary relative footer">
-      {!disableBackButton && (
-        <button
-          onClick={() => window.scrollTo(0, 0)}
-          className="animate-bounce absolute top-[-1.75rem] right-8 flex items-center justify-center w-14 h-14 border rounded-full bg-secondary text-sm font-medium text-gray-700 shadow-sm hover:brightness-75 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
-        >
-          <ChevronUp color="#fff" size={26} />
-        </button>
-      )}
+    <footer className="bg-primary footer">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-12 lg:py-14">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
