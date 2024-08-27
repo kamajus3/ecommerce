@@ -1,5 +1,6 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -19,7 +20,10 @@ interface FormData {
 
 export default function SignIn() {
   const t = useTranslations()
+
   const router = useRouter()
+  const searchParams = useSearchParams()
+
   const { signInWithEmail } = useAuth()
 
   const schema = z.object({
@@ -43,10 +47,12 @@ export default function SignIn() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({ resolver: zodResolver(schema) })
 
+  const onsuccessful = searchParams.get('onsuccessful') || '/'
+
   function onSubmit(data: FormData) {
-    signInWithEmail(data.email, data.password, 'admin')
+    signInWithEmail(data.email, data.password, 'client')
       .then(async () => {
-        router.push('/')
+        router.push(onsuccessful)
       })
       .catch((e: Error) => {
         toast.error(e.message)

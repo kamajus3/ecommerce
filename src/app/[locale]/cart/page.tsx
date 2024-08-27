@@ -359,7 +359,7 @@ export default function CartPage({
         description={t('modals.login.description')}
         actionTitle={t('modals.login.title')}
         action={() => {
-          router.push('/login')
+          router.push('/login?onsuccessful=/cart')
         }}
         isOpen={openLoginModal}
         setOpen={setOpenLoginModal}

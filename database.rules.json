@@ -1,7 +1,7 @@
 {
   "rules": {
     "products": {
-      ".indexOn": ["name", "nameLowerCase", "category", "views", "campaign/id", "updatedAt",  "createdAt"],
+      ".indexOn": ["name", "nameLowerCase", "category", "views", "campaign", "campaign/id", "updatedAt",  "createdAt"],
       ".read": true,
       ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },
@@ -11,7 +11,7 @@
       ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'client'"
     },
     "campaigns": {
-      ".indexOn": ["updatedAt",  "createdAt", "products"],
+      ".indexOn": ["updatedAt",  "createdAt"],
       ".read": true,
       ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
     },

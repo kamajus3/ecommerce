@@ -113,7 +113,7 @@ export default function OrderPage() {
                 <Table.R inside="head">
                   <Table.H>{t('admin.order.table.header.reference')}</Table.H>
                   <Table.H>{t('admin.order.table.header.entities')}</Table.H>
-                  <Table.H>{t('admin.order.table.header.entities')}</Table.H>
+                  <Table.H>{t('admin.order.table.header.destination')}</Table.H>
                   <Table.H>{t('admin.order.table.header.state')}</Table.H>
                   <Table.H>{t('admin.order.table.header.date')}</Table.H>
                   <Table.H>{t('admin.order.table.header.toPay')}</Table.H>

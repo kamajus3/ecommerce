@@ -27,6 +27,14 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     this.collectionName = collectionName
   }
 
+  private reverseData<T>(arr: T[]): T[] {
+    const newArray: T[] = []
+    for (let i = arr.length - 1; i >= 0; i--) {
+      newArray.push(arr[i])
+    }
+    return newArray
+  }
+
   getCollectionRef() {
     return ref(database, this.collectionName)
   }
@@ -46,7 +54,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               ...data[key],
               id: key,
             }))
-            resolve(resultArray)
+            resolve(this.reverseData(resultArray))
           } else {
             resolve([])
           }
@@ -102,7 +110,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               })
             }
 
-            resolve(resultArray)
+            resolve(this.reverseData(resultArray))
           } else {
             resolve([])
           }
