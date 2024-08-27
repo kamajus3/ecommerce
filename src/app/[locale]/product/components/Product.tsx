@@ -95,7 +95,7 @@ export default function Product(product: IProduct) {
         }}
       />
       <div className="mb-4" />
-      <Footer disableBackButton />
+      <Footer />
     </section>
   )
 }
