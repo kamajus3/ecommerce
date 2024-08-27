@@ -1,6 +1,5 @@
-# Poubelle - Ecommerce Application
-![Example](https://github.com/user-attachments/assets/f425edcb-d6e6-4675-b1f7-46235d6ce1ed)
-
+# Poubelle (Ecommerce)
+![Example](https://github.com/user-attachments/assets/78c1ad16-4a18-4002-b8a5-242d481c6fba)
 
 ## Main Technologies
 
@@ -8,6 +7,18 @@
 - **TypeScript**: A typed superset of JavaScript that compiles to plain JavaScript.
 - **Next.js**: A React framework for server-side rendering and static site generation.
 - **Firebase**: A platform for building mobile and web applications, offering backend services such as authentication, real-time databases, and cloud storage.
+
+## Main Features
+
+- [x] **User Authentication**: Secure login and registration with Firebase Authentication.
+- [x] **Product Catalog**: Display products with filtering and sorting options.
+- [x] **Shopping Cart**: Add, remove, and update items in the shopping cart.
+- [x] **Order Management**: View and manage user orders in the admin panel.
+- [x] **Responsive Design**: Mobile-friendly layout with responsive design principles.
+- [x] **Campaign Management**: Manage marketing campaigns from the admin panel.
+- [x] **Product Posting**: Add and update products from the admin panel.
+- [x] **Order Creation and Proforma Invoice**: Create orders and generate proforma invoices for user orders.
+- [ ] **Checkout Process**: Integration with payment gateway and order summary.
 
 ## Getting Started
 
