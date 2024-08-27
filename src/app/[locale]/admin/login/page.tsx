@@ -47,7 +47,7 @@ export default function SignIn() {
   function onSubmit(data: FormData) {
     signInWithEmail(data.email, data.password, 'admin')
       .then(async () => {
-        router.push('/')
+        router.push('/admin/dashboard')
       })
       .catch((e: Error) => {
         toast.error(e.message)
