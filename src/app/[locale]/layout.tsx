@@ -1,3 +1,4 @@
+import { Metadata, Viewport } from 'next'
 import { Dosis } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import {
@@ -6,6 +7,7 @@ import {
 } from 'next-intl/server'
 import { Bounce, ToastContainer } from 'react-toastify'
 
+import constants from '@/constants'
 import AuthProvider from '@/contexts/AuthContext'
 import CampaignProvider from '@/contexts/CampaignContext'
 
@@ -16,6 +18,26 @@ const dosis = Dosis({
   subsets: ['latin'],
   weight: ['200', '300', '400', '500', '700'],
 })
+
+export const viewport: Viewport = {
+  themeColor: constants.colors.secondary,
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Poubelle',
+    default: 'Poubelle',
+  },
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
+  creator: 'Carlos Mateus',
+}
 
 export default async function RootLayout({
   children,
@@ -34,6 +56,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body className={`${dosis.className}`}>
+        <link rel="icon" href="/favicon.png" sizes="any" />
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <CampaignProvider>{children}</CampaignProvider>
