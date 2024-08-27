@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
-import { ChevronUp, MoveUpRight } from 'lucide-react'
+import { MoveUpRight } from 'lucide-react'
 
 import { env } from '@/env'
 import { Link } from '@/navigation'
