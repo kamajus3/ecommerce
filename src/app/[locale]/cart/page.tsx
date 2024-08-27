@@ -43,8 +43,6 @@ function TableRow({
   const removeFromCart = useCartStore((state) => state.removeProduct)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
 
-  const notifyDelete = () => toast.success('Product removed successfully')
-
   return (
     <Table.R inside="body">
       <Table.D>
@@ -113,7 +111,7 @@ function TableRow({
           themeColor={constants.colors.error}
           action={() => {
             removeFromCart(product.id)
-            notifyDelete()
+            toast.success(t('table.content.remove.successful'))
           }}
           isOpen={openDeleteModal}
           setOpen={setOpenDeleteModal}
