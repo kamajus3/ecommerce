@@ -147,7 +147,7 @@ export const InvoiceStructure = ({ order, t }: IStructure) => (
 
       <View style={styles.infoBlock}>
         <Text>
-          {t('table.header.phone')}: {formatPhoneNumber('935420498')}
+          {t('table.header.phone')}: {formatPhoneNumber('+3317018XXXX')}
         </Text>
         <Text>
           {t('table.header.email')}: {env.NEXT_PUBLIC_EMAIL_ADDRESS}
@@ -160,7 +160,8 @@ export const InvoiceStructure = ({ order, t }: IStructure) => (
           {t('table.header.name')}: {order.firstName} {order.lastName}
         </Text>
         <Text>
-          {t('table.header.phone')}: {formatPhoneNumber(order.phone)}
+          {t('table.header.phone')}:{' '}
+          {formatPhoneNumber(`+${order.phone.ddd}${order.phone.number}`)}
         </Text>
         <Text>
           {t('table.header.address')}: {order.address}

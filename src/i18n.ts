@@ -22,6 +22,7 @@ export default getRequestConfig(async ({ locale }) => {
       auth: (await import(`../messages/${locale}/auth.json`)).default,
       settings: (await import(`../messages/${locale}/settings.json`)).default,
       order: (await import(`../messages/${locale}/order.json`)).default,
+      countries: (await import(`../messages/${locale}/countries.json`)).default,
       admin: {
         dashboard: (await import(`../messages/${locale}/admin/dashboard.json`))
           .default,

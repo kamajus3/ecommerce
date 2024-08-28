@@ -53,7 +53,9 @@ function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
         </abbr>
       </Table.D>
       <Table.D>{`${order.firstName} ${order.lastName}`}</Table.D>
-      <Table.D>{formatPhoneNumber(order.phone)}</Table.D>
+      <Table.D>
+        {formatPhoneNumber(`+${order.phone.ddd}${order.phone.number}`)}
+      </Table.D>
       <Table.D>{order.address}</Table.D>
       <Table.D>{t(`admin.order.table.content.states.${order.state}`)}</Table.D>
       <Table.D>{publishedSince(order.createdAt)}</Table.D>

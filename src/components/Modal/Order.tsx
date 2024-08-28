@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import { IProduct } from '@/@types'
+import { IPhone, IProduct } from '@/@types'
+import { COUNTRIES } from '@/constants/countries'
 import useUserStore from '@/store/UserStore'
 import { Dialog, Transition } from '@headlessui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -17,7 +18,7 @@ interface IFormData {
   firstName: string
   lastName: string
   address: string
-  phone: string
+  phone: IPhone
 }
 
 interface ICartProduct extends IProduct {
@@ -87,16 +88,32 @@ export default function Order(props: IOrder) {
       )
       .trim(),
     phone: z
-      .string({
-        required_error: t('form.errors.required', {
-          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
-        }),
+      .object({
+        number: z
+          .string({
+            required_error: t('form.errors.required', {
+              field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
+            }),
+          })
+          .trim(),
+        ddd: z.string().trim(),
       })
-      .regex(
-        /^(?:\+244)?\d{9}$/,
-        t('form.errors.invalid', {
-          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
-        }),
+      .refine(
+        (values) => {
+          const phoneLength = COUNTRIES.find(
+            (c) => c.ddd === values.ddd,
+          )?.numberLength
+
+          const phoneNumber = values.number.replace(' ', '')
+
+          return phoneNumber.length === phoneLength
+        },
+        {
+          message: t('form.errors.invalid', {
+            field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
+          }),
+          path: ['number'],
+        },
       ),
   })
 
@@ -104,6 +121,8 @@ export default function Order(props: IOrder) {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<IFormData>({
     resolver: zodResolver(schema),
@@ -113,6 +132,8 @@ export default function Order(props: IOrder) {
 
   function onSubmit(data: IFormData) {
     props.setOpen(false)
+
+    data.phone.number = data.phone.number.replace(' ', '')
     props.action(data)
   }
 
@@ -194,12 +215,27 @@ export default function Order(props: IOrder) {
                         <Field.Label htmlFor="phone">
                           {t('settings.contactUpdate.fields.phone')}
                         </Field.Label>
-                        <Field.Input
-                          type="tel"
-                          {...register('phone')}
-                          error={errors.phone}
+                        <Field.Phone
+                          numberProps={register('phone.number')}
+                          phone={watch('phone.number')}
+                          changeNumberValue={(value) => {
+                            setValue('phone.number', value, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: false,
+                            })
+                          }}
+                          ddd={watch('phone.ddd')}
+                          changeDDDValue={(value) => {
+                            setValue('phone.ddd', value, {
+                              shouldDirty: true,
+                              shouldTouch: true,
+                              shouldValidate: false,
+                            })
+                          }}
+                          error={errors.phone?.number}
                         />
-                        <Field.Error error={errors.phone} />
+                        <Field.Error error={errors.phone?.number} />
                       </div>
 
                       <div className="mb-4">

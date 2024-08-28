@@ -7,16 +7,18 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
+import { IPhone } from '@/@types'
 import Button from '@/components/Button'
 import Field from '@/components/Field'
 import Modal from '@/components/Modal'
+import { COUNTRIES } from '@/constants/countries'
 import { UserRepository } from '@/repositories/user.repository'
 import useUserStore from '@/store/UserStore'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 interface IFormData {
   email: string
-  phone: string
+  phone: IPhone
 }
 
 export default function ContactUpdate() {
@@ -27,16 +29,32 @@ export default function ContactUpdate() {
 
   const schema = z.object({
     phone: z
-      .string({
-        required_error: t('form.errors.required', {
-          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
-        }),
+      .object({
+        number: z
+          .string({
+            required_error: t('form.errors.required', {
+              field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
+            }),
+          })
+          .trim(),
+        ddd: z.string().trim(),
       })
-      .regex(
-        /^(?:\+244)?\d{9}$/,
-        t('form.errors.invalid', {
-          field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
-        }),
+      .refine(
+        (values) => {
+          const phoneLength = COUNTRIES.find(
+            (c) => c.ddd === values.ddd,
+          )?.numberLength
+
+          const phoneNumber = values.number.replace(' ', '')
+
+          return phoneNumber.length === phoneLength
+        },
+        {
+          message: t('form.errors.invalid', {
+            field: `${t('settings.contactUpdate.fields.phone').toLowerCase()}`,
+          }),
+          path: ['number'],
+        },
       ),
     email: z.string().email(
       t('form.errors.invalid', {
@@ -49,6 +67,7 @@ export default function ContactUpdate() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors, isSubmitting, dirtyFields },
   } = useForm<IFormData>({
     resolver: zodResolver(schema),
@@ -61,7 +80,11 @@ export default function ContactUpdate() {
 
   const onSubmit = (data: IFormData) => {
     if (user && userDB) {
-      if (dirtyFields.email || dirtyFields.phone) {
+      if (
+        dirtyFields.email ||
+        dirtyFields.phone?.ddd ||
+        dirtyFields.phone?.number
+      ) {
         userReposiyory
           .update(
             {
@@ -104,12 +127,21 @@ export default function ContactUpdate() {
     (data?: IFormData) => {
       if (userDB && user) {
         const userData = data || userDB
+        const phone = userData.phone
+
         setValue('email', user.email || '', {
           shouldDirty: false,
           shouldTouch: false,
           shouldValidate: false,
         })
-        setValue('phone', userData.phone || '', {
+
+        setValue('phone.ddd', phone?.ddd || '', {
+          shouldDirty: false,
+          shouldTouch: false,
+          shouldValidate: false,
+        })
+
+        setValue('phone.number', phone?.number || '', {
           shouldDirty: false,
           shouldTouch: false,
           shouldValidate: false,
@@ -169,16 +201,31 @@ export default function ContactUpdate() {
                 />
                 <Field.Error error={errors.email} />
               </div>
-              <div className="sm:col-span-2 sm:col-start-1">
+              <div className="sm:col-span-1 sm:col-start-1">
                 <Field.Label htmlFor="phone">
                   {t('settings.contactUpdate.fields.phone')}
                 </Field.Label>
-                <Field.Input
-                  type="tel"
-                  {...register('phone')}
-                  error={errors.phone}
+                <Field.Phone
+                  numberProps={register('phone.number')}
+                  phone={watch('phone.number')}
+                  changeNumberValue={(value) => {
+                    setValue('phone.number', value, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: false,
+                    })
+                  }}
+                  ddd={watch('phone.ddd')}
+                  changeDDDValue={(value) => {
+                    setValue('phone.ddd', value, {
+                      shouldDirty: true,
+                      shouldTouch: true,
+                      shouldValidate: false,
+                    })
+                  }}
+                  error={errors.phone?.number}
                 />
-                <Field.Error error={errors.phone} />
+                <Field.Error error={errors.phone?.number} />
               </div>
             </div>
           </div>

@@ -1,20 +1,62 @@
+import { COUNTRIES } from '@/constants/countries'
+
 export function formatPhotoUrl(photoUrl: string, updateAt: string) {
   photoUrl = photoUrl + '?timestamp=' + updateAt
   return photoUrl
 }
 
-export function formatPhoneNumber(phone: string) {
+export function formatPhoneNumber(
+  phone?: string,
+  includeDDD: boolean = true,
+): string {
+  if (!phone) {
+    return ''
+  }
+
+  // Remove all spaces from the phone number
   phone = phone.replaceAll(' ', '')
 
-  if (!/^(?:\+244)?\d{9}$/.test(phone)) {
-    throw new Error('Invalid number')
+  // Try to find the country by the DDD (country code)
+  const country = COUNTRIES.find((c) => phone.startsWith(`+${c.ddd}`))
+
+  let formattedNumber
+  let localNumber
+
+  if (country) {
+    const dddLength = country.ddd.length
+    const numberLength = country.numberLength
+
+    // Extract the local number without the DDD
+    localNumber = phone.slice(dddLength + 1)
+
+    // Format the number based on whether the DDD should be included
+    if (includeDDD) {
+      formattedNumber =
+        `+${country.ddd} ` +
+        `${localNumber.slice(0, numberLength / 3)} ` +
+        `${localNumber.slice(numberLength / 3, (2 * numberLength) / 3)} ` +
+        `${localNumber.slice((2 * numberLength) / 3)}`
+    } else {
+      formattedNumber =
+        `${localNumber.slice(0, numberLength / 3)} ` +
+        `${localNumber.slice(numberLength / 3, (2 * numberLength) / 3)} ` +
+        `${localNumber.slice((2 * numberLength) / 3)}`
+    }
+  } else {
+    // If the DDD is not found, assume the number does not have a DDD
+    localNumber = phone
+
+    // Estimate the length of the number (without DDD)
+    const numberLength = localNumber.length
+
+    // Format the number without any country code
+    formattedNumber =
+      `${localNumber.slice(0, numberLength / 3)} ` +
+      `${localNumber.slice(numberLength / 3, (2 * numberLength) / 3)} ` +
+      `${localNumber.slice((2 * numberLength) / 3)}`
   }
 
-  if (phone.startsWith('+244')) {
-    return `+244 ${phone.slice(4, 7)} ${phone.slice(7, 10)} ${phone.slice(10)}`
-  }
-
-  return `+244 ${phone.slice(0, 3)} ${phone.slice(3, 6)} ${phone.slice(6)}`
+  return formattedNumber
 }
 
 export function formatMoney(
