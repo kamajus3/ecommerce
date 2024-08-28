@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl'
 import { nanoid } from 'nanoid'
 import { toast } from 'react-toastify'
 
-import { IOrder, IProduct, IProductOrder } from '@/@types'
+import { IOrder, IPhone, IProduct, IProductOrder } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Header from '@/components/Header'
@@ -204,7 +204,7 @@ export default function CartPage({
     firstName: string
     lastName: string
     address: string
-    phone: string
+    phone: IPhone
   }
 
   async function createOrder() {

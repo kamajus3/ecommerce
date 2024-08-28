@@ -50,7 +50,7 @@ export default function sendOrder({
       id,
       firstName,
       lastName,
-      phone: formatPhoneNumber(phone),
+      phone: formatPhoneNumber(`+${phone.ddd}${phone.number}`),
       email,
       address,
       products: finalProducts,

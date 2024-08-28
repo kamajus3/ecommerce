@@ -83,13 +83,18 @@ export interface IProductOrder {
   promotion?: number
 }
 
+export interface IPhone {
+  number: string
+  ddd: string
+}
+
 export type IOrder = {
   id: string
   userId: string
   firstName: string
   lastName: string
   address: string
-  phone: string
+  phone: IPhone
   state: 'not-sold' | 'sold'
   products: IProductOrder[]
   createdAt: string
@@ -103,7 +108,7 @@ export type IUser = {
   firstName: string
   lastName?: string
   address?: string
-  phone?: string
+  phone?: IPhone
   role: EnumUserRole
   createdAt: string
   updatedAt: string
