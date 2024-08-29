@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useTranslations } from 'next-intl'
 import clsx from 'clsx'
 import { ChevronDown, Search } from 'lucide-react'
 import { FieldError } from 'react-hook-form'
@@ -79,6 +80,8 @@ function CustomInput(
   }
 
   function SearchCountry() {
+    const t = useTranslations('search')
+
     const [searchTerm, setSearchTerm] = useState('')
     const [filteredCountries, setFilteredCountries] = useState<ICountry[]>([])
 
@@ -120,7 +123,6 @@ function CustomInput(
         <div className="flex items-center gap-2 px-3 py-2">
           <Search color="#9ca3af" />
           <input
-            placeholder="Search country"
             onChange={(e) => setSearchTerm(e.target.value)}
             className="text-gray-500 placeholder:text-gray-400 h-full w-full outline-none border-none bg-transparent disabled:text-disabledText"
           />
@@ -136,13 +138,28 @@ function CustomInput(
               >
                 <div className="flex gap-2">
                   <span className={`fi fi-${country.code.toLowerCase()}`} />
-                  <span className="text-gray-500">{country.name}</span>
+                  <abbr
+                    className={clsx('text-gray-500 no-underline', {
+                      'text-gray-600 font-medium': ddd === country.ddd,
+                    })}
+                    title={country.name}
+                  >
+                    {country.name.length > 25
+                      ? country.name.slice(0, 25) + '...'
+                      : country.name}
+                  </abbr>
                 </div>
-                <span className="text-gray-500">+{country.ddd}</span>
+                <span
+                  className={clsx('text-gray-500', {
+                    'text-gray-600 font-medium': ddd === country.ddd,
+                  })}
+                >
+                  +{country.ddd}
+                </span>
               </button>
             ))
           ) : (
-            <div className="text-gray-500">No results found</div>
+            <div className="text-gray-500">{t('notFound')}</div>
           )}
         </div>
       </div>
