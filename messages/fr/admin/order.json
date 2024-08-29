@@ -20,7 +20,7 @@
         "button": "Annuler",
         "title": "Annuler la commande",
         "action": "Confirmer",
-        "description": "Êtes-vous sûr de vouloir annuler cette commande ?",
+        "description": "Êtes-vous sûr de vouloir annuler cette commande ?",
         "error": "Erreur lors de l'annulation de la commande",
         "successful": "Commande annulée avec succès"
       },
@@ -28,7 +28,7 @@
         "button": "Vendre",
         "title": "Marquer comme vendu",
         "action": "Confirmer",
-        "description": "Êtes-vous sûr de vouloir marquer cette commande comme vendue ?",
+        "description": "Êtes-vous sûr de vouloir marquer cette commande comme vendue ?",
         "error": "Erreur lors du traitement de la vente",
         "successful": "Commande marquée comme vendue avec succès"
       },
@@ -37,7 +37,10 @@
       }
     }
   },
-  "stateUpdated": "État mis à jour avec succès",
+  "stateUpdate": {
+    "successful": "État mis à jour avec succès",
+    "error": "Erreur lors de la mise à jour de l'état"
+  },
   "noDataMessage": "Les commandes des clients apparaîtront ici",
   "notFound": "Aucune commande avec cette référence n'a été trouvée"
 }

@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 import {
   A11y,
   Autoplay,
@@ -28,6 +29,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/scrollbar'
 
 export default function Carousel() {
+  const t = useTranslations('structure')
   const { campaignData } = useCampaign()
   const [width] = useDimensions()
 
@@ -64,7 +66,7 @@ export default function Carousel() {
                       backgroundColor: constants.colors.secondary,
                     }}
                   >
-                    Ver productos
+                    {t('carousel.seeProducts')}
                   </Button>
                 </Link>
               )}
