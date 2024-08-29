@@ -33,14 +33,22 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
 
   private sortData(data: T[], orderBy = 'createdAt'): T[] {
     return data.sort((a, b) => {
-      if (orderBy === 'createdAt' || orderBy === 'updatedAt') {
-        const aValue = a.createdAt as string
-        const bValue = b.createdAt as string
+      const aValue = a[orderBy] as string
+      const bValue = b[orderBy] as string
 
+      if (orderBy === 'createdAt' || orderBy === 'updatedAt') {
         const dateA = new Date(aValue).getTime()
         const dateB = new Date(bValue).getTime()
 
         return dateB - dateA
+      }
+
+      if (aValue < bValue) {
+        return -1
+      }
+
+      if (aValue > bValue) {
+        return 1
       }
 
       return 0
@@ -60,6 +68,8 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               ...data[key],
               id: key,
             }))
+
+            console.log(this.sortData(resultArray))
 
             resolve(this.sortData(resultArray))
           } else {

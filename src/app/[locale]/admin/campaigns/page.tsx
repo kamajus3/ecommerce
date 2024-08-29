@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { ICampaign, IProductInput } from '@/@types'
+import { ICampaign, IProductInput, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Field from '@/components/Field'
@@ -40,6 +40,7 @@ interface IFormData {
 }
 
 interface ITableRow {
+  locale: LocaleKey
   data: ICampaign
   _delete(): void
   _edit(data: IFormData, oldData?: ICampaign): Promise<void>
@@ -50,7 +51,7 @@ interface IFilterData {
   orderBy: string
 }
 
-function TableRow({ data, _delete, _edit }: ITableRow) {
+function TableRow({ locale, data, _delete, _edit }: ITableRow) {
   const t = useTranslations('admin.campaign')
 
   const [openEditModal, setOpenEditModal] = useState(false)
@@ -59,10 +60,34 @@ function TableRow({ data, _delete, _edit }: ITableRow) {
   return (
     <Table.R inside="body">
       <Table.D>{data.title}</Table.D>
-      <Table.D>{data.startDate ? publishedSince(data.startDate) : '-'}</Table.D>
-      <Table.D>{data.endDate ? publishedSince(data.endDate) : '-'}</Table.D>
-      <Table.D>{publishedSince(data.createdAt)}</Table.D>
-      <Table.D>{publishedSince(data.updatedAt)}</Table.D>
+      <Table.D>
+        {data.startDate
+          ? publishedSince({
+              lng: locale,
+              date: data.startDate,
+            })
+          : '-'}
+      </Table.D>
+      <Table.D>
+        {data.endDate
+          ? publishedSince({
+              lng: locale,
+              date: data.endDate,
+            })
+          : '-'}
+      </Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: data.createdAt,
+        })}
+      </Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: data.updatedAt,
+        })}
+      </Table.D>
       <Table.D>{data.products ? data.products.length : '-'}</Table.D>
       <Table.D>
         {data.default ? t('table.content.yes') : t('table.content.no')}
@@ -114,7 +139,11 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-export default function CampaignP() {
+export default function CampaignPage({
+  params: { locale },
+}: {
+  params: { locale: LocaleKey }
+}) {
   const t = useTranslations('admin.campaign')
 
   const productRepository = useMemo(() => new ProductRepository(), [])
@@ -391,6 +420,7 @@ export default function CampaignP() {
               {campaignData.map((campaign) => (
                 <TableRow
                   key={campaign.id}
+                  locale={locale}
                   data={campaign}
                   _delete={() => {
                     _delete(campaign.id)

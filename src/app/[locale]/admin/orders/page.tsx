@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { IOrder, IProduct } from '@/@types'
+import { IOrder, IProduct, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Header from '@/components/Header'
@@ -27,12 +27,13 @@ interface IFilterData {
 }
 
 interface ITableRow {
+  locale: LocaleKey
   order: IOrder
   deleteOrder(): void
   putAsSold(): void
 }
 
-function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
+function TableRow({ locale, order, deleteOrder, putAsSold }: ITableRow) {
   const t = useTranslations()
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -58,7 +59,12 @@ function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
       </Table.D>
       <Table.D>{order.address}</Table.D>
       <Table.D>{t(`admin.order.table.content.states.${order.state}`)}</Table.D>
-      <Table.D>{publishedSince(order.createdAt)}</Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: order.createdAt,
+        })}
+      </Table.D>
       <Table.D>
         {formatMoney(
           order.products.reduce((total, product) => {
@@ -132,7 +138,11 @@ const schema = z.object({
   code: z.string().trim(),
 })
 
-export default function OrderPage() {
+export default function OrderPage({
+  params: { locale },
+}: {
+  params: { locale: LocaleKey }
+}) {
   const { register, watch } = useForm<IFilterData>({
     resolver: zodResolver(schema),
   })
@@ -286,6 +296,7 @@ export default function OrderPage() {
               {orderData.map((order) => (
                 <TableRow
                   key={order.id}
+                  locale={locale}
                   order={order}
                   deleteOrder={() => deleteOrder(order.id)}
                   putAsSold={() => updateOrderState(order, 'sold')}

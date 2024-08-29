@@ -14,7 +14,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
-import { IProduct, IProductCampaign } from '@/@types'
+import { IProduct, IProductCampaign, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Field from '@/components/Field'
@@ -44,12 +44,13 @@ interface IFilterData {
 }
 
 interface ITableRow {
+  locale: LocaleKey
   data: IProduct
   _delete(): void
   _edit(data: IFormData, oldProduct?: IProduct): Promise<void>
 }
 
-function TableRow({ data, _delete, _edit }: ITableRow) {
+function TableRow({ locale, data, _delete, _edit }: ITableRow) {
   const t = useTranslations()
 
   const [openEditModal, setOpenEditModal] = useState(false)
@@ -71,8 +72,18 @@ function TableRow({ data, _delete, _edit }: ITableRow) {
       <Table.D>{t(`categories.labels.${data.category}`)}</Table.D>
       <Table.D>{formatMoney(data.price)}</Table.D>
       <Table.D>{data.quantity}</Table.D>
-      <Table.D>{publishedSince(data.createdAt)}</Table.D>
-      <Table.D>{publishedSince(data.updatedAt)}</Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: data.createdAt,
+        })}
+      </Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: data.updatedAt,
+        })}
+      </Table.D>
       <Table.D>
         <Button
           variant="no-background"
@@ -117,7 +128,11 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-export default function ProductPage() {
+export default function ProductPage({
+  params: { locale },
+}: {
+  params: { locale: LocaleKey }
+}) {
   const [productData, setProductData] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -320,6 +335,7 @@ export default function ProductPage() {
                 productData.map((product) => (
                   <TableRow
                     key={product.id}
+                    locale={locale}
                     data={product}
                     _delete={() => {
                       _delete(product.id, product?.campaign)

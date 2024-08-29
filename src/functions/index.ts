@@ -1,8 +1,7 @@
-import { useTranslations } from 'next-intl'
 import { formatDistanceToNowStrict, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { enUS, fr } from 'date-fns/locale'
 
-import { IProductCampaign } from '@/@types'
+import { IProductCampaign, LocaleKey } from '@/@types'
 
 export const calculateDiscountedPrice = (
   price: number,
@@ -27,25 +26,28 @@ export async function URLtoFile(url: string) {
   throw Error('Erro ao converter URL para arquivo')
 }
 
-export function publishedSince(date: string): string {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const t = useTranslations('time')
+interface IPublishedSince {
+  lng: LocaleKey
+  date: string
+}
+
+export function publishedSince({ lng, date }: IPublishedSince): string {
+  const locales = {
+    en: enUS,
+    fr,
+  }
+
+  const locale = locales[lng]
 
   try {
-    const publishedSince = formatDistanceToNowStrict(parseISO(date), {
-      locale: ptBR,
+    const publishedSince = formatDistanceToNowStrict(date, {
+      locale,
+      addSuffix: true,
     })
 
-    if (parseISO(date) > new Date()) {
-      return t('fromNow', {
-        publishedSince,
-      })
-    }
-    return t('ago', {
-      publishedSince,
-    })
-  } catch (e) {
-    return ''
+    return publishedSince
+  } catch {
+    return '-'
   }
 }
 

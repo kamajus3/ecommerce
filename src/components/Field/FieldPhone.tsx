@@ -140,7 +140,7 @@ function CustomInput(
                   <span className={`fi fi-${country.code.toLowerCase()}`} />
                   <abbr
                     className={clsx('text-gray-500 no-underline', {
-                      'text-gray-600 font-medium': ddd === country.ddd,
+                      'text-gray-600 font-bold': ddd === country.ddd,
                     })}
                     title={country.name}
                   >
@@ -151,7 +151,7 @@ function CustomInput(
                 </div>
                 <span
                   className={clsx('text-gray-500', {
-                    'text-gray-600 font-medium': ddd === country.ddd,
+                    'text-gray-600 font-bold': ddd === country.ddd,
                   })}
                 >
                   +{country.ddd}

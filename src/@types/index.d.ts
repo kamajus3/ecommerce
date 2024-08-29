@@ -1,3 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Formats,
+  MarkupTranslationValues,
+  RichTranslationValues,
+  TranslationValues,
+} from 'next-intl'
+
 export interface IProductCampaign {
   id: string
   title: string
@@ -114,3 +122,23 @@ export type IUser = {
   createdAt: string
   updatedAt: string
 }
+
+export type NextIntlTProps = {
+  (key: string, values?: TranslationValues, formats?: Partial<Formats>): string
+
+  rich(
+    key: string,
+    values?: RichTranslationValues,
+    formats?: Partial<Formats>,
+  ): string | React.ReactElement | React.ReactNodeArray
+
+  markup(
+    key: string,
+    values?: MarkupTranslationValues,
+    formats?: Partial<Formats>,
+  ): string
+
+  raw(key: string): any
+}
+
+export type LocaleKey = 'en' | 'fr'
