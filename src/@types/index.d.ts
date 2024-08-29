@@ -35,6 +35,7 @@ export interface IProductCart {
 export interface IQuery {
   orderBy?: string
   limit?: number
+  orderDirection?: 'asc' | 'desc'
   filterBy?: { [key: string]: string | number | boolean }
   filterById?: string
   exceptionId?: string

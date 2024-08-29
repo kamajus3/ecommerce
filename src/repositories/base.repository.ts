@@ -27,23 +27,29 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
     this.collectionName = collectionName
   }
 
-  private reverseData<T>(arr: T[]): T[] {
-    const newArray: T[] = []
-    for (let i = arr.length - 1; i >= 0; i--) {
-      newArray.push(arr[i])
-    }
-    return newArray
-  }
-
   getCollectionRef() {
     return ref(database, this.collectionName)
+  }
+
+  private sortData(data: T[], orderBy = 'createdAt'): T[] {
+    return data.sort((a, b) => {
+      if (orderBy === 'createdAt' || orderBy === 'updatedAt') {
+        const aValue = a.createdAt as string
+        const bValue = b.createdAt as string
+
+        const dateA = new Date(aValue).getTime()
+        const dateB = new Date(bValue).getTime()
+
+        return dateB - dateA
+      }
+
+      return 0
+    })
   }
 
   async findAll(): Promise<T[]> {
     const collectionRef = this.getCollectionRef()
     const constraints: QueryConstraint[] = []
-
-    constraints.push(orderByChild('createdAt'))
 
     return new Promise((resolve, reject) => {
       get(query(collectionRef, ...constraints))
@@ -54,7 +60,8 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               ...data[key],
               id: key,
             }))
-            resolve(this.reverseData(resultArray))
+
+            resolve(this.sortData(resultArray))
           } else {
             resolve([])
           }
@@ -97,20 +104,7 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               id: key,
             }))
 
-            if (params?.orderBy) {
-              const orderByField = params.orderBy as keyof T
-              resultArray.sort((a, b) => {
-                if (a[orderByField] < b[orderByField]) {
-                  return -1
-                }
-                if (a[orderByField] > b[orderByField]) {
-                  return 1
-                }
-                return 0
-              })
-            }
-
-            resolve(this.reverseData(resultArray))
+            resolve(this.sortData(resultArray, params?.orderBy))
           } else {
             resolve([])
           }

@@ -130,14 +130,10 @@ function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
 
 const schema = z.object({
   code: z.string().trim(),
-  orderBy: z.string().trim(),
 })
 
 export default function OrderPage() {
   const { register, watch } = useForm<IFilterData>({
-    defaultValues: {
-      orderBy: 'createdAt',
-    },
     resolver: zodResolver(schema),
   })
 
@@ -159,9 +155,7 @@ export default function OrderPage() {
           filterById: code,
         })
       } else {
-        orders = orderRepository.find({
-          orderBy: 'createdAt',
-        })
+        orders = orderRepository.findAll()
       }
 
       return orders
