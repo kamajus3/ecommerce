@@ -154,7 +154,7 @@ export default function OrderPage({
   const productRepository = useMemo(() => new ProductRepository(), [])
   const orderRepository = useMemo(() => new OrderRepository(), [])
 
-  const t = useTranslations('admin.order')
+  const t = useTranslations()
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -181,7 +181,7 @@ export default function OrderPage({
   }, [setOrderData, code, orderRepository])
 
   async function updateOrderState(order: IOrder, state: 'sold' | 'not-sold') {
-    let errorMessage = 'Erro ao alterar o estado do pedido'
+    let errorMessage = t('admin.order.stateUpdate.error')
     const soldProducts: IProduct[] = []
 
     try {
@@ -196,21 +196,18 @@ export default function OrderPage({
             })
 
             if (product.quantity === 0) {
-              errorMessage = `O/A ${product.name} está fora de estoque`
+              errorMessage = `(${product.name}) ${t('product.stock.outOfStock')}`
               throw new Error(errorMessage)
             }
 
             if (p.quantity > product.quantity) {
-              errorMessage = `Tem apenas ${product.quantity} ${product.name} em estoque`
-              throw new Error(errorMessage)
-            }
-
-            if (p.quantity > product.quantity) {
-              errorMessage = `Não tem nenhum ${product.name} em estoque`
+              errorMessage = `(${product.name}) ${t('product.stock.inStock', {
+                quantity: product.quantity,
+              })}`
               throw new Error(errorMessage)
             }
           } else {
-            errorMessage = `O producto ${p.name} não está no estoque`
+            errorMessage = `(${p.name}) ${t('product.stock.outOfStock')}`
             throw new Error(errorMessage)
           }
         }
@@ -236,7 +233,7 @@ export default function OrderPage({
         }
       }
 
-      toast.success(t('stateUpdated'))
+      toast.success(t('admin.order.stateUpdate.successful'))
     } catch {
       toast.error(errorMessage)
     }
@@ -245,9 +242,9 @@ export default function OrderPage({
   async function deleteOrder(orderId: string) {
     try {
       await orderRepository.deleteById(orderId)
-      toast.success(t('table.content.cancel.successful'))
+      toast.success(t('admin.order.table.content.cancel.successful'))
     } catch {
-      toast.error(t('table.content.cancel.error'))
+      toast.error(t('admin.order.table.content.cancel.error'))
     }
   }
 
@@ -255,14 +252,16 @@ export default function OrderPage({
     <section className="bg-white min-h-screen overflow-hidden">
       <Header.Admin />
       <article className="mb-4 mt-5">
-        <h1 className="text-black font-semibold text-3xl p-9">{t('title')}</h1>
+        <h1 className="text-black font-semibold text-3xl p-9">
+          {t('admin.order.title')}
+        </h1>
 
         <div className="px-8 gap-y-5 gap-x-4 flex flex-wrap items-center">
           <div className="max-sm:w-full rounded-lg bg-white p-3 px-4 border flex items-center gap-2">
             <Hash size={15} color="#6B7280" />
             <input
               type="text"
-              placeholder={t('table.header.reference')}
+              placeholder={t('admin.order.table.header.reference')}
               {...register('code')}
               className="max-sm:w-full text-gray-500 bg-white outline-none"
             />
@@ -274,19 +273,21 @@ export default function OrderPage({
         <DataState
           dataCount={orderData.length}
           loading={loading}
-          noDataMessage={code ? t('notFound') : t('noDataMessage')}
+          noDataMessage={
+            code ? t('admin.order.notFound') : t('admin.order.noDataMessage')
+          }
         >
           <Table.Root>
             <thead>
               <Table.R inside="head">
-                <Table.H>{t('table.header.reference')}</Table.H>
-                <Table.H>{t('table.header.entities')}</Table.H>
-                <Table.H>{t('table.header.name')}</Table.H>
-                <Table.H>{t('table.header.phone')}</Table.H>
-                <Table.H>{t('table.header.reference')}</Table.H>
-                <Table.H>{t('table.header.state')}</Table.H>
-                <Table.H>{t('table.header.date')}</Table.H>
-                <Table.H>{t('table.header.toPay')}</Table.H>
+                <Table.H>{t('admin.order.table.header.reference')}</Table.H>
+                <Table.H>{t('admin.order.table.header.entities')}</Table.H>
+                <Table.H>{t('admin.order.table.header.name')}</Table.H>
+                <Table.H>{t('admin.order.table.header.phone')}</Table.H>
+                <Table.H>{t('admin.order.table.header.reference')}</Table.H>
+                <Table.H>{t('admin.order.table.header.state')}</Table.H>
+                <Table.H>{t('admin.order.table.header.date')}</Table.H>
+                <Table.H>{t('admin.order.table.header.toPay')}</Table.H>
                 <Table.H>-</Table.H>
                 <Table.H>-</Table.H>
                 <Table.H>-</Table.H>

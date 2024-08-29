@@ -17,6 +17,9 @@
       "backToClient": "Retour au Client"
     }
   },
+  "carousel": {
+    "seeProducts": "Voir les produits"
+  },
   "advantages": {
     "qualityProducts": {
       "title": "Produits de qualité",

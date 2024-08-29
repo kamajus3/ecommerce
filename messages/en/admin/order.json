@@ -37,7 +37,10 @@
       }
     }
   },
-  "stateUpdated": "State successfully updated",
+  "stateUpdate": {
+    "successful": "State successfully updated",
+    "error": "Error updating the state"
+  },
   "noDataMessage": "Customer orders will appear here",
   "notFound": "No order with this reference was found"
 }
