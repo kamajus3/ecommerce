@@ -12,7 +12,6 @@ export default getRequestConfig(async ({ locale }) => {
       categories: (await import(`../messages/${locale}/categories.json`))
         .default,
       campaign: (await import(`../messages/${locale}/campaign.json`)).default,
-      time: (await import(`../messages/${locale}/time.json`)).default,
       structure: (await import(`../messages/${locale}/structure.json`)).default,
       product: (await import(`../messages/${locale}/product.json`)).default,
       form: (await import(`../messages/${locale}/form.json`)).default,

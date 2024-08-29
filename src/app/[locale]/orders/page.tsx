@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 
-import { IOrder } from '@/@types'
+import { IOrder, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Header from '@/components/Header'
@@ -15,7 +15,12 @@ import { Link } from '@/navigation'
 import { OrderRepository } from '@/repositories/order.repository'
 import useUserStore from '@/store/UserStore'
 
-function OrderTableRow(order: IOrder) {
+interface ITableRow {
+  locale: LocaleKey
+  order: IOrder
+}
+
+function OrderTableRow({ locale, order }: ITableRow) {
   const t = useTranslations('admin.order')
 
   const abbrTitle =
@@ -34,7 +39,12 @@ function OrderTableRow(order: IOrder) {
       </Table.D>
       <Table.D>{order.address}</Table.D>
       <Table.D>{t(`table.content.states.${order.state}`)}</Table.D>
-      <Table.D>{publishedSince(order.createdAt)}</Table.D>
+      <Table.D>
+        {publishedSince({
+          lng: locale,
+          date: order.createdAt,
+        })}
+      </Table.D>
       <Table.D>
         {formatMoney(
           order.products.reduce((total, product) => {
@@ -59,7 +69,11 @@ function OrderTableRow(order: IOrder) {
   )
 }
 
-export default function OrderPage() {
+export default function OrderPage({
+  params: { locale },
+}: {
+  params: { locale: LocaleKey }
+}) {
   const t = useTranslations()
 
   const [orderData, setOrderData] = useState<IOrder[]>([])
@@ -122,7 +136,7 @@ export default function OrderPage() {
               </thead>
               <Table.Body>
                 {orderData.map((order) => (
-                  <OrderTableRow key={order.id} {...order} />
+                  <OrderTableRow key={order.id} locale={locale} order={order} />
                 ))}
               </Table.Body>
             </Table.Root>
