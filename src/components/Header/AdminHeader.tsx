@@ -28,7 +28,7 @@ export default function AdminHeader() {
           <Link
             href={`/admin/dashboard`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-primary border-b border-b-main':
+              'text-primary font-extrabold':
                 pathname.includes('/admin/dashboard'),
             })}
           >
@@ -37,7 +37,7 @@ export default function AdminHeader() {
           <Link
             href={`/admin/products`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-primary border-b border-b-main':
+              'text-primary font-extrabold':
                 pathname.includes('/admin/products'),
             })}
           >
@@ -46,8 +46,7 @@ export default function AdminHeader() {
           <Link
             href={`/admin/orders`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-primary border-b border-b-main':
-                pathname.includes('/admin/orders'),
+              'text-primary font-extrabold': pathname.includes('/admin/orders'),
             })}
           >
             {t('header.admin.orders')}
@@ -55,7 +54,7 @@ export default function AdminHeader() {
           <Link
             href={`/admin/campaigns`}
             className={clsx('font-medium text-black max-sm:hidden', {
-              'text-primary border-b border-b-main':
+              'text-primary font-extrabold':
                 pathname.includes('/admin/campaigns'),
             })}
           >
