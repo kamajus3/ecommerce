@@ -9,6 +9,7 @@ import {
   ref as storageRef,
   uploadBytes,
 } from 'firebase/storage'
+import { Check, X } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
@@ -90,10 +91,18 @@ function TableRow({ locale, data, _delete, _edit }: ITableRow) {
       </Table.D>
       <Table.D>{data.products ? data.products.length : '-'}</Table.D>
       <Table.D>
-        {data.default ? t('table.content.yes') : t('table.content.no')}
+        {data.default ? (
+          <Check className="inline" size={15} />
+        ) : (
+          <X className="inline" size={15} />
+        )}
       </Table.D>
       <Table.D>
-        {data.fixed ? t('table.content.yes') : t('table.content.no')}
+        {data.fixed ? (
+          <Check className="inline" size={15} />
+        ) : (
+          <X className="inline" size={15} />
+        )}
       </Table.D>
       <Table.D>
         <Button
