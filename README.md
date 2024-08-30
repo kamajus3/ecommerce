@@ -1,5 +1,5 @@
 # Poubelle (Ecommerce)
-![Example](https://github.com/user-attachments/assets/78c1ad16-4a18-4002-b8a5-242d481c6fba)
+![Example](https://github.com/user-attachments/assets/9847f12c-b6a3-45b3-8c36-ae087a4b7f35)
 
 ## Main Technologies
 
