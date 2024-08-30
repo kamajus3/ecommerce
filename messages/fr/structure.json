@@ -35,6 +35,10 @@
     }
   },
   "footer": {
+    "languages": {
+      "english": "Anglais",
+      "french": "Français"
+    },
     "support": {
       "title": "Support"
     },

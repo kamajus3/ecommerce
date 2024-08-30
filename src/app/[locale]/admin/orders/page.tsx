@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { Hash } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
@@ -27,14 +27,14 @@ interface IFilterData {
 }
 
 interface ITableRow {
-  locale: LocaleKey
   order: IOrder
   deleteOrder(): void
   putAsSold(): void
 }
 
-function TableRow({ locale, order, deleteOrder, putAsSold }: ITableRow) {
+function TableRow({ order, deleteOrder, putAsSold }: ITableRow) {
   const t = useTranslations()
+  const locale = useLocale() as LocaleKey
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [openSoldModal, setOpenSoldModal] = useState(false)
@@ -138,11 +138,7 @@ const schema = z.object({
   code: z.string().trim(),
 })
 
-export default function OrderPage({
-  params: { locale },
-}: {
-  params: { locale: LocaleKey }
-}) {
+export default function OrderPage() {
   const { register, watch } = useForm<IFilterData>({
     resolver: zodResolver(schema),
   })
@@ -297,7 +293,6 @@ export default function OrderPage({
               {orderData.map((order) => (
                 <TableRow
                   key={order.id}
-                  locale={locale}
                   order={order}
                   deleteOrder={() => deleteOrder(order.id)}
                   putAsSold={() => updateOrderState(order, 'sold')}
