@@ -3,10 +3,11 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
+import axios from 'axios'
 import { nanoid } from 'nanoid'
 import { toast } from 'react-toastify'
 
-import { IOrder, IPhone, IProduct, IProductOrder } from '@/@types'
+import { IOrder, IPhone, IProduct, IProductOrder, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
 import DataState from '@/components/DataState'
 import Header from '@/components/Header'
@@ -19,7 +20,6 @@ import { useAuth } from '@/hooks/useAuth'
 import { Link, useRouter } from '@/navigation'
 import { OrderRepository } from '@/repositories/order.repository'
 import { ProductRepository } from '@/repositories/product.repository'
-import sendOrder from '@/services/email/send'
 import useCartStore from '@/store/CartStore'
 import useUserStore from '@/store/UserStore'
 
@@ -124,7 +124,7 @@ function TableRow({
 export default function CartPage({
   params: { locale },
 }: {
-  params: { locale: string }
+  params: { locale: LocaleKey }
 }) {
   const t = useTranslations('cart')
 
@@ -212,14 +212,17 @@ export default function CartPage({
       try {
         const data = await orderRepository.create(orderData, nanoid(10))
         if (userMetadata.email) {
-          sendOrder({
-            order: {
-              ...data,
-              email: userMetadata.email,
-              totalPrice,
-            },
-            locale,
-          })
+          axios
+            .post('/api/send-order', {
+              order: {
+                ...data,
+                totalPrice,
+              },
+              locale,
+            })
+            .catch((error) => {
+              console.error(error)
+            })
         }
 
         selectedProducts.forEach((id) => removeFromCart(id))
