@@ -69,8 +69,6 @@ export class BaseRepository<T extends Record> extends IRepository<T> {
               id: key,
             }))
 
-            console.log(this.sortData(resultArray))
-
             resolve(this.sortData(resultArray))
           } else {
             resolve([])

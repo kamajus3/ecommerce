@@ -9,6 +9,7 @@ import * as z from 'zod'
 import Button from '@/components/Button'
 import Field from '@/components/Field'
 import Header from '@/components/Header'
+import { useRouter } from '@/navigation'
 import { auth } from '@/services/firebase/config'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -17,6 +18,7 @@ interface IFormData {
 }
 
 export default function RecoverAccount() {
+  const router = useRouter()
   const t = useTranslations()
 
   const schema = z.object({
@@ -36,7 +38,11 @@ export default function RecoverAccount() {
   function onSubmit(data: IFormData) {
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        toast.success(t('auth.recoveryAccount.successful'))
+        toast.success(t('auth.recoveryAccount.successful'), {
+          onClose() {
+            router.replace('/login')
+          },
+        })
       })
       .catch(() => {
         toast.error(t('auth.recoveryAccount.error'))
