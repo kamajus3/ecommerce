@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import * as z from 'zod'
 
+import Field from '@/components/Field'
 import Header from '@/components/Header'
 import Loading from '@/components/Loading'
 import { useRouter } from '@/navigation'
@@ -129,33 +130,26 @@ export default function ChangePassword({
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label className="font-medium">
+              <Field.Label htmlFor="email">
                 {t('auth.sharedFields.password')}
-              </label>
-              <input
+              </Field.Label>
+              <Field.Input
                 type="password"
                 {...register('password')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-primary"
+                error={errors.password}
               />
-              {errors.password && (
-                <p className="text-red-500 mt-1">{errors.password.message}</p>
-              )}
+              <Field.Error error={errors.password} />
             </div>
-
             <div>
-              <label className="font-medium">
+              <Field.Label htmlFor="confirmPassword">
                 {t('auth.sharedFields.confirmPassword')}
-              </label>
-              <input
+              </Field.Label>
+              <Field.Input
                 type="password"
                 {...register('confirmPassword')}
-                className="w-full rounded mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-primary"
+                error={errors.confirmPassword}
               />
-              {errors.confirmPassword && (
-                <p className="text-red-500 mt-1">
-                  {errors.confirmPassword.message}
-                </p>
-              )}
+              <Field.Error error={errors.confirmPassword} />
             </div>
 
             <button
