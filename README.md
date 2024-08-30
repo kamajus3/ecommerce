@@ -1,4 +1,5 @@
 # Poubelle (Ecommerce)
+
 ![Example](https://github.com/user-attachments/assets/9847f12c-b6a3-45b3-8c36-ae087a4b7f35)
 
 ## Main Technologies
@@ -48,9 +49,15 @@ To get started with the Poubelle ecommerce application, follow these steps:
 
    - **Enable Firebase Services**
 
-     - Enable Firebase Authentication
+     - Enable Firebase Authentication By email and password
      - Enable Firebase Realtime Database
      - Enable Firebase Cloud Storage
+
+   - **Enable custom email action pages (change email, reset password, recovery account, etc)**
+
+     Go to your Firebase Project -> Authentication -> Templates tab on top of the page -> click on pencil button -> customise action url on the bottom -> Replace
+
+     `https://myapp.firebaseapp.com/__/auth/action` with `https://auth.mydom.com/en/action`
 
    - **Update Firebase Configuration**
 
@@ -61,7 +68,7 @@ To get started with the Poubelle ecommerce application, follow these steps:
      Apply the Firebase storage and database rules by executing:
 
      ```bash
-     npm run deploy
+     npm run deploy:rules
      ```
 
 4. **Configure CORS for Firebase Storage**

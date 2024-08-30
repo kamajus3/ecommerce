@@ -162,7 +162,7 @@ export default function ChangePassword({
               type="submit"
               className="w-full rounded px-4 py-2 text-white font-medium bg-primary hover:brightness-90 active:brightness-70 duration-150"
             >
-              {t('auth.sharedFields.action')}
+              {t('auth.changePassword.action')}
             </button>
           </form>
         </div>
