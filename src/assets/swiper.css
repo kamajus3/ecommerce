@@ -67,12 +67,7 @@ div.swiper-button-prev::after {
 }
 
 .swiper-pagination-bullet {
-  background-color: #ffffff;
+  background-color: #fff !important;
   width: 15px !important;
   height: 15px !important;
-}
-
-.swiper-pagination-bullet.swiper-pagination-bullet-active {
-  background-color: #4E888F;
-  border: 2px solid #fff;
 }
