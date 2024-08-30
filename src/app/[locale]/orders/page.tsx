@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 import { IOrder, LocaleKey } from '@/@types'
 import Button from '@/components/Button'
@@ -16,12 +16,12 @@ import { OrderRepository } from '@/repositories/order.repository'
 import useUserStore from '@/store/UserStore'
 
 interface ITableRow {
-  locale: LocaleKey
   order: IOrder
 }
 
-function OrderTableRow({ locale, order }: ITableRow) {
+function OrderTableRow({ order }: ITableRow) {
   const t = useTranslations('admin.order')
+  const locale = useLocale() as LocaleKey
 
   const abbrTitle =
     `${order.products.map((p) => `- ${p.name} (x${p.quantity})\n`)}`.replaceAll(
@@ -69,11 +69,7 @@ function OrderTableRow({ locale, order }: ITableRow) {
   )
 }
 
-export default function OrderPage({
-  params: { locale },
-}: {
-  params: { locale: LocaleKey }
-}) {
+export default function OrderPage() {
   const t = useTranslations()
 
   const [orderData, setOrderData] = useState<IOrder[]>([])
@@ -136,7 +132,7 @@ export default function OrderPage({
               </thead>
               <Table.Body>
                 {orderData.map((order) => (
-                  <OrderTableRow key={order.id} locale={locale} order={order} />
+                  <OrderTableRow key={order.id} order={order} />
                 ))}
               </Table.Body>
             </Table.Root>

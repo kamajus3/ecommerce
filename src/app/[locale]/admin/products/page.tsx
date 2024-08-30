@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { randomBytes } from 'crypto'
 import {
   deleteObject,
@@ -44,14 +44,14 @@ interface IFilterData {
 }
 
 interface ITableRow {
-  locale: LocaleKey
   data: IProduct
   _delete(): void
   _edit(data: IFormData, oldProduct?: IProduct): Promise<void>
 }
 
-function TableRow({ locale, data, _delete, _edit }: ITableRow) {
+function TableRow({ data, _delete, _edit }: ITableRow) {
   const t = useTranslations()
+  const locale = useLocale() as LocaleKey
 
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -128,11 +128,7 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-export default function ProductPage({
-  params: { locale },
-}: {
-  params: { locale: LocaleKey }
-}) {
+export default function ProductPage() {
   const [productData, setProductData] = useState<IProduct[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -335,7 +331,6 @@ export default function ProductPage({
                 productData.map((product) => (
                   <TableRow
                     key={product.id}
-                    locale={locale}
                     data={product}
                     _delete={() => {
                       _delete(product.id, product?.campaign)

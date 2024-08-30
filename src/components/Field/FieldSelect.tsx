@@ -20,7 +20,7 @@ function CustomSelect(
       {...props}
       className={twMerge(
         clsx(
-          'mt-2 rounded-lg bg-neutral-100 px-3 py-2 text-gray-500 bg-transparent outline-none border',
+          'cursor-pointer mt-2 rounded-lg bg-transparent px-3 py-2 text-gray-500 outline-none border',
           {
             'border-red-500': props.error,
           },

@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { randomBytes } from 'crypto'
 import {
   deleteObject,
@@ -41,7 +41,6 @@ interface IFormData {
 }
 
 interface ITableRow {
-  locale: LocaleKey
   data: ICampaign
   _delete(): void
   _edit(data: IFormData, oldData?: ICampaign): Promise<void>
@@ -52,8 +51,9 @@ interface IFilterData {
   orderBy: string
 }
 
-function TableRow({ locale, data, _delete, _edit }: ITableRow) {
+function TableRow({ data, _delete, _edit }: ITableRow) {
   const t = useTranslations('admin.campaign')
+  const locale = useLocale() as LocaleKey
 
   const [openEditModal, setOpenEditModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -148,11 +148,7 @@ const schema = z.object({
   orderBy: z.string().trim(),
 })
 
-export default function CampaignPage({
-  params: { locale },
-}: {
-  params: { locale: LocaleKey }
-}) {
+export default function CampaignPage() {
   const t = useTranslations('admin.campaign')
 
   const productRepository = useMemo(() => new ProductRepository(), [])
@@ -429,7 +425,6 @@ export default function CampaignPage({
               {campaignData.map((campaign) => (
                 <TableRow
                   key={campaign.id}
-                  locale={locale}
                   data={campaign}
                   _delete={() => {
                     _delete(campaign.id)
