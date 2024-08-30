@@ -1,5 +1,3 @@
-import { NextApiRequest } from 'next'
-
 import { IOrder, LocaleKey } from '@/@types'
 import { OrderEmail } from '@/email/OrderEmail'
 import { env } from '@/env'
@@ -15,7 +13,7 @@ interface FormData {
   locale: LocaleKey
 }
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: Request) {
   try {
     const body: FormData = await new Response(req.body).json()
 
