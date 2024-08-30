@@ -11,15 +11,16 @@
 
 ## Main Features
 
-- [x] **User Authentication**: Secure login and registration with Firebase Authentication.
-- [x] **Product Catalog**: Display products with filtering and sorting options.
-- [x] **Shopping Cart**: Add, remove, and update items in the shopping cart.
-- [x] **Order Management**: View and manage user orders in the admin panel.
-- [x] **Responsive Design**: Mobile-friendly layout with responsive design principles.
-- [x] **Campaign Management**: Manage marketing campaigns from the admin panel.
-- [x] **Product Posting**: Add and update products from the admin panel.
-- [x] **Order Creation and Proforma Invoice**: Create orders and generate proforma invoices for user orders.
-- [ ] **Checkout Process**: Integration with payment gateway and order summary.
+- [x] **User Authentication**: Robust login and registration system powered by Firebase Authentication, ensuring secure access for all users.
+- [x] **Product Catalog**: Comprehensive product display with advanced filtering and sorting options, making it easy for users to find exactly what they need.
+- [x] **Shopping Cart**: Dynamic shopping cart functionality that allows users to add, remove, and update items effortlessly.
+- [x] **Order Management**: Admin panel with full control over user orders, including viewing, updating, and managing order statuses.
+- [x] **Responsive Design**: Optimized for all devices, providing a seamless and intuitive experience across desktops, tablets, and mobile devices.
+- [x] **Campaign Management**: Admin panel tools for creating and managing marketing campaigns, enabling targeted promotions and discounts.
+- [x] **Product Management**: Easy-to-use admin interface for adding, updating, and organizing product listings.
+- [x] **Order Creation & Proforma Invoicing**: Streamlined process for creating orders and generating proforma invoices, enhancing the efficiency of order handling.
+- [x] **Admin Email Notifications**: Automatic email notifications to the admin for every new order, ensuring timely awareness and action.
+- [ ] **Checkout & Payment Integration**: In-progress feature for a smooth checkout experience, including integration with a payment gateway and detailed order summaries.
 
 ## Getting Started
 

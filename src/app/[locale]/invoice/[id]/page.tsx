@@ -86,7 +86,7 @@ export default function Invoice() {
         if (isMobile) {
           return (
             <div className="bg-white h-screen w-screen flex items-center justify-center">
-              <Button onClick={downloadInvoice}>{t('table.action')}</Button>
+              <Button onClick={downloadInvoice}>{t('action')}</Button>
             </div>
           )
         }
