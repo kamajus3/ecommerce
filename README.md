@@ -1,4 +1,4 @@
-# Poubelle (Ecommerce)
+# E-commerce
 
 ![Example](https://github.com/user-attachments/assets/9847f12c-b6a3-45b3-8c36-ae087a4b7f35)
 
